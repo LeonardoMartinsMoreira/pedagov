@@ -27,7 +27,10 @@ const registerSchema = z
 
 type RegisterType = z.infer<typeof registerSchema>
 
-export function RegisterForm({ className, ...props }: React.ComponentProps<'div'>) {
+export function RegisterForm({
+  className,
+  ...props
+}: React.ComponentProps<'div'>) {
   const {
     register,
     handleSubmit,
@@ -48,33 +51,69 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<'div'
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center">
                 <h1 className="text-2xl font-bold">Crie sua conta</h1>
-                <p className="text-balance text-muted-foreground">Cadastre-se para acessar o EducaGov</p>
+                <p className="text-balance text-muted-foreground">
+                  Cadastre-se para acessar o PedaGov
+                </p>
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="name">Nome</Label>
-                <Input id="name" type="text" placeholder="Seu nome" {...register('name')} />
-                {errors.name && <p className="text-red-500 text-xs">{errors.name.message}</p>}
+                <Input
+                  id="name"
+                  type="text"
+                  placeholder="Seu nome"
+                  {...register('name')}
+                />
+                {errors.name && (
+                  <p className="text-red-500 text-xs">{errors.name.message}</p>
+                )}
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="email">E-mail</Label>
-                <Input id="email" type="email" placeholder="seu@email.com" {...register('email')} />
-                {errors.email && <p className="text-red-500 text-xs">{errors.email.message}</p>}
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="seu@email.com"
+                  {...register('email')}
+                />
+                {errors.email && (
+                  <p className="text-red-500 text-xs">{errors.email.message}</p>
+                )}
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="password">Senha</Label>
-                <Input id="password" type="password" placeholder="********" {...register('password')} />
-                {errors.password && <p className="text-red-500 text-xs">{errors.password.message}</p>}
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="********"
+                  {...register('password')}
+                />
+                {errors.password && (
+                  <p className="text-red-500 text-xs">
+                    {errors.password.message}
+                  </p>
+                )}
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="confirmPassword">Confirme sua senha</Label>
-                <Input id="confirmPassword" type="password" placeholder="********" {...register('confirmPassword')} />
-                {errors.confirmPassword && <p className="text-red-500 text-xs">{errors.confirmPassword.message}</p>}
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  placeholder="********"
+                  {...register('confirmPassword')}
+                />
+                {errors.confirmPassword && (
+                  <p className="text-red-500 text-xs">
+                    {errors.confirmPassword.message}
+                  </p>
+                )}
               </div>
               <Button type="submit" className="w-full">
                 Registrar
               </Button>
               <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
-                <span className="relative z-10 bg-background px-2 text-muted-foreground">Ou registre-se com</span>
+                <span className="relative z-10 bg-background px-2 text-muted-foreground">
+                  Ou registre-se com
+                </span>
               </div>
               <div className="grid grid-cols-3 gap-4">
                 <Button variant="outline" className="w-full">
@@ -108,8 +147,8 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<'div'
         </CardContent>
       </Card>
       <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary">
-        Ao continuar, você concorda com nossos <a href="#">Termos de Serviço</a> e{' '}
-        <a href="#">Política de Privacidade</a>.
+        Ao continuar, você concorda com nossos <a href="#">Termos de Serviço</a>{' '}
+        e <a href="#">Política de Privacidade</a>.
       </div>
     </div>
   )

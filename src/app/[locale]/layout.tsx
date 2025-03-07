@@ -10,7 +10,7 @@ import { notFound } from 'next/navigation'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'EducaGov',
+  title: 'PedaGov',
   description: 'A melhor aplicação para controle e estatísticas de escolas.',
   icons: {
     icon: '/favicon.ico',

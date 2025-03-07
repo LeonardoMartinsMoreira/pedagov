@@ -1,7 +1,12 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 import { BarChart2, ChevronLeft, Home, Menu, Settings } from 'lucide-react'
 import Image from 'next/image'
@@ -17,7 +22,9 @@ const navigation = [
   { name: 'Estatísticas', href: '/analytics', icon: BarChart2 },
 ]
 
-const bottomNavigation = [{ name: 'Configurações', href: '/settings', icon: Settings }]
+const bottomNavigation = [
+  { name: 'Configurações', href: '/settings', icon: Settings },
+]
 
 export function Sidebar() {
   const pathname = usePathname()
@@ -45,7 +52,7 @@ export function Sidebar() {
             pathname === item.href
               ? 'bg-secondary text-secondary-foreground'
               : 'text-muted-foreground hover:bg-secondary hover:text-secondary-foreground',
-            isCollapsed && 'justify-center px-2',
+            isCollapsed && 'justify-center px-2'
           )}
         >
           <item.icon className={cn('h-4 w-4', !isCollapsed && 'mr-3')} />
@@ -74,14 +81,21 @@ export function Sidebar() {
           className={cn(
             'fixed inset-y-0 z-20 flex h-full flex-col bg-background transition-all duration-300 ease-in-out lg:static',
             isCollapsed ? 'w-[72px]' : 'w-72',
-            isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
+            isMobileOpen
+              ? 'translate-x-0'
+              : '-translate-x-full lg:translate-x-0'
           )}
         >
           <div className="border-b border-border">
-            <div className={cn('flex h-16 items-center gap-2 px-4', isCollapsed && 'justify-center px-2')}>
+            <div
+              className={cn(
+                'flex h-16 items-center gap-2 px-4',
+                isCollapsed && 'justify-center px-2'
+              )}
+            >
               {!isCollapsed && (
                 <Link href="/" className="flex items-center font-semibold">
-                  <Image alt="EducaGov Logo" src={logo} className="h-14" />
+                  <Image alt="PedaGov Logo" src={logo} className="h-14" />
                 </Link>
               )}
               <Button
@@ -90,8 +104,15 @@ export function Sidebar() {
                 className={cn('ml-auto h-8 w-8', isCollapsed && 'ml-0')}
                 onClick={() => setIsCollapsed(!isCollapsed)}
               >
-                <ChevronLeft className={cn('h-4 w-4 transition-transform', isCollapsed && 'rotate-180')} />
-                <span className="sr-only">{isCollapsed ? 'Expand' : 'Collapse'} Sidebar</span>
+                <ChevronLeft
+                  className={cn(
+                    'h-4 w-4 transition-transform',
+                    isCollapsed && 'rotate-180'
+                  )}
+                />
+                <span className="sr-only">
+                  {isCollapsed ? 'Expand' : 'Collapse'} Sidebar
+                </span>
               </Button>
             </div>
           </div>

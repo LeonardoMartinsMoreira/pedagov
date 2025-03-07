@@ -1,8 +1,8 @@
 import { ThemeToggle } from '@/components/theme-toggle'
 
 export const metadata = {
-  title: 'EducaGov - Conectar',
-  description: 'Conecte-se ao EducaGov',
+  title: 'PedaGov - Conectar',
+  description: 'Conecte-se ao PedaGov',
 }
 
 export default function Layout({ children }: { children: React.ReactNode }) {
