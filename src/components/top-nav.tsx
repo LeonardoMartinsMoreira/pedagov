@@ -1,7 +1,6 @@
 'use client'
 import { ThemeToggle } from './theme-toggle'
 import { Notifications } from './notifications'
-import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useSettings } from '@/contexts/settings-context'
 import {
@@ -15,6 +14,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import React from 'react'
+import { Link } from '@/i18n/routing'
 
 export function TopNav() {
   const pathname = usePathname()

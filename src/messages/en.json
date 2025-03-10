@@ -1,6 +1,9 @@
 {
-  "HomePage": {
-    "title": "Hello world!",
-    "about": "Go to the about page"
+  "BusinessMetrics": {
+    "resumeTitle": "Resume",
+    "studentsRegistered": "Registered Students",
+    "incidentsRecorded": "Incidents Recorded",
+    "mainProblems": "Main Problems",
+    "last30Days": "Last 30 days"
   }
 }

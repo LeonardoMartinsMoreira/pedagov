@@ -1,93 +1,88 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { TrendingUp, Users, DollarSign, ArrowRight } from "lucide-react"
-
-const metrics = [
-  {
-    id: 1,
-    title: "Revenue Growth",
-    subtitle: "Monthly revenue target",
-    icon: TrendingUp,
-    status: "On Track",
-    progress: 75,
-    target: 100000,
-    current: 75000,
-    unit: "$",
-  },
-  {
-    id: 2,
-    title: "Customer Acquisition",
-    subtitle: "New customers this quarter",
-    icon: Users,
-    status: "Behind",
-    progress: 60,
-    target: 1000,
-    current: 600,
-    unit: "",
-  },
-  {
-    id: 3,
-    title: "Average Order Value",
-    subtitle: "Target AOV for Q3",
-    icon: DollarSign,
-    status: "Ahead",
-    progress: 110,
-    target: 150,
-    current: 165,
-    unit: "$",
-  },
-]
-
-const statusColors = {
-  "On Track": "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
-  Behind: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
-  Ahead: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
-}
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  ClockCounterClockwise,
+  UsersThree,
+  Warning,
+} from '@phosphor-icons/react'
+import { useTranslations } from 'next-intl'
 
 export function BusinessMetrics() {
+  const t = useTranslations('BusinessMetrics')
+
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">Business Metrics</h2>
-        <Button variant="outline" size="sm">
-          View Details <ArrowRight className="ml-2 h-4 w-4" />
-        </Button>
-      </div>
+      <h2 className="text-lg font-semibold">{t('resumeTitle')}</h2>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {metrics.map((metric) => (
-          <Card key={metric.id}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">{metric.title}</CardTitle>
-              <metric.icon className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <p className="text-xs text-muted-foreground">{metric.subtitle}</p>
-              <div className="mt-2 space-y-2">
-                <div className="flex items-center justify-between text-xs">
-                  <span className={`px-2 py-1 rounded-full ${statusColors[metric.status]}`}>{metric.status}</span>
-                  <span className="text-muted-foreground">
-                    {metric.current} / {metric.target} {metric.unit}
-                  </span>
-                </div>
-                <div className="w-full bg-secondary rounded-full h-1.5">
-                  <div
-                    className="bg-primary h-1.5 rounded-full"
-                    style={{ width: `${Math.min(metric.progress, 100)}%` }}
-                  />
-                </div>
-                <div className="flex justify-between items-center text-sm">
-                  <span className="font-medium">
-                    {metric.unit}
-                    {metric.target.toLocaleString()}
-                  </span>
-                  <span className="text-muted-foreground">{metric.progress}% complete</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-normal text-primary">
+              {t('studentsRegistered')}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between text-xs">
+              <span className="font-bold text-3xl">1,234</span>
+              <span
+                className={`px-2 py-1 rounded-sm bg-blue-100 text-blue-800 dark:bg-blue-200`}
+              >
+                <UsersThree
+                  weight="fill"
+                  size={32}
+                  className="text-blue-700 dark:text-blue-900"
+                />
+              </span>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-normal text-primary">
+              {t('incidentsRecorded')}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between text-xs">
+              <span className="font-bold text-3xl">103</span>
+              <span
+                className={`px-1.5 py-1.5 rounded-lg bg-purple-100 text-purple-800 dark:bg-purple-200`}
+              >
+                <ClockCounterClockwise
+                  weight="fill"
+                  size={32}
+                  className="text-purple-700 dark:text-purple-700"
+                />
+              </span>
+            </div>
+            <span className="text-xs text-muted-foreground">
+              {t('last30Days')}
+            </span>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-normal text-primary">
+              {t('mainProblems')}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between text-xs">
+              <span className="font-bold text-3xl">Bullying</span>
+              <span
+                className={`px-2 py-1 rounded-sm bg-red-100 text-red-800 dark:bg-red-200`}
+              >
+                <Warning
+                  weight="fill"
+                  size={32}
+                  className="text-red-700 dark:text-red-700"
+                />
+              </span>
+            </div>
+            <span className="text-xs text-muted-foreground">
+              {t('last30Days')}
+            </span>
+          </CardContent>
+        </Card>
       </div>
     </div>
   )
 }
-

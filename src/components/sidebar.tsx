@@ -10,7 +10,7 @@ import {
 import { cn } from '@/lib/utils'
 import { BarChart2, ChevronLeft, Home, Menu, Settings } from 'lucide-react'
 import Image from 'next/image'
-import Link from 'next/link'
+import { Link } from '@/i18n/routing'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import DarkLogo from '../../public/dark-logo.svg'

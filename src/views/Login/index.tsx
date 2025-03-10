@@ -1,17 +1,16 @@
 'use client'
 
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { cn } from '@/lib/utils'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Chrome } from 'lucide-react'
 import Image from 'next/image'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 import SideLoginImage from '../../../public/full-shot-kid-cheating-school.jpg'
-import { Chrome, Facebook } from 'lucide-react'
-import { GitHubLogoIcon } from '@radix-ui/react-icons'
 
 const loginSchema = z.object({
   email: z.string().email('E-mail inválido'),
@@ -90,18 +89,10 @@ export function LoginForm({
                   Ou continue com
                 </span>
               </div>
-              <div className="grid grid-cols-3 gap-4">
-                <Button variant="outline" className="w-full">
-                  <GitHubLogoIcon />
-                  <span className="sr-only">Entrar com GitHub</span>
-                </Button>
+              <div>
                 <Button variant="outline" className="w-full">
                   <Chrome />
                   <span className="sr-only">Entrar com Google</span>
-                </Button>
-                <Button variant="outline" className="w-full">
-                  <Facebook />
-                  <span className="sr-only">Entrar com Facebook</span>
                 </Button>
               </div>
               <div className="text-center text-sm">
