@@ -7,23 +7,33 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { cn } from '@/lib/utils'
-import { BarChart2, ChevronLeft, Home, Menu, Settings } from 'lucide-react'
-import Image from 'next/image'
 import { Link } from '@/i18n/routing'
+import { cn } from '@/lib/utils'
+import {
+  CaretLeft,
+  ChalkboardTeacher,
+  ChartLine,
+  Gear,
+  House,
+  List,
+  Student,
+} from '@phosphor-icons/react'
+import { useTheme } from 'next-themes'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import DarkLogo from '../../public/dark-logo.svg'
 import LightLogo from '../../public/light-logo.svg'
-import { useTheme } from 'next-themes'
 
 const navigation = [
-  { name: 'Inicio', href: '/', icon: Home },
-  { name: 'Estatísticas', href: '/analytics', icon: BarChart2 },
+  { name: 'Inicio', href: '/', icon: House },
+  { name: 'Alunos', href: '/students', icon: Student },
+  { name: 'Estatísticas', href: '/analytics', icon: ChartLine },
+  { name: 'Pedagogos', href: '/pedagogues', icon: ChalkboardTeacher },
 ]
 
 const bottomNavigation = [
-  { name: 'Configurações', href: '/settings', icon: Settings },
+  { name: 'Configurações', href: '/settings', icon: Gear },
 ]
 
 export function Sidebar() {
@@ -75,7 +85,7 @@ export function Sidebar() {
           onClick={() => setIsMobileOpen(!isMobileOpen)}
           aria-label="Toggle sidebar"
         >
-          <Menu className="h-6 w-6" />
+          <List className="h-6 w-6" />
         </button>
         <div
           className={cn(
@@ -104,7 +114,7 @@ export function Sidebar() {
                 className={cn('ml-auto h-8 w-8', isCollapsed && 'ml-0')}
                 onClick={() => setIsCollapsed(!isCollapsed)}
               >
-                <ChevronLeft
+                <CaretLeft
                   className={cn(
                     'h-4 w-4 transition-transform',
                     isCollapsed && 'rotate-180'
