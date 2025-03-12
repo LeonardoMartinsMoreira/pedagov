@@ -15,19 +15,28 @@ import { useState } from 'react'
 export function OcorrenciaDialog({
   isVisible,
   closeDialog,
+  idSelectedStudent,
 }: {
   isVisible: boolean
   closeDialog: () => void
+  idSelectedStudent: number
 }) {
-  const [selectedStudent, setSelectedStudent] = useState<string[]>([])
+  const defaultSelectedStudent = students1000.find(
+    ({ id }) => id === idSelectedStudent
+  )?.id
+
+  console.log(idSelectedStudent, defaultSelectedStudent)
+
+  const [selectedStudent, setSelectedStudent] = useState<string[]>([
+    defaultSelectedStudent?.toString() as string,
+  ])
 
   return (
     <Dialog open={isVisible} onOpenChange={closeDialog}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="flex flex-col gap-y-3 sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Registrar nova ocorrência</DialogTitle>
         </DialogHeader>
-
         <Label>Selecione o(s) Aluno(s)</Label>
         <MultiSelect
           options={students1000
@@ -52,10 +61,11 @@ export function OcorrenciaDialog({
           placeholder="Selecione o(s) Aluno(s)"
           variant="inverted"
         />
-
         <Label>Motivo</Label>
-        <Textarea></Textarea>
-
+        <Textarea
+          aria-describedby={undefined}
+          className="resize-none h-32"
+        ></Textarea>
         <Button>Adicionar ocorrência</Button>
       </DialogContent>
     </Dialog>
