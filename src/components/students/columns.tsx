@@ -12,61 +12,69 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { useDialogState } from '@/hooks/useDialogState'
+import { OcorrenciaDialog } from './OcorrenciaDialog/OcorrenciaDialog'
 
 export type Payment = {
-  id: string
-  amount: number
-  status: 'pending' | 'processing' | 'success' | 'failed'
-  email: string
+  id: number
+  nome: string
+  serie: string
+  turma: string
 }
 
 export const columns: ColumnDef<Payment>[] = [
   {
-    accessorKey: 'status',
-    header: 'Status',
-  },
-  {
-    accessorKey: 'email',
+    accessorKey: 'nome',
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Email
+          Nome
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
     },
   },
+
   {
-    accessorKey: 'amount',
-    header: 'Amount',
+    accessorKey: 'serie',
+    header: 'Serie',
+  },
+  {
+    accessorKey: 'turma',
+    header: 'Turma',
   },
   {
     id: 'actions',
     cell: ({ row }) => {
-      const payment = row.original
+      const student = row.original
+
+      const ocorrenciaDialog = useDialogState()
 
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
+              <span className="sr-only">Abrir menu</span>
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem>
+            <DropdownMenuLabel>Ações</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+            <DropdownMenuItem>Ver Perfil do Aluno</DropdownMenuItem>
+            <DropdownMenuItem onClick={ocorrenciaDialog.openDialog}>
+              Registrar Ocorrência
+            </DropdownMenuItem>
+            <DropdownMenuItem>Deletar aluno</DropdownMenuItem>
           </DropdownMenuContent>
+
+          <OcorrenciaDialog
+            closeDialog={ocorrenciaDialog.closeDialog}
+            isVisible={ocorrenciaDialog.isVisible}
+          />
         </DropdownMenu>
       )
     },
