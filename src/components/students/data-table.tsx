@@ -25,6 +25,8 @@ import { Input } from '../ui/input'
 import { Select, SelectContent, SelectTrigger, SelectValue } from '../ui/select'
 import { SelectItem } from '@radix-ui/react-select'
 import { faker } from '@faker-js/faker'
+import { AdicionarAlunoDialog } from './AdicionarAlunoDialog'
+import { useDialogState } from '@/hooks/useDialogState'
 
 const generateFakeClass = () => {
   const series = `${faker.number.int({ min: 1, max: 9 })}º Ano`
@@ -50,6 +52,8 @@ export function StudentsDataTable<TData, TValue>({
   const [globalFilter, setGlobalFilter] = useState<string[]>([])
   const [filterByClass, setFilterByClass] = useState('')
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+
+  const adicionarAluno = useDialogState()
 
   const table = useReactTable({
     data,
@@ -111,7 +115,7 @@ export function StudentsDataTable<TData, TValue>({
           </div>
         </div>
 
-        <Button>Adicionar Aluno</Button>
+        <Button onClick={adicionarAluno.openDialog}>Adicionar Aluno</Button>
       </div>
       <div className="rounded-md border">
         <Table>
@@ -181,6 +185,11 @@ export function StudentsDataTable<TData, TValue>({
           Próximo
         </Button>
       </div>
+
+      <AdicionarAlunoDialog
+        closeDialog={adicionarAluno.closeDialog}
+        isVisible={adicionarAluno.isVisible}
+      />
     </div>
   )
 }
