@@ -72,6 +72,7 @@ export const columns: ColumnDef<Payment>[] = [
           </DropdownMenuContent>
 
           <OcorrenciaDialog
+            idSelectedStudent={student.id}
             closeDialog={ocorrenciaDialog.closeDialog}
             isVisible={ocorrenciaDialog.isVisible}
           />
