@@ -25,8 +25,6 @@ export function OcorrenciaDialog({
     ({ id }) => id === idSelectedStudent
   )?.id
 
-  console.log(idSelectedStudent, defaultSelectedStudent)
-
   const [selectedStudent, setSelectedStudent] = useState<string[]>([
     defaultSelectedStudent?.toString() as string,
   ])

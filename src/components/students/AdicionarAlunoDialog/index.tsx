@@ -27,7 +27,7 @@ export function AdicionarAlunoDialog({
         </DialogHeader>
 
         <form className="flex flex-col gap-y-4">
-          <div className="flex flex-col gap-y-2">
+          <div className="flex flex-col gap-y-3">
             <div className="flex gap-x-4">
               <div>
                 <Label>Nome do aluno</Label>
@@ -42,11 +42,15 @@ export function AdicionarAlunoDialog({
 
             <Label>Telefone responsável</Label>
             <Input placeholder="Telefone / Whatsapp" {...register('tel')} />
-            <div>
+            <div className="flex flex-col gap-y-3">
+              <Label>
+                Foto do aluno{' '}
+                <span className="text-muted-foreground text-xs">
+                  (Opcional)
+                </span>
+              </Label>
               <UploadImage setValue={setValue} />
-              <span className="text-xs text-muted-foreground">
-                São permitidos JPG, GIF ou PNG. Tamanho máximo 1.5MB
-              </span>
+              
             </div>
           </div>
 
