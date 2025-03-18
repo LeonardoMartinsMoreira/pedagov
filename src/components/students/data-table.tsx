@@ -38,7 +38,7 @@ const generateFakeClass = () => {
   }
 }
 
-const fakeClass = Array.from({ length: 6 }, () => generateFakeClass())
+export const fakeClass = Array.from({ length: 6 }, () => generateFakeClass())
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]

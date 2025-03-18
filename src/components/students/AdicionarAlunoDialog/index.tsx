@@ -1,3 +1,4 @@
+import { Combobox } from '@/components/combo-box'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -8,7 +9,8 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import UploadImage from '@/components/upload-image'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
+import { fakeClass } from '../data-table'
 
 export function AdicionarAlunoDialog({
   isVisible,
@@ -17,7 +19,7 @@ export function AdicionarAlunoDialog({
   isVisible: boolean
   closeDialog: () => void
 }) {
-  const { register, setValue } = useForm()
+  const { register, setValue, control, getValues } = useForm()
 
   return (
     <Dialog open={isVisible} onOpenChange={closeDialog}>
@@ -36,7 +38,20 @@ export function AdicionarAlunoDialog({
 
               <div>
                 <Label>Turma</Label>
-                <Input placeholder="Turma" {...register('turma')} />
+                <Controller
+                  name="turma"
+                  control={control}
+                  render={({ field }) => (
+                    <Combobox
+                      options={fakeClass.map(({ serie, turma }) => ({
+                        label: `${serie} ${turma}`,
+                        value: `${serie} ${turma}`,
+                      }))}
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
+                  )}
+                />
               </div>
             </div>
 
@@ -50,7 +65,6 @@ export function AdicionarAlunoDialog({
                 </span>
               </Label>
               <UploadImage setValue={setValue} />
-              
             </div>
           </div>
 
