@@ -1,4 +1,3 @@
-import { Combobox } from '@/components/combo-box'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -6,11 +5,27 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import UploadImage from '@/components/upload-image'
-import { Controller, useForm } from 'react-hook-form'
-import { fakeClass } from '../data-table'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+
+const AdicionarAlunoSchema = z.object({
+  name: z.string({ message: 'Nome do aluno é obrigatório' }),
+  turma: z.string(),
+  tel: z.string().nullish(),
+})
+
+export type IAdicionarAluno = z.infer<typeof AdicionarAlunoSchema>
 
 export function AdicionarAlunoDialog({
   isVisible,
@@ -19,7 +34,13 @@ export function AdicionarAlunoDialog({
   isVisible: boolean
   closeDialog: () => void
 }) {
-  const { register, setValue, control, getValues } = useForm()
+  const form = useForm({
+    resolver: zodResolver(AdicionarAlunoSchema),
+  })
+
+  const onSubmit = (data: IAdicionarAluno) => {
+    console.log(data)
+  }
 
   return (
     <Dialog open={isVisible} onOpenChange={closeDialog}>
@@ -28,48 +49,57 @@ export function AdicionarAlunoDialog({
           <DialogTitle>Adicionar novo aluno</DialogTitle>
         </DialogHeader>
 
-        <form className="flex flex-col gap-y-4">
-          <div className="flex flex-col gap-y-3">
-            <div className="flex gap-x-4">
-              <div>
-                <Label>Nome do aluno</Label>
-                <Input placeholder="Nome completo" {...register('name')} />
-              </div>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col gap-y-4"
+          >
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Nome</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Nome completo" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-              <div>
-                <Label>Turma</Label>
-                <Controller
-                  name="turma"
-                  control={control}
-                  render={({ field }) => (
-                    <Combobox
-                      options={fakeClass.map(({ serie, turma }) => ({
-                        label: `${serie} ${turma}`,
-                        value: `${serie} ${turma}`,
-                      }))}
-                      value={field.value}
-                      onChange={field.onChange}
-                    />
-                  )}
-                />
-              </div>
-            </div>
+            <FormField
+              control={form.control}
+              name="turma"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Turma</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Turma/Serie" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-            <Label>Telefone responsável</Label>
-            <Input placeholder="Telefone / Whatsapp" {...register('tel')} />
-            <div className="flex flex-col gap-y-3">
-              <Label>
-                Foto do aluno{' '}
-                <span className="text-muted-foreground text-xs">
-                  (Opcional)
-                </span>
-              </Label>
-              <UploadImage setValue={setValue} />
-            </div>
-          </div>
+            <FormField
+              control={form.control}
+              name="tel"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Telefone</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Telefone responsavel" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit">Submit</Button>
+          </form>
 
-          <Button type="submit">Adicionar aluno</Button>
-        </form>
+          <UploadImage setValue={form.setValue} />
+        </Form>
       </DialogContent>
     </Dialog>
   )

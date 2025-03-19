@@ -24,7 +24,6 @@ export default function UploadImage({
   }
 
   useEffect(() => {
-    console.log(image)
     setValue('profileImage', image)
   }, [image])
 
