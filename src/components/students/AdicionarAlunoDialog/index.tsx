@@ -11,7 +11,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
+  FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import UploadImage from '@/components/upload-image'
@@ -21,7 +21,7 @@ import { z } from 'zod'
 
 const AdicionarAlunoSchema = z.object({
   name: z.string({ message: 'Nome do aluno é obrigatório' }),
-  turma: z.string(),
+  turma: z.string({ message: 'Selecione uma turma' }),
   tel: z.string().nullish(),
 })
 
@@ -87,18 +87,41 @@ export function AdicionarAlunoDialog({
               name="tel"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Telefone</FormLabel>
+                  <FormLabel>
+                    Telefone do responsável{' '}
+                    <span className="text-xs text-muted-foreground">
+                      (Opcional)
+                    </span>
+                  </FormLabel>
                   <FormControl>
-                    <Input placeholder="Telefone responsavel" {...field} />
+                    <Input placeholder="Whatsapp/Telefone" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name="foto"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    Foto do aluno{' '}
+                    <span className="text-xs text-muted-foreground">
+                      (Opcional)
+                    </span>
+                  </FormLabel>
+                  <FormControl>
+                    <UploadImage trigger={form.trigger} setValue={form.setValue} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <Button type="submit">Submit</Button>
           </form>
-
-          <UploadImage setValue={form.setValue} />
         </Form>
       </DialogContent>
     </Dialog>

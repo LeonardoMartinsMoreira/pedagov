@@ -2,14 +2,9 @@ import { useEffect, useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
-import { FieldValues, UseFormSetValue } from 'react-hook-form'
 import { Separator } from './ui/separator'
 
-export default function UploadImage({
-  setValue,
-}: {
-  setValue: UseFormSetValue<FieldValues>
-}) {
+export default function UploadImage({ setValue, trigger }) {
   const [image, setImage] = useState<string | null>(null)
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -17,15 +12,15 @@ export default function UploadImage({
     if (file) {
       const reader = new FileReader()
       reader.onloadend = () => {
-        setImage(reader.result as string)
+        const imageData = reader.result as string
+        setImage(imageData)
+
+        setValue('foto', imageData) // ✅ Agora está salvando corretamente
+        trigger('foto') // ✅ Garante que o React Hook Form detecta a mudança
       }
       reader.readAsDataURL(file)
     }
   }
-
-  useEffect(() => {
-    setValue('profileImage', image)
-  }, [image])
 
   return (
     <div className="flex flex-col">
@@ -58,8 +53,8 @@ export default function UploadImage({
           id="file-upload"
           type="file"
           accept="image/*"
-          onChange={handleFileChange}
           className="hidden"
+          onChange={handleFileChange} // ✅ Agora salva corretamente
         />
       </div>
     </div>
