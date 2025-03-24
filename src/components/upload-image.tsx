@@ -1,10 +1,17 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
 import { Separator } from './ui/separator'
+import { UseFormSetValue, UseFormTrigger } from 'react-hook-form'
+import { IAdicionarAluno } from './students/AdicionarAlunoDialog'
 
-export default function UploadImage({ setValue, trigger }) {
+interface IUploadImage {
+  setValue: UseFormSetValue<IAdicionarAluno>
+  trigger: UseFormTrigger<IAdicionarAluno>
+}
+
+export function UploadImage({ setValue, trigger }: IUploadImage) {
   const [image, setImage] = useState<string | null>(null)
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -15,8 +22,8 @@ export default function UploadImage({ setValue, trigger }) {
         const imageData = reader.result as string
         setImage(imageData)
 
-        setValue('foto', imageData) // ✅ Agora está salvando corretamente
-        trigger('foto') // ✅ Garante que o React Hook Form detecta a mudança
+        setValue('photo', imageData)
+        trigger('photo')
       }
       reader.readAsDataURL(file)
     }
@@ -54,7 +61,7 @@ export default function UploadImage({ setValue, trigger }) {
           type="file"
           accept="image/*"
           className="hidden"
-          onChange={handleFileChange} // ✅ Agora salva corretamente
+          onChange={handleFileChange}
         />
       </div>
     </div>

@@ -14,15 +14,16 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import UploadImage from '@/components/upload-image'
+import { UploadImage } from '@/components/upload-image'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 const AdicionarAlunoSchema = z.object({
   name: z.string({ message: 'Nome do aluno é obrigatório' }),
-  turma: z.string({ message: 'Selecione uma turma' }),
-  tel: z.string().nullish(),
+  class: z.string({ message: 'Selecione uma turma' }),
+  responsablePhone: z.string().optional(),
+  photo: z.string().optional(),
 })
 
 export type IAdicionarAluno = z.infer<typeof AdicionarAlunoSchema>
@@ -71,7 +72,7 @@ export function AdicionarAlunoDialog({
 
               <FormField
                 control={form.control}
-                name="turma"
+                name="class"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Turma</FormLabel>
@@ -86,7 +87,7 @@ export function AdicionarAlunoDialog({
 
             <FormField
               control={form.control}
-              name="tel"
+              name="responsablePhone"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
@@ -96,7 +97,11 @@ export function AdicionarAlunoDialog({
                     </span>
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder="Whatsapp/Telefone" {...field} />
+                    <Input
+                      defaultValue=""
+                      placeholder="Whatsapp/Telefone"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -105,7 +110,7 @@ export function AdicionarAlunoDialog({
 
             <FormField
               control={form.control}
-              name="foto"
+              name="photo"
               render={() => (
                 <FormItem>
                   <FormLabel>
