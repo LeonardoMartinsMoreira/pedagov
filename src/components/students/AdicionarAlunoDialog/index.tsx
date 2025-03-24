@@ -54,33 +54,35 @@ export function AdicionarAlunoDialog({
             onSubmit={form.handleSubmit(onSubmit)}
             className="flex flex-col gap-y-4"
           >
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nome</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Nome completo" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="flex gap-x-2">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nome</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Nome completo" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={form.control}
-              name="turma"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Turma</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Turma/Serie" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={form.control}
+                name="turma"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Turma</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Turma/Serie" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <FormField
               control={form.control}
@@ -104,7 +106,7 @@ export function AdicionarAlunoDialog({
             <FormField
               control={form.control}
               name="foto"
-              render={({ field }) => (
+              render={() => (
                 <FormItem>
                   <FormLabel>
                     Foto do aluno{' '}
@@ -113,7 +115,10 @@ export function AdicionarAlunoDialog({
                     </span>
                   </FormLabel>
                   <FormControl>
-                    <UploadImage trigger={form.trigger} setValue={form.setValue} />
+                    <UploadImage
+                      trigger={form.trigger}
+                      setValue={form.setValue}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
