@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/rules-of-hooks */
+
 'use client'
 
 import { ColumnDef } from '@tanstack/react-table'
@@ -13,7 +15,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useDialogState } from '@/hooks/useDialogState'
-import { OcorrenciaDialog } from './OcorrenciaDialog/OcorrenciaDialog'
+import { OcorrenciaDialog } from './OcorrenciaDialog'
+import { StudentProfileDialog } from './StudentProfileDialog'
 
 export type Payment = {
   id: number
@@ -52,6 +55,7 @@ export const columns: ColumnDef<Payment>[] = [
       const student = row.original
 
       const ocorrenciaDialog = useDialogState()
+      const studentProfileDialog = useDialogState()
 
       return (
         <DropdownMenu>
@@ -64,7 +68,9 @@ export const columns: ColumnDef<Payment>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Ver Perfil do Aluno</DropdownMenuItem>
+            <DropdownMenuItem onClick={studentProfileDialog.openDialog}>
+              Ver Perfil do Aluno
+            </DropdownMenuItem>
             <DropdownMenuItem onClick={ocorrenciaDialog.openDialog}>
               Registrar Ocorrência
             </DropdownMenuItem>
@@ -75,6 +81,12 @@ export const columns: ColumnDef<Payment>[] = [
             idSelectedStudent={student.id}
             closeDialog={ocorrenciaDialog.closeDialog}
             isVisible={ocorrenciaDialog.isVisible}
+          />
+
+          <StudentProfileDialog
+            idSelectedStudent={student.id}
+            closeDialog={studentProfileDialog.closeDialog}
+            isVisible={studentProfileDialog.isVisible}
           />
         </DropdownMenu>
       )
