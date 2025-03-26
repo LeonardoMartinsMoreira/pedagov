@@ -2,13 +2,16 @@
 
 import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { OverviewCards } from '@/components/overview-cards'
-import { RevenueChart } from '@/components/revenue-chart'
 import { RecentTransactions } from '@/components/recent-transactions'
-import { AccountGrowth } from '@/components/account-growth'
 import { TopProducts } from '@/components/top-products'
 import { UserActivity } from '@/components/user-activity'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 export function OverviewTab() {
   const [comparisonPeriod, setComparisonPeriod] = useState('previous_month')
@@ -31,21 +34,18 @@ export function OverviewTab() {
           </Select>
         </div>
       </div>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <OverviewCards comparisonPeriod={comparisonPeriod} />
-      </div>
+
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7 mt-4">
         <Card className="col-span-4">
           <CardHeader>
             <CardTitle className="text-xl font-semibold">Revenue</CardTitle>
           </CardHeader>
-          <CardContent className="pl-2">
-            <RevenueChart comparisonPeriod={comparisonPeriod} />
-          </CardContent>
         </Card>
         <Card className="col-span-3">
           <CardHeader>
-            <CardTitle className="text-xl font-semibold">Recent Transactions</CardTitle>
+            <CardTitle className="text-xl font-semibold">
+              Recent Transactions
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <RecentTransactions />
@@ -55,15 +55,16 @@ export function OverviewTab() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7 mt-4">
         <Card className="col-span-4">
           <CardHeader>
-            <CardTitle className="text-xl font-semibold">Account Growth</CardTitle>
+            <CardTitle className="text-xl font-semibold">
+              Account Growth
+            </CardTitle>
           </CardHeader>
-          <CardContent>
-            <AccountGrowth comparisonPeriod={comparisonPeriod} />
-          </CardContent>
         </Card>
         <Card className="col-span-3">
           <CardHeader>
-            <CardTitle className="text-xl font-semibold">Top Products</CardTitle>
+            <CardTitle className="text-xl font-semibold">
+              Top Products
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <TopProducts />
@@ -73,7 +74,9 @@ export function OverviewTab() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7 mt-4">
         <Card className="col-span-4">
           <CardHeader>
-            <CardTitle className="text-xl font-semibold">User Activity</CardTitle>
+            <CardTitle className="text-xl font-semibold">
+              User Activity
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <UserActivity />

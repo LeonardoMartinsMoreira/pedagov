@@ -1,5 +1,3 @@
-import { students1000 } from '@/app/[locale]/(dashboard)/students/page'
-import { MultiSelect } from '@/components/multi-select'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -19,6 +17,8 @@ export function StudentProfileDialog({
   closeDialog: () => void
   idSelectedStudent: number
 }) {
+  console.log(idSelectedStudent, 'perfil do aluno')
+
   return (
     <Dialog open={isVisible} onOpenChange={closeDialog}>
       <DialogContent className="flex flex-col gap-y-3 sm:max-w-[425px]">

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // src/components/multi-select.tsx
 
 import * as React from 'react'

@@ -1,4 +1,3 @@
-import { students1000 } from '@/app/[locale]/(dashboard)/students/page'
 import { MultiSelect } from '@/components/multi-select'
 import { Button } from '@/components/ui/button'
 import {
@@ -9,6 +8,7 @@ import {
 } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { students1000 } from '@/faker/students'
 import { useState } from 'react'
 
 export function OcorrenciaDialog({
