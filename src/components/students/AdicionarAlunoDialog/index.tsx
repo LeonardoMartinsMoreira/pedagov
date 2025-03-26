@@ -39,12 +39,18 @@ export function AdicionarAlunoDialog({
     resolver: zodResolver(AdicionarAlunoSchema),
   })
 
+  const onCloseDialog = () => {
+    closeDialog()
+    form.reset()
+  }
+
   const onSubmit = (data: IAdicionarAluno) => {
     console.log(data)
+    onCloseDialog()
   }
 
   return (
-    <Dialog open={isVisible} onOpenChange={closeDialog}>
+    <Dialog open={isVisible} onOpenChange={onCloseDialog}>
       <DialogContent className="flex flex-col gap-y-4">
         <DialogHeader>
           <DialogTitle>Adicionar novo aluno</DialogTitle>

@@ -4,8 +4,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { DateRangePicker } from '@/components/date-range-picker'
 import { OverviewTab } from '@/components/overview-tab'
 import { AnalyticsTab } from '@/components/analytics-tab'
-import { ReportsTab } from '@/components/reports-tab'
-import { NotificationsTab } from '@/components/notifications-tab'
 import { Button } from '@/components/ui/button'
 import { Download } from 'lucide-react'
 
@@ -21,7 +19,10 @@ export default function AnalyticsPage() {
         <h2 className="text-3xl font-bold tracking-tight">Analytics</h2>
         <div className="flex items-center space-x-2">
           <DateRangePicker />
-          <Button onClick={handleExportData} className="flex items-center gap-2">
+          <Button
+            onClick={handleExportData}
+            className="flex items-center gap-2"
+          >
             <Download className="h-4 w-4" />
             Export Data
           </Button>
@@ -39,12 +40,6 @@ export default function AnalyticsPage() {
         </TabsContent>
         <TabsContent value="analytics" className="space-y-4">
           <AnalyticsTab />
-        </TabsContent>
-        <TabsContent value="reports" className="space-y-4">
-          <ReportsTab />
-        </TabsContent>
-        <TabsContent value="notifications" className="space-y-4">
-          <NotificationsTab />
         </TabsContent>
       </Tabs>
     </div>
