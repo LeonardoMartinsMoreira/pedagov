@@ -28,8 +28,8 @@ import LightLogo from '../../public/light-logo.svg'
 const navigation = [
   { name: 'Inicio', href: '/', icon: House },
   { name: 'Alunos', href: '/students', icon: Student },
-  { name: 'Estatísticas', href: '/analytics', icon: ChartLine },
   { name: 'Pedagogos', href: '/pedagogues', icon: ChalkboardTeacher },
+  { name: 'Estatísticas', href: '/analytics', icon: ChartLine },
 ]
 
 const bottomNavigation = [

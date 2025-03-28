@@ -19,41 +19,25 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Button } from '../ui/button'
-import { useEffect, useState } from 'react'
-import { Input } from '../ui/input'
-import { Select, SelectContent, SelectTrigger, SelectValue } from '../ui/select'
-import { SelectItem } from '@radix-ui/react-select'
-import { faker } from '@faker-js/faker'
-import { AdicionarAlunoDialog } from '../pedagogues/AddPedagogueDialog'
 import { useDialogState } from '@/hooks/useDialogState'
-
-const generateFakeClass = () => {
-  const series = `${faker.number.int({ min: 1, max: 9 })}º Ano`
-  const turma = faker.helpers.arrayElement(['A', 'B', 'C', 'D', 'E'])
-
-  return {
-    serie: series,
-    turma: turma,
-  }
-}
-
-export const fakeClass = Array.from({ length: 6 }, () => generateFakeClass())
+import { useState } from 'react'
+import { Button } from '../ui/button'
+import { Input } from '../ui/input'
+import { AddPedagogueDialog } from './AddPedagogueDialog'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
 }
 
-export function StudentsDataTable<TData, TValue>({
+export function PedagoguesDataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
   const [globalFilter, setGlobalFilter] = useState<string[]>([])
-  const [filterByClass, setFilterByClass] = useState('')
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 
-  const adicionarAluno = useDialogState()
+  const addPedagogue = useDialogState()
 
   const table = useReactTable({
     data,
@@ -70,52 +54,19 @@ export function StudentsDataTable<TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
   })
 
-  useEffect(() => {
-    if (filterByClass) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const [serie, ano, turma] = filterByClass.split(' ')
-
-      return setColumnFilters([
-        { id: 'serie', value: `${serie} ${ano}` },
-        { id: 'turma', value: turma },
-      ])
-    }
-    setColumnFilters([])
-  }, [filterByClass])
-
   return (
     <div>
       <div className="flex items-center justify-between py-4">
         <div className="w-full flex gap-x-4">
           <Input
-            placeholder="Filtre por Nome / Turma / Serie"
+            placeholder="Filtre por Nome"
             value={globalFilter ?? ''}
             onChange={(e) => table.setGlobalFilter(String(e.target.value))}
             className="max-w-sm"
           />
-
-          <div className="space-y-2">
-            <Select value={filterByClass} onValueChange={setFilterByClass}>
-              <SelectTrigger id="class">
-                <SelectValue placeholder="Selecione uma turma" />
-                {filterByClass && <span>{filterByClass}</span>}
-              </SelectTrigger>
-              <SelectContent className="p-2">
-                {fakeClass.map(({ serie, turma }) => {
-                  const itemId = `${serie} ${turma}`
-
-                  return (
-                    <SelectItem key={itemId} value={itemId}>
-                      {itemId}
-                    </SelectItem>
-                  )
-                })}
-              </SelectContent>
-            </Select>
-          </div>
         </div>
 
-        <Button onClick={adicionarAluno.openDialog}>Adicionar Aluno</Button>
+        <Button onClick={addPedagogue.openDialog}>Adicionar Pedadogo(a)</Button>
       </div>
       <div className="rounded-md border">
         <Table>
@@ -186,9 +137,9 @@ export function StudentsDataTable<TData, TValue>({
         </Button>
       </div>
 
-      <AdicionarAlunoDialog
-        closeDialog={adicionarAluno.closeDialog}
-        isVisible={adicionarAluno.isVisible}
+      <AddPedagogueDialog
+        isVisible={addPedagogue.isVisible}
+        closeDialog={addPedagogue.closeDialog}
       />
     </div>
   )
