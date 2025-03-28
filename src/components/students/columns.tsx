@@ -18,14 +18,14 @@ import { useDialogState } from '@/hooks/useDialogState'
 import { OcorrenciaDialog } from './OcorrenciaDialog'
 import { StudentProfileDialog } from './StudentProfileDialog'
 
-export type Payment = {
+type TAlunoTable = {
   id: number
   nome: string
   serie: string
   turma: string
 }
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<TAlunoTable>[] = [
   {
     accessorKey: 'nome',
     header: ({ column }) => {

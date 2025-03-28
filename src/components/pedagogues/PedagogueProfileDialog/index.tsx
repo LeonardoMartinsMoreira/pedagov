@@ -8,16 +8,16 @@ import {
 import { WhatsappLogo } from '@phosphor-icons/react/dist/ssr'
 import Image from 'next/image'
 
-export function StudentProfileDialog({
+export function PedagogueProfileDialog({
   isVisible,
   closeDialog,
-  idSelectedStudent,
+  idSelectedPedagogue,
 }: {
   isVisible: boolean
   closeDialog: () => void
-  idSelectedStudent: number
+  idSelectedPedagogue: number
 }) {
-  console.log(idSelectedStudent, 'perfil do aluno')
+  console.log(idSelectedPedagogue, 'perfil do aluno')
 
   return (
     <Dialog open={isVisible} onOpenChange={closeDialog}>
