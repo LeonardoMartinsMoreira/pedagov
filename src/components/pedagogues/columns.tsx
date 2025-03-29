@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { useDialogState } from '@/hooks/useDialogState'
 import { PedagogueProfileDialog } from './PedagogueProfileDialog'
+import { DeletePedagogueDialog } from './DeletePedagogueDialog'
 
 type TPedadogueTable = {
   id: number
@@ -69,6 +70,12 @@ export const columns: ColumnDef<TPedadogueTable>[] = [
             idSelectedPedagogue={row.original.id}
             isVisible={pedagogueProfileDialog.isVisible}
             closeDialog={pedagogueProfileDialog.closeDialog}
+          />
+
+          <DeletePedagogueDialog
+            closeDialog={deletePedagogue.closeDialog}
+            isVisible={deletePedagogue.isVisible}
+            idSelectedPedagogue={row.original.id}
           />
         </div>
       )

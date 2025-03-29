@@ -17,6 +17,7 @@ import {
 import { useDialogState } from '@/hooks/useDialogState'
 import { OccurrenceDialog } from './OccurrenceDialog'
 import { StudentProfileDialog } from './StudentProfileDialog'
+import { DeleteStudentDialog } from './DeleteStudentDialog'
 
 type TAlunoTable = {
   id: number
@@ -56,6 +57,7 @@ export const columns: ColumnDef<TAlunoTable>[] = [
 
       const occurrenceDialog = useDialogState()
       const studentProfileDialog = useDialogState()
+      const deleteStudentDialog = useDialogState()
 
       return (
         <DropdownMenu>
@@ -74,7 +76,7 @@ export const columns: ColumnDef<TAlunoTable>[] = [
             <DropdownMenuItem onClick={occurrenceDialog.openDialog}>
               Registrar Ocorrência
             </DropdownMenuItem>
-            <DropdownMenuItem>Deletar aluno</DropdownMenuItem>
+            <DropdownMenuItem onClick={deleteStudentDialog.openDialog}>Deletar aluno</DropdownMenuItem>
           </DropdownMenuContent>
 
           <OccurrenceDialog
@@ -87,6 +89,12 @@ export const columns: ColumnDef<TAlunoTable>[] = [
             idSelectedStudent={student.id}
             closeDialog={studentProfileDialog.closeDialog}
             isVisible={studentProfileDialog.isVisible}
+          />
+
+          <DeleteStudentDialog
+            closeDialog={deleteStudentDialog.closeDialog}
+            isVisible={deleteStudentDialog.isVisible}
+            idSelectedStudent={student.id}
           />
         </DropdownMenu>
       )
