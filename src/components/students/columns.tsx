@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useDialogState } from '@/hooks/useDialogState'
-import { OcorrenciaDialog } from './OcorrenciaDialog'
+import { OccurrenceDialog } from './OccurrenceDialog'
 import { StudentProfileDialog } from './StudentProfileDialog'
 
 type TAlunoTable = {
@@ -54,7 +54,7 @@ export const columns: ColumnDef<TAlunoTable>[] = [
     cell: ({ row }) => {
       const student = row.original
 
-      const ocorrenciaDialog = useDialogState()
+      const occurrenceDialog = useDialogState()
       const studentProfileDialog = useDialogState()
 
       return (
@@ -71,16 +71,16 @@ export const columns: ColumnDef<TAlunoTable>[] = [
             <DropdownMenuItem onClick={studentProfileDialog.openDialog}>
               Ver Perfil do Aluno
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={ocorrenciaDialog.openDialog}>
+            <DropdownMenuItem onClick={occurrenceDialog.openDialog}>
               Registrar Ocorrência
             </DropdownMenuItem>
             <DropdownMenuItem>Deletar aluno</DropdownMenuItem>
           </DropdownMenuContent>
 
-          <OcorrenciaDialog
+          <OccurrenceDialog
             idSelectedStudent={student.id}
-            closeDialog={ocorrenciaDialog.closeDialog}
-            isVisible={ocorrenciaDialog.isVisible}
+            closeDialog={occurrenceDialog.closeDialog}
+            isVisible={occurrenceDialog.isVisible}
           />
 
           <StudentProfileDialog
