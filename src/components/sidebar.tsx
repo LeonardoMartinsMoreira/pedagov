@@ -7,7 +7,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { Link } from '@/i18n/routing'
 import { cn } from '@/lib/utils'
 import {
   CaretLeft,
@@ -24,6 +23,7 @@ import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import DarkLogo from '../../public/dark-logo.svg'
 import LightLogo from '../../public/light-logo.svg'
+import Link from 'next/link'
 
 const navigation = [
   { name: 'Inicio', href: '/', icon: House },
