@@ -97,7 +97,7 @@ export function StudentsDataTable<TData, TValue>({
           <div className="space-y-2">
             <Select value={filterByClass} onValueChange={setFilterByClass}>
               <SelectTrigger id="class">
-                <SelectValue placeholder="Selecione uma turma" />
+                <SelectValue placeholder="Selecione uma turma"  />
                 {filterByClass && <span>{filterByClass}</span>}
               </SelectTrigger>
               <SelectContent className="p-2">
