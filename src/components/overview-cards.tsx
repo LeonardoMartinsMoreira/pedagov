@@ -1,34 +1,34 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { DollarSign, Users, CreditCard, TrendingUp } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { DollarSign, Users, CreditCard, TrendingUp } from 'lucide-react'
 
 const cards = [
   {
-    title: "Total Revenue",
+    title: 'Total Revenue',
     icon: DollarSign,
-    amount: "$45,231.89",
-    description: "+20.1% from last month",
-    trend: "up",
+    amount: '$45,231.89',
+    description: '+20.1% from last month',
+    trend: 'up',
   },
   {
-    title: "New Customers",
+    title: 'New Customers',
     icon: Users,
-    amount: "2,350",
-    description: "+180.1% from last month",
-    trend: "up",
+    amount: '2,350',
+    description: '+180.1% from last month',
+    trend: 'up',
   },
   {
-    title: "Active Accounts",
+    title: 'Active Accounts',
     icon: CreditCard,
-    amount: "12,234",
-    description: "+19% from last month",
-    trend: "up",
+    amount: '12,234',
+    description: '+19% from last month',
+    trend: 'up',
   },
   {
-    title: "Growth Rate",
+    title: 'Growth Rate',
     icon: TrendingUp,
-    amount: "18.6%",
-    description: "+5.4% from last month",
-    trend: "up",
+    amount: '18.6%',
+    description: '+5.4% from last month',
+    trend: 'up',
   },
 ]
 
@@ -45,14 +45,16 @@ export function OverviewCards() {
             <div className="text-2xl font-bold">{card.amount}</div>
             <p className="text-xs text-muted-foreground">{card.description}</p>
             <div
-              className={`mt-2 flex items-center text-xs ${card.trend === "up" ? "text-green-500" : "text-red-500"}`}
+              className={`mt-2 flex items-center text-xs ${
+                card.trend === 'up' ? 'text-green-500' : 'text-red-500'
+              }`}
             >
-              {card.trend === "up" ? (
+              {card.trend === 'up' ? (
                 <TrendingUp className="mr-1 h-3 w-3" />
               ) : (
                 <TrendingUp className="mr-1 h-3 w-3 transform rotate-180" />
               )}
-              {card.description.split(" ")[0]}
+              {card.description.split(' ')[0]}
             </div>
           </CardContent>
         </Card>
@@ -60,4 +62,3 @@ export function OverviewCards() {
     </>
   )
 }
-

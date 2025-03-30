@@ -14,7 +14,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import React from 'react'
-import { Link } from '@/i18n/routing'
+import Link from 'next/link'
 
 export function TopNav() {
   const pathname = usePathname()
@@ -32,7 +32,10 @@ export function TopNav() {
             {pathSegments.map((segment, index) => (
               <React.Fragment key={segment}>
                 <span className="text-muted-foreground">/</span>
-                <Link href={`/${pathSegments.slice(0, index + 1).join('/')}`} className="text-sm font-medium">
+                <Link
+                  href={`/${pathSegments.slice(0, index + 1).join('/')}`}
+                  className="text-sm font-medium"
+                >
                   {segment.charAt(0).toUpperCase() + segment.slice(1)}
                 </Link>
               </React.Fragment>
@@ -59,8 +62,12 @@ export function TopNav() {
             <DropdownMenuContent className="w-56" align="end" forceMount>
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">{settings.fullName}</p>
-                  <p className="text-xs leading-none text-muted-foreground">{settings.email}</p>
+                  <p className="text-sm font-medium leading-none">
+                    {settings.fullName}
+                  </p>
+                  <p className="text-xs leading-none text-muted-foreground">
+                    {settings.email}
+                  </p>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />

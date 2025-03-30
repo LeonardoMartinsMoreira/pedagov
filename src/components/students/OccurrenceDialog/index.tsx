@@ -11,7 +11,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { students1000 } from '@/faker/students'
 import { useState } from 'react'
 
-export function OcorrenciaDialog({
+export function OccurrenceDialog({
   isVisible,
   closeDialog,
   idSelectedStudent,

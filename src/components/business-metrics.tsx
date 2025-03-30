@@ -4,19 +4,16 @@ import {
   UsersThree,
   Warning,
 } from '@phosphor-icons/react'
-import { useTranslations } from 'next-intl'
 
 export function BusinessMetrics() {
-  const t = useTranslations('BusinessMetrics')
-
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-semibold">{t('resumeTitle')}</h2>
+      <h2 className="text-lg font-semibold">Resumo</h2>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-normal text-primary">
-              {t('studentsRegistered')}
+              Alunos Cadastrados
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -37,7 +34,7 @@ export function BusinessMetrics() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-normal text-primary">
-              {t('incidentsRecorded')}
+              Incidentes Registrados
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -54,14 +51,14 @@ export function BusinessMetrics() {
               </span>
             </div>
             <span className="text-xs text-muted-foreground">
-              {t('last30Days')}
+              Ultimos 30 dias
             </span>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-normal text-primary">
-              {t('mainProblems')}
+              Principais Problemas
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -78,7 +75,7 @@ export function BusinessMetrics() {
               </span>
             </div>
             <span className="text-xs text-muted-foreground">
-              {t('last30Days')}
+              Ultimos 30 dias
             </span>
           </CardContent>
         </Card>

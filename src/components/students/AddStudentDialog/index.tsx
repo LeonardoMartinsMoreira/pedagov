@@ -19,16 +19,16 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-const AdicionarAlunoSchema = z.object({
+const AddStdudentSchema = z.object({
   name: z.string({ message: 'Nome do aluno é obrigatório' }),
   class: z.string({ message: 'Selecione uma turma' }),
   responsablePhone: z.string().optional(),
   photo: z.string().optional(),
 })
 
-export type IAdicionarAluno = z.infer<typeof AdicionarAlunoSchema>
+export type IAddStudent = z.infer<typeof AddStdudentSchema>
 
-export function AdicionarAlunoDialog({
+export function AddStudentDialog({
   isVisible,
   closeDialog,
 }: {
@@ -36,7 +36,7 @@ export function AdicionarAlunoDialog({
   closeDialog: () => void
 }) {
   const form = useForm({
-    resolver: zodResolver(AdicionarAlunoSchema),
+    resolver: zodResolver(AddStdudentSchema),
   })
 
   const onCloseDialog = () => {
@@ -44,7 +44,7 @@ export function AdicionarAlunoDialog({
     form.reset()
   }
 
-  const onSubmit = (data: IAdicionarAluno) => {
+  const onSubmit = (data: IAddStudent) => {
     console.log(data)
     onCloseDialog()
   }

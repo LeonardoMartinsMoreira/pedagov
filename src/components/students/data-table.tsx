@@ -19,14 +19,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Button } from '../ui/button'
+import { useDialogState } from '@/hooks/useDialogState'
+import { faker } from '@faker-js/faker'
+import { SelectItem } from '@radix-ui/react-select'
 import { useEffect, useState } from 'react'
+import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 import { Select, SelectContent, SelectTrigger, SelectValue } from '../ui/select'
-import { SelectItem } from '@radix-ui/react-select'
-import { faker } from '@faker-js/faker'
-import { AdicionarAlunoDialog } from '../pedagogues/AddPedagogueDialog'
-import { useDialogState } from '@/hooks/useDialogState'
+import { AddStudentDialog } from './AddStudentDialog'
 
 const generateFakeClass = () => {
   const series = `${faker.number.int({ min: 1, max: 9 })}º Ano`
@@ -186,7 +186,7 @@ export function StudentsDataTable<TData, TValue>({
         </Button>
       </div>
 
-      <AdicionarAlunoDialog
+      <AddStudentDialog
         closeDialog={adicionarAluno.closeDialog}
         isVisible={adicionarAluno.isVisible}
       />
