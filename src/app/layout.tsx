@@ -2,6 +2,8 @@ import { ThemeProvider } from '@/components/theme-provider'
 import { Inter } from 'next/font/google'
 import type React from 'react'
 import '../styles/globals.css'
+import { SettingsProvider } from '@/contexts/settings-context'
+import { TooltipProvider } from '@/components/ui/tooltip'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -15,16 +17,19 @@ export const metadata = {
 
 export default async function LocaleLayout({
   children,
-  params: { locale },
 }: {
   children: React.ReactNode
   params: { locale: string }
 }) {
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html lang="pt-BR" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <main className="w-full">{children}</main>
+          <SettingsProvider>
+            <TooltipProvider delayDuration={0}>
+              <main className="w-full">{children}</main>
+            </TooltipProvider>
+          </SettingsProvider>
         </ThemeProvider>
       </body>
     </html>
