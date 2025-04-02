@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import Image from 'next/image'
 import { Separator } from './ui/separator'
 import { UseFormSetValue, UseFormTrigger } from 'react-hook-form'
-import { IAddStudent } from './pedagogues/AddPedagogueDialog'
+import { IAddStudent } from './students/AddStudentDialog'
 
 interface IUploadImage {
   setValue: UseFormSetValue<IAddStudent>

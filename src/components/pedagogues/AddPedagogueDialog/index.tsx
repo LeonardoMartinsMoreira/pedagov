@@ -40,18 +40,20 @@ const options = [
   },
 ]
 
-const AddStudentSchema = z.object({
+const AddPedagogueSchema = z.object({
   name: z.string().min(4, { message: 'Nome do pedagogo é obrigatório' }),
   email: z
     .string({ message: 'É obrigatório' })
     .email({ message: 'Insira um email válido' }),
-  school: z.array(z.string(), {
-    message: 'É obrigatório ao menos 1 escola de atuação',
-  }),
+  school: z
+    .array(z.string(), {
+      message: 'É obrigatório ao menos 1 escola de atuação',
+    })
+    .min(1, { message: 'É obrigatório ao menos 1 escola de atuação' }),
   isAdmin: z.boolean(),
 })
 
-export type IAddStudent = z.infer<typeof AddStudentSchema>
+export type IAddPedagogue = z.infer<typeof AddPedagogueSchema>
 
 export function AddPedagogueDialog({
   isVisible,
@@ -61,7 +63,7 @@ export function AddPedagogueDialog({
   closeDialog: () => void
 }) {
   const form = useForm({
-    resolver: zodResolver(AddStudentSchema),
+    resolver: zodResolver(AddPedagogueSchema),
     defaultValues: {
       email: '',
       school: [],
@@ -79,7 +81,7 @@ export function AddPedagogueDialog({
     form.reset()
   }
 
-  const onSubmit = (data: IAddStudent) => {
+  const onSubmit = (data: IAddPedagogue) => {
     console.log(data)
     onCloseDialog()
   }

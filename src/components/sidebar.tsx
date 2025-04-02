@@ -29,7 +29,7 @@ const navigation = [
   { name: 'Inicio', href: '/', icon: House },
   { name: 'Alunos', href: '/students', icon: Student },
   { name: 'Pedagogos', href: '/pedagogues', icon: ChalkboardTeacher },
-  { name: 'Estatísticas', href: '/analytics', icon: ChartLine },
+  { name: 'Ocorrências', href: '/occurrences', icon: ChartLine },
 ]
 
 const bottomNavigation = [
