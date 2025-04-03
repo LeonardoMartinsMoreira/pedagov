@@ -55,7 +55,6 @@ export function AddStudentDialog({
         <DialogHeader>
           <DialogTitle>Adicionar novo aluno</DialogTitle>
         </DialogHeader>
-
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -75,7 +74,6 @@ export function AddStudentDialog({
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="class"
@@ -90,7 +88,6 @@ export function AddStudentDialog({
                 )}
               />
             </div>
-
             <FormField
               control={form.control}
               name="responsablePhone"
@@ -135,8 +132,7 @@ export function AddStudentDialog({
                 </FormItem>
               )}
             />
-
-            <Button type="submit">Submit</Button>
+            <Button type="submit">Adicionar aluno(a)</Button>
           </form>
         </Form>
       </DialogContent>
