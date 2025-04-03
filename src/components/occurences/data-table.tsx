@@ -80,7 +80,7 @@ export function OccurrencesDataTable<TData, TValue>({
                 <SelectValue placeholder="Turma" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Todas as turmas</SelectItem>
+                <SelectItem value={null!}>Todas as turmas</SelectItem>
                 <SelectItem value="1º Ano A">1º Ano A</SelectItem>
                 <SelectItem value="2º Ano B">2º Ano B</SelectItem>
                 <SelectItem value="3º Ano C">3º Ano C</SelectItem>

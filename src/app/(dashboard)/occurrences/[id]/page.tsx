@@ -1,5 +1,6 @@
 'use client'
 
+import BackButton from '@/components/back-button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -33,12 +34,23 @@ export default function OccurrenceDetailsPage({
   return (
     <div className="container mx-auto py-6 max-w-5xl">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-        <div>
+        <div className="flex flex-col items-start gap-y-2">
+          <BackButton />
           <div className="flex items-center gap-2 mb-2">
             <h1 className="text-2xl md:text-3xl font-bold">
               Ocorrência #{params.id}
             </h1>
-            <Badge variant={getBadgeVariant(occurrence.type)}>
+            <Badge
+              variant={
+                getBadgeVariant(occurrence.type) as
+                  | 'default'
+                  | 'destructive'
+                  | 'outline'
+                  | 'secondary'
+                  | null
+                  | undefined
+              }
+            >
               {occurrence.type}
             </Badge>
           </div>
