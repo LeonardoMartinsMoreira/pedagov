@@ -204,7 +204,6 @@ export default function OccurrenceDetailsPage({
   )
 }
 
-// Sample data
 const occurrencesData = [
   {
     id: '1',

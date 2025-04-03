@@ -12,9 +12,7 @@ interface Occurrence {
   student: string
   type: string
   date: string
-  school: string
   class: string
-  status: string
 }
 
 export default function OccurrencesListPage() {
@@ -69,7 +67,21 @@ export default function OccurrencesListPage() {
           }
         }
 
-        return <Badge variant={getBadgeVariant(type)}>{type}</Badge>
+        return (
+          <Badge
+            variant={
+              getBadgeVariant(type) as
+                | 'default'
+                | 'destructive'
+                | 'outline'
+                | 'secondary'
+                | null
+                | undefined
+            }
+          >
+            {type}
+          </Badge>
+        )
       },
       filterFn: 'equals',
     },

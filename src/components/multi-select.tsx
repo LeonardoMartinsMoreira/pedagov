@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-// src/components/multi-select.tsx
 
 import * as React from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
