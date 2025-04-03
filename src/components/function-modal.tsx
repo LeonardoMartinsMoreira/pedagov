@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -6,10 +6,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import type React from "react" // Import React
+} from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import type React from 'react'
 
 interface FunctionModalProps {
   title: string
@@ -18,7 +18,12 @@ interface FunctionModalProps {
   icon: React.ReactNode
 }
 
-export function FunctionModal({ title, description, actionText, icon }: FunctionModalProps) {
+export function FunctionModal({
+  title,
+  description,
+  actionText,
+  icon,
+}: FunctionModalProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -37,7 +42,12 @@ export function FunctionModal({ title, description, actionText, icon }: Function
             <Label htmlFor="amount" className="text-right">
               Amount
             </Label>
-            <Input id="amount" type="number" placeholder="Enter amount" className="col-span-3" />
+            <Input
+              id="amount"
+              type="number"
+              placeholder="Enter amount"
+              className="col-span-3"
+            />
           </div>
         </div>
         <Button type="submit">{actionText}</Button>
@@ -45,4 +55,3 @@ export function FunctionModal({ title, description, actionText, icon }: Function
     </Dialog>
   )
 }
-
