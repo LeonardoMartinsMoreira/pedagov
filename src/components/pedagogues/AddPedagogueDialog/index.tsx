@@ -145,6 +145,7 @@ export function AddPedagogueDialog({
                         Escolas de atuação
                       </FormLabel>
                       <MultiSelect
+                        className="min-h-10"
                         options={options.map(({ id, schoolName }) => {
                           return {
                             label: schoolName,

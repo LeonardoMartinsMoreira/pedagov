@@ -1,21 +1,9 @@
 'use client'
 
-import Link from 'next/link'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import { ArrowLeft, Save } from 'lucide-react'
+import BackButton from '@/components/back-button'
+import { MultiSelect } from '@/components/multi-select'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import {
   Form,
   FormControl,
@@ -24,11 +12,25 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { MultiSelect } from '@/components/multi-select'
+import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
 import { students1000 } from '@/faker/students'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Save } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
 const occurrenceFormSchema = z.object({
-  student: z.array(z.string(), { message: 'Selecione ao menos um aluno' }),
+  student: z
+    .array(z.string(), { message: 'Selecione ao menos um aluno' })
+    .min(1, { message: 'Selecione ao menos um aluno' }),
   type: z
     .string({ required_error: 'Selecione o tipo da ocorrência' })
     .min(1, 'Selecione um tipo de ocorrência'),
@@ -41,8 +43,12 @@ const occurrenceFormSchema = z.object({
   time: z
     .string({ required_error: 'Selecione um horário' })
     .min(1, 'Selecione um horário'),
-  teacher: z.string(),
-  subject: z.string(),
+  teacher: z.string({
+    message: 'É necessário inserir o professor responsável pela aula',
+  }),
+  subject: z.string({
+    message: 'É necessário inserir a matéria do ocorrido',
+  }),
 })
 
 type OccurrenceFormValues = z.infer<typeof occurrenceFormSchema>
@@ -69,34 +75,25 @@ export default function NewOccurrencePage() {
 
   return (
     <div className="container max-w-4xl py-8">
-      <div className="mb-6">
-        <Link
-          href="/"
-          className="inline-flex items-center text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Voltar para listagem
-        </Link>
-      </div>
-
       <Card className="border-none">
         <CardHeader className="rounded-t-lg">
-          <CardTitle className="text-xl font-medium">Nova Ocorrência</CardTitle>
+          <BackButton />
+          <CardTitle className="text-3xl font-bold">Nova Ocorrência</CardTitle>
         </CardHeader>
         <CardContent className="p-6">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
                 <FormField
                   control={form.control}
                   name="student"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="mt-1.5">
                       <div className="flex flex-col gap-y-2">
                         <div className="flex flex-col gap-y-3">
                           <FormLabel>Aluno(s)</FormLabel>
                           <MultiSelect
-                            className="h-4"
+                            className="min-h-9"
                             options={students1000.map(({ id, nome }) => {
                               return {
                                 label: nome,
@@ -126,7 +123,7 @@ export default function NewOccurrencePage() {
                         defaultValue={field.value}
                       >
                         <FormControl>
-                          <SelectTrigger>
+                          <SelectTrigger error={Boolean(type)}>
                             <SelectValue placeholder="Selecione o tipo" />
                           </SelectTrigger>
                         </FormControl>
@@ -185,6 +182,7 @@ export default function NewOccurrencePage() {
                           {...field}
                         />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -202,6 +200,7 @@ export default function NewOccurrencePage() {
                           {...field}
                         />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -227,11 +226,7 @@ export default function NewOccurrencePage() {
               />
 
               <div className="flex justify-end">
-                <Button
-                  type="submit"
-                  className="bg-gradient-to-r from-sky-600 to-cyan-600 hover:from-sky-700 hover:to-cyan-700"
-                  disabled={form.formState.isSubmitting}
-                >
+                <Button type="submit" disabled={form.formState.isSubmitting}>
                   <Save className="mr-2 h-4 w-4" />
                   {form.formState.isSubmitting ? 'Salvando...' : 'Salvar'}
                 </Button>

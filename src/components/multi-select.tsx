@@ -210,7 +210,7 @@ export const MultiSelect = React.forwardRef<
             className={cn(
               `${
                 error && 'border-red-900'
-              } flex w-full p-1 rounded-md border min-h-10 h-auto items-center justify-between bg-inherit hover:bg-inherit [&_svg]:pointer-events-auto`,
+              } flex w-full p-1 rounded-md border h-auto items-center justify-between bg-inherit hover:bg-inherit [&_svg]:pointer-events-auto`,
               className
             )}
           >

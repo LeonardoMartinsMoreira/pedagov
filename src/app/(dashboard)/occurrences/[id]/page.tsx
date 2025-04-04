@@ -107,7 +107,7 @@ export default function OccurrenceDetailsPage({
               <div>
                 <h3 className="font-medium mb-2">Ocorrências Anteriores</h3>
                 <div className="space-y-2">
-                  <div className="text-sm p-2 bg-muted rounded-md">
+                  <div className="text-sm p-4 bg-muted rounded-md">
                     <div className="flex justify-between">
                       <Badge variant="outline" className="mb-1">
                         Atraso
@@ -120,7 +120,7 @@ export default function OccurrenceDetailsPage({
                       Chegou 15 minutos atrasado na primeira aula.
                     </p>
                   </div>
-                  <div className="text-sm p-2 bg-muted rounded-md">
+                  <div className="text-sm p-4 bg-muted rounded-md">
                     <div className="flex justify-between">
                       <Badge variant="outline" className="mb-1">
                         Uniforme

@@ -19,7 +19,7 @@ export default function OccurrencesListPage() {
   const columns: ColumnDef<Occurrence>[] = [
     {
       accessorKey: 'id',
-      header: 'ID',
+      header: '№ Ocorrência',
       cell: ({ row }) => (
         <div className="font-medium">#{row.getValue('id')}</div>
       ),
