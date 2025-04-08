@@ -195,7 +195,7 @@ export default function NewOccurrencePage() {
                       <FormLabel>Matéria do acontecimento</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="Máteria"
+                          placeholder="Matéria"
                           error={Boolean(subject)}
                           {...field}
                         />

@@ -16,6 +16,13 @@ import { Button } from '@/components/ui/button'
 import React from 'react'
 import Link from 'next/link'
 
+const RoutesLabelEnum: Record<string, string> = {
+  students: 'Alunos',
+  'new-occurrence': 'Nova ocorrência',
+  pedagogues: 'Pedagogos',
+  occurrences: 'Ocorrências',
+}
+
 export function TopNav() {
   const pathname = usePathname()
   const pathSegments = pathname.split('/').filter(Boolean)
@@ -27,7 +34,7 @@ export function TopNav() {
         <div className="hidden md:block">
           <nav className="flex items-center space-x-2">
             <Link href="/" className="text-sm font-medium">
-              Home
+              Início
             </Link>
             {pathSegments.map((segment, index) => (
               <React.Fragment key={segment}>
@@ -36,7 +43,7 @@ export function TopNav() {
                   href={`/${pathSegments.slice(0, index + 1).join('/')}`}
                   className="text-sm font-medium"
                 >
-                  {segment.charAt(0).toUpperCase() + segment.slice(1)}
+                  {RoutesLabelEnum[segment]}
                 </Link>
               </React.Fragment>
             ))}
