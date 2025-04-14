@@ -10,6 +10,8 @@ import Image from 'next/image'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import SideLoginImage from '../../../public/full-shot-kid-cheating-school.jpg'
+import { signIn } from 'next-auth/react'
+import { toast } from '@/hooks/use-toast'
 
 const loginSchema = z.object({
   email: z.string().email('E-mail inválido'),
@@ -30,8 +32,21 @@ export function LoginForm({
     resolver: zodResolver(loginSchema),
   })
 
-  const onSubmit = (data: loginType) => {
-    console.log('Dados enviados:', data)
+  const onSubmit = async (data: loginType) => {
+    const result = await signIn('credentials', {
+      redirect: false,
+      email: data.email,
+      password: data.password,
+      callbackUrl: '/',
+    })
+
+    if (result?.error) {
+      toast({
+        title: 'Erro ao tentar fazer login',
+        description: result.error,
+        variant: 'destructive',
+      })
+    }
   }
 
   return (

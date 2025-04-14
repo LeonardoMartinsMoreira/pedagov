@@ -36,6 +36,8 @@ const bottomNavigation = [
   { name: 'Configurações', href: '/settings', icon: Gear },
 ]
 
+export const privateRoutes = navigation.concat(bottomNavigation)
+
 export function Sidebar() {
   const pathname = usePathname()
   const [isCollapsed, setIsCollapsed] = useState(false)
