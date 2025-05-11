@@ -15,18 +15,27 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import React from 'react'
 import Link from 'next/link'
+import { signOut } from 'next-auth/react'
 
 const RoutesLabelEnum: Record<string, string> = {
   students: 'Alunos',
   'new-occurrence': 'Nova ocorrência',
   pedagogues: 'Pedagogos',
   occurrences: 'Ocorrências',
+  classes: 'Turmas',
 }
 
 export function TopNav() {
   const pathname = usePathname()
   const pathSegments = pathname.split('/').filter(Boolean)
   const { settings } = useSettings()
+
+  const handleOnLogoutPress = () => {
+    signOut({
+      redirect: true,
+      callbackUrl: '/login',
+    })
+  }
 
   return (
     <header className="sticky top-0 z-40 border-b bg-background">
@@ -84,7 +93,9 @@ export function TopNav() {
               <DropdownMenuItem asChild>
                 <Link href="/settings">Settings</Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>Log out</DropdownMenuItem>
+              <DropdownMenuItem onClick={handleOnLogoutPress}>
+                Log out
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

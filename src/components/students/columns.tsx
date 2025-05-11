@@ -44,10 +44,6 @@ export const columns: ColumnDef<TAlunoTable>[] = [
   },
 
   {
-    accessorKey: 'serie',
-    header: 'Serie',
-  },
-  {
     accessorKey: 'turma',
     header: 'Turma',
   },

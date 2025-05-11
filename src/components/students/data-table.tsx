@@ -20,25 +20,13 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useDialogState } from '@/hooks/useDialogState'
-import { faker } from '@faker-js/faker'
 import { SelectItem } from '@radix-ui/react-select'
 import { useEffect, useState } from 'react'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 import { Select, SelectContent, SelectTrigger, SelectValue } from '../ui/select'
 import { AddStudentDialog } from './AddStudentDialog'
-
-const generateFakeClass = () => {
-  const series = `${faker.number.int({ min: 1, max: 9 })}º Ano`
-  const turma = faker.helpers.arrayElement(['A', 'B', 'C', 'D', 'E'])
-
-  return {
-    serie: series,
-    turma: turma,
-  }
-}
-
-export const fakeClass = Array.from({ length: 6 }, () => generateFakeClass())
+import { fakeClasses } from '@/faker/classes'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -97,16 +85,14 @@ export function StudentsDataTable<TData, TValue>({
           <div className="space-y-2">
             <Select value={filterByClass} onValueChange={setFilterByClass}>
               <SelectTrigger id="class">
-                <SelectValue placeholder="Selecione uma turma"  />
+                <SelectValue placeholder="Selecione uma turma" />
                 {filterByClass && <span>{filterByClass}</span>}
               </SelectTrigger>
               <SelectContent className="p-2">
-                {fakeClass.map(({ serie, turma }) => {
-                  const itemId = `${serie} ${turma}`
-
+                {fakeClasses.map(({ class: className, id }) => {
                   return (
-                    <SelectItem key={itemId} value={itemId}>
-                      {itemId}
+                    <SelectItem key={id} value={id.toString()}>
+                      {className}
                     </SelectItem>
                   )
                 })}
@@ -168,6 +154,9 @@ export function StudentsDataTable<TData, TValue>({
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
+        <div className="flex-1 text-sm text-muted-foreground">
+          {table.getFilteredRowModel().rows.length} aluno(s) encontrada(s)
+        </div>
         <Button
           variant="outline"
           size="sm"

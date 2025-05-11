@@ -16,6 +16,7 @@ import {
   House,
   List,
   Student,
+  UsersFour,
 } from '@phosphor-icons/react'
 import { useTheme } from 'next-themes'
 import Image from 'next/image'
@@ -30,6 +31,7 @@ const navigation = [
   { name: 'Alunos', href: '/students', icon: Student },
   { name: 'Pedagogos', href: '/pedagogues', icon: ChalkboardTeacher },
   { name: 'Ocorrências', href: '/occurrences', icon: ChartLine },
+  { name: 'Turmas', href: '/classes', icon: UsersFour },
 ]
 
 const bottomNavigation = [

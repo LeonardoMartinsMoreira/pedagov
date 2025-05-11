@@ -1,6 +1,7 @@
 'use client'
 
 import { checkPrivateRoute } from '@/utils/checkPrivateRoute'
+import { Loader } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import { usePathname, useRouter } from 'next/navigation'
 
@@ -11,29 +12,34 @@ export function RouteGuard() {
   const router = useRouter()
   const pathname = usePathname()
 
-  console.log(status)
-
   const isPrivateRoute = checkPrivateRoute(pathname)
+
+  const isLoading = status === 'loading'
 
   useEffect(() => {
     if (
-      status !== 'loading' &&
+      !isLoading &&
       status === 'unauthenticated' &&
-      isPrivateRoute
+      isPrivateRoute &&
+      pathname !== '/login'
     ) {
       router.push('/login')
     }
-  }, [isPrivateRoute, router, status])
+  }, [isLoading, isPrivateRoute, pathname, router, status])
 
   useEffect(() => {
-    if (
-      status !== 'loading' &&
-      status === 'authenticated' &&
-      pathname === '/login'
-    ) {
+    if (!isLoading && status === 'authenticated' && pathname === '/login') {
       router.push('/')
     }
-  }, [pathname, router, status])
+  }, [isLoading, pathname, router, status])
 
-  return <></>
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center w-full h-screen">
+        <Loader className="w-6 h-6 animate-spin text-muted-foreground" />
+      </div>
+    )
+  }
+
+  return null
 }

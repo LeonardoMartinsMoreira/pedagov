@@ -2,6 +2,9 @@ import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 
 const handler = NextAuth({
+  session: {
+    strategy: 'jwt',
+  },
   providers: [
     CredentialsProvider({
       name: 'Credentials',
@@ -23,6 +26,25 @@ const handler = NextAuth({
       },
     }),
   ],
+  callbacks: {
+    jwt({ user, token }) {
+      if (user) {
+        token.id = user.id
+        token.email = user.email
+        token.name = user.name
+      }
+
+      return token
+    },
+    session({ session, token }) {
+      if (session.user) {
+        session.user.name = token.name
+        session.user.email = token.email
+      }
+
+      return session
+    },
+  },
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: '/login',
