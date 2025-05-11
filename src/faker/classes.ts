@@ -8,7 +8,7 @@ const steps = [
 
 const letras = ['A', 'B', 'C', 'D']
 
-const generateFakeClasses = (id: number) => {
+export const generateFakeClasses = (id: number) => {
   const step = faker.helpers.arrayElement(steps)
   const year = faker.helpers.arrayElement(step.anos)
   const letter = faker.helpers.arrayElement(letras)

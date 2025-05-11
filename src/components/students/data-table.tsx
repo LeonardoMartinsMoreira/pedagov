@@ -60,15 +60,10 @@ export function StudentsDataTable<TData, TValue>({
 
   useEffect(() => {
     if (filterByClass) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const [serie, ano, turma] = filterByClass.split(' ')
-
-      return setColumnFilters([
-        { id: 'serie', value: `${serie} ${ano}` },
-        { id: 'turma', value: turma },
-      ])
+      setColumnFilters([{ id: 'turma', value: filterByClass }])
+    } else {
+      setColumnFilters([])
     }
-    setColumnFilters([])
   }, [filterByClass])
 
   return (
@@ -86,16 +81,13 @@ export function StudentsDataTable<TData, TValue>({
             <Select value={filterByClass} onValueChange={setFilterByClass}>
               <SelectTrigger id="class">
                 <SelectValue placeholder="Selecione uma turma" />
-                {filterByClass && <span>{filterByClass}</span>}
               </SelectTrigger>
               <SelectContent className="p-2">
-                {fakeClasses.map(({ class: className, id }) => {
-                  return (
-                    <SelectItem key={id} value={id.toString()}>
-                      {className}
-                    </SelectItem>
-                  )
-                })}
+                {fakeClasses.map(({ class: className }) => (
+                  <SelectItem key={className} value={className}>
+                    {className}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>

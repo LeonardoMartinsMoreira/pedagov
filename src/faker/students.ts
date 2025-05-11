@@ -1,14 +1,13 @@
 import { faker } from '@faker-js/faker'
+import { fakeClasses } from './classes'
 
 const generateFakeStudent = (id: number) => {
-  const series = `${faker.number.int({ min: 3, max: 9 })}º Ano`
-  const turma = faker.helpers.arrayElement(['A', 'B', 'C'])
+  const turma = faker.helpers.arrayElement(fakeClasses)
 
   return {
     id,
     nome: faker.person.fullName(),
-    serie: series,
-    turma: turma,
+    turma: turma.class,
   }
 }
 

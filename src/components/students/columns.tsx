@@ -23,8 +23,7 @@ import { useRouter } from 'next/navigation'
 type TAlunoTable = {
   id: number
   nome: string
-  serie: string
-  turma: string
+  className: { id: number; class: string }
 }
 
 export const columns: ColumnDef<TAlunoTable>[] = [
