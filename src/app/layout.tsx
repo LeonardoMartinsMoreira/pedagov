@@ -1,7 +1,6 @@
 'use client'
 
 import { ThemeProvider } from '@/components/theme-provider'
-import { Toaster } from '@/components/ui/toaster'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { SettingsProvider } from '@/contexts/settings-context'
 import { SessionProvider } from 'next-auth/react'
@@ -25,7 +24,6 @@ export default function LocaleLayout({
             <TooltipProvider delayDuration={0}>
               <SessionProvider>
                 <RouteGuard />
-                <Toaster />
                 <main className="w-full">{children}</main>
               </SessionProvider>
             </TooltipProvider>
