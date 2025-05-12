@@ -23,7 +23,7 @@ import { useRouter } from 'next/navigation'
 type TAlunoTable = {
   id: number
   nome: string
-  className: { id: number; class: string }
+  turma: string
 }
 
 export const columns: ColumnDef<TAlunoTable>[] = [
@@ -71,7 +71,9 @@ export const columns: ColumnDef<TAlunoTable>[] = [
               Ver Perfil do Aluno
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => router.push(`new-occurrence/${student.id}`)}
+              onClick={() =>
+                router.push(`/occurrences/new-occurrence/${student.id}`)
+              }
             >
               Registrar Ocorrência
             </DropdownMenuItem>

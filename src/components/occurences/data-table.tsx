@@ -46,7 +46,7 @@ export function OccurrencesDataTable<TData, TValue>({
   const router = useRouter()
 
   const handleOnNewOccurrenceClick = () =>
-    router.push(`occurrences/new-occurrence`)
+    router.push(`occurrences/new-occurrence/null`)
 
   const table = useReactTable({
     data,
