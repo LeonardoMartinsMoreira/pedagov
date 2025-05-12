@@ -12,6 +12,10 @@ export function ThemeToggle() {
     setMounted(true)
   }, [])
 
+  useEffect(() => {
+    setTheme(theme ? theme : 'light')
+  }, [setTheme, theme])
+
   if (!mounted) return null
 
   return (

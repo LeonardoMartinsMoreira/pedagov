@@ -19,7 +19,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { useDialogState } from '@/hooks/useDialogState'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -30,6 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { useRouter } from 'next/navigation'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -43,7 +43,10 @@ export function OccurrencesDataTable<TData, TValue>({
   const [globalFilter, setGlobalFilter] = useState<string>('')
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 
-  const addOccurrence = useDialogState()
+  const router = useRouter()
+
+  const handleOnNewOccurrenceClick = () =>
+    router.push(`occurrences/new-occurrence/null`)
 
   const table = useReactTable({
     data,
@@ -96,7 +99,7 @@ export function OccurrencesDataTable<TData, TValue>({
                 <SelectValue placeholder="Tipo" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Todos os tipos</SelectItem>
+                <SelectItem value={null!}>Todos os tipos</SelectItem>
                 <SelectItem value="Comportamento">Comportamento</SelectItem>
                 <SelectItem value="Atraso">Atraso</SelectItem>
                 <SelectItem value="Falta">Falta</SelectItem>
@@ -107,7 +110,7 @@ export function OccurrencesDataTable<TData, TValue>({
         </div>
 
         <Button
-          onClick={addOccurrence.openDialog}
+          onClick={handleOnNewOccurrenceClick}
           className="whitespace-nowrap"
         >
           Nova Ocorrência

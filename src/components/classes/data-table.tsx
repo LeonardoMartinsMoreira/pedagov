@@ -23,14 +23,14 @@ import { useDialogState } from '@/hooks/useDialogState'
 import { useState } from 'react'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
-import { AddPedagogueDialog } from './AddPedagogueDialog'
+import { AddPedagogueDialog } from './AddClassDialog'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
 }
 
-export function PedagoguesDataTable<TData, TValue>({
+export function ClassesDataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
@@ -59,14 +59,14 @@ export function PedagoguesDataTable<TData, TValue>({
       <div className="flex items-center justify-between py-4">
         <div className="w-full flex gap-x-4">
           <Input
-            placeholder="Filtre por Nome"
+            placeholder="Filtre por Nome da turma"
             value={globalFilter ?? ''}
             onChange={(e) => table.setGlobalFilter(String(e.target.value))}
             className="max-w-sm"
           />
         </div>
 
-        <Button onClick={addPedagogue.openDialog}>Adicionar Pedadogo(a)</Button>
+        <Button onClick={addPedagogue.openDialog}>Adicionar Turma</Button>
       </div>
       <div className="rounded-md border">
         <Table>
@@ -120,7 +120,7 @@ export function PedagoguesDataTable<TData, TValue>({
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredRowModel().rows.length} pedagogo(s) encontrada(s)
+          {table.getFilteredRowModel().rows.length} turmas(s) encontrada(s)
         </div>
         <Button
           variant="outline"

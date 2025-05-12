@@ -18,11 +18,11 @@ import { useDialogState } from '@/hooks/useDialogState'
 import { OccurrenceDialog } from './OccurrenceDialog'
 import { StudentProfileDialog } from './StudentProfileDialog'
 import { DeleteStudentDialog } from './DeleteStudentDialog'
+import { useRouter } from 'next/navigation'
 
 type TAlunoTable = {
   id: number
   nome: string
-  serie: string
   turma: string
 }
 
@@ -43,10 +43,6 @@ export const columns: ColumnDef<TAlunoTable>[] = [
   },
 
   {
-    accessorKey: 'serie',
-    header: 'Serie',
-  },
-  {
     accessorKey: 'turma',
     header: 'Turma',
   },
@@ -58,6 +54,7 @@ export const columns: ColumnDef<TAlunoTable>[] = [
       const occurrenceDialog = useDialogState()
       const studentProfileDialog = useDialogState()
       const deleteStudentDialog = useDialogState()
+      const router = useRouter()
 
       return (
         <DropdownMenu>
@@ -73,10 +70,16 @@ export const columns: ColumnDef<TAlunoTable>[] = [
             <DropdownMenuItem onClick={studentProfileDialog.openDialog}>
               Ver Perfil do Aluno
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={occurrenceDialog.openDialog}>
+            <DropdownMenuItem
+              onClick={() =>
+                router.push(`/occurrences/new-occurrence/${student.id}`)
+              }
+            >
               Registrar Ocorrência
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={deleteStudentDialog.openDialog}>Deletar aluno</DropdownMenuItem>
+            <DropdownMenuItem onClick={deleteStudentDialog.openDialog}>
+              Deletar aluno
+            </DropdownMenuItem>
           </DropdownMenuContent>
 
           <OccurrenceDialog

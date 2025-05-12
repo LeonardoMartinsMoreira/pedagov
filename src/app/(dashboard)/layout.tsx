@@ -1,20 +1,17 @@
+'use client'
+
 import { Sidebar } from '@/components/sidebar'
 import { TopNav } from '@/components/top-nav'
 import type React from 'react'
-
-export const metadata = {
-  title: 'PedaGov',
-  description: 'A melhor aplicação para controle e estatísticas de escolas.',
-  icons: {
-    icon: '/favicon.ico',
-  },
-}
+import { useEffect } from 'react'
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  useEffect(() => {}, [])
+
   return (
     <div className="min-h-screen flex">
       <Sidebar />
