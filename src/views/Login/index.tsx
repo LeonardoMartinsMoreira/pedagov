@@ -16,7 +16,7 @@ import { errorMessages } from '@/utils/next-auth-errors-message'
 
 const loginSchema = z.object({
   email: z.string().email('E-mail inválido'),
-  password: z.string().min(8, 'A senha deve ter pelo menos 8 caracteres'),
+  password: z.string().min(8, 'A senha deve conter pelo menos 8 caracteres'),
 })
 
 type loginType = z.infer<typeof loginSchema>
