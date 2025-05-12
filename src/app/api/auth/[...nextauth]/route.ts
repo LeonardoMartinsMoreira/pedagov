@@ -22,7 +22,7 @@ const handler = NextAuth({
           return user
         }
 
-        throw new Error('Usuário ou senha incorretos')
+        return null
       },
     }),
   ],

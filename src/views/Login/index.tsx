@@ -12,6 +12,7 @@ import { z } from 'zod'
 import SideLoginImage from '../../../public/full-shot-kid-cheating-school.jpg'
 import { signIn } from 'next-auth/react'
 import { toast } from '@/hooks/use-toast'
+import { errorMessages } from '@/utils/next-auth-errors-message'
 
 const loginSchema = z.object({
   email: z.string().email('E-mail inválido'),
@@ -40,10 +41,12 @@ export function LoginForm({
       callbackUrl: '/',
     })
 
-    if (result?.error) {
+    if (!result?.ok) {
+      console.log('teste')
+
       toast({
         title: 'Erro ao tentar fazer login',
-        description: result.error,
+        description: errorMessages[result?.error ?? 'default'],
         variant: 'destructive',
       })
     }
