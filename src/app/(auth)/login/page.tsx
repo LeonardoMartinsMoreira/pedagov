@@ -1,5 +1,8 @@
-import { LoginForm } from '@/views/Login'
-import React from 'react'
+import { LoginForm } from '@/views/login'
+
+export const metadata = {
+  title: 'PedaGov - Conectar-se',
+}
 
 function LoginPage() {
   return <LoginForm />

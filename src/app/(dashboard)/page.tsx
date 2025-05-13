@@ -1,6 +1,8 @@
-'use client'
-
 import { BusinessMetrics } from '@/components/business-metrics'
+
+export const metadata = {
+  title: 'PedaGov - Início',
+}
 
 export default function Dashboard() {
   return (

@@ -8,6 +8,7 @@ import { Inter } from 'next/font/google'
 import type React from 'react'
 import '../styles/globals.css'
 import { RouteGuard } from '@/components/route-guard'
+import { Toaster } from '@/components/ui/toaster'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -23,6 +24,7 @@ export default function LocaleLayout({
           <SettingsProvider>
             <TooltipProvider delayDuration={0}>
               <SessionProvider>
+                <Toaster />
                 <RouteGuard />
                 <main className="w-full">{children}</main>
               </SessionProvider>
