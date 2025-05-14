@@ -15,7 +15,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useDialogState } from '@/hooks/useDialogState'
-import { OccurrenceDialog } from './OccurrenceDialog'
 import { StudentProfileDialog } from './StudentProfileDialog'
 import { DeleteStudentDialog } from './DeleteStudentDialog'
 import { useRouter } from 'next/navigation'
@@ -51,7 +50,6 @@ export const columns: ColumnDef<TAlunoTable>[] = [
     cell: ({ row }) => {
       const student = row.original
 
-      const occurrenceDialog = useDialogState()
       const studentProfileDialog = useDialogState()
       const deleteStudentDialog = useDialogState()
       const router = useRouter()
@@ -81,12 +79,6 @@ export const columns: ColumnDef<TAlunoTable>[] = [
               Deletar aluno
             </DropdownMenuItem>
           </DropdownMenuContent>
-
-          <OccurrenceDialog
-            idSelectedStudent={student.id}
-            closeDialog={occurrenceDialog.closeDialog}
-            isVisible={occurrenceDialog.isVisible}
-          />
 
           <StudentProfileDialog
             idSelectedStudent={student.id}

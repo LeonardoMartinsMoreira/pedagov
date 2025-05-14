@@ -20,7 +20,7 @@ export function BusinessMetrics() {
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between text-xs">
-              <span className="font-bold text-3xl">1,234</span>
+              <span className="font-bold text-3xl">1.234</span>
               <span
                 className={`px-2 py-1 rounded-sm bg-blue-100 text-blue-800 dark:bg-blue-200`}
               >
