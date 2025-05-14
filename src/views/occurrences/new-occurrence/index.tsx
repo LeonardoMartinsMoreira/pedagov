@@ -24,6 +24,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { students1000 } from '@/faker/students'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Save } from 'lucide-react'
+import { useParams } from 'next/navigation'
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -54,16 +56,25 @@ const occurrenceFormSchema = z.object({
 type OccurrenceFormValues = z.infer<typeof occurrenceFormSchema>
 
 export function NewOccurrenceForm() {
+  const idSelectedStudent = useParams<{ id: string }>().id
+  const [defaultSelectedStudent, setDefaultSelectedStudent] = React.useState<
+    string | undefined
+  >(undefined)
+
   const form = useForm<OccurrenceFormValues>({
     resolver: zodResolver(occurrenceFormSchema),
   })
 
+  useEffect(() => {
+    if (idSelectedStudent) {
+      setDefaultSelectedStudent(idSelectedStudent)
+    }
+  }, [defaultSelectedStudent, form, idSelectedStudent])
+
   const onSubmit = async (data: OccurrenceFormValues) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000))
-
       console.log('Dados da ocorrência:', data)
-
       window.location.href = '/'
     } catch (error) {
       console.error('Erro ao salvar ocorrência:', error)
@@ -94,12 +105,11 @@ export function NewOccurrenceForm() {
                           <FormLabel>Aluno(s)</FormLabel>
                           <MultiSelect
                             className="min-h-9"
-                            options={students1000.map(({ id, nome }) => {
-                              return {
-                                label: nome,
-                                value: id.toString(),
-                              }
-                            })}
+                            options={students1000.map(({ id, nome }) => ({
+                              label: nome,
+                              value: id.toString(),
+                            }))}
+                            defaultValue={[defaultSelectedStudent!]}
                             onValueChange={field.onChange}
                             value={field.value}
                             selectAll={false}
