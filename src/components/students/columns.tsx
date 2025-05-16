@@ -65,7 +65,9 @@ export const columns: ColumnDef<TAlunoTable>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={studentProfileDialog.openDialog}>
+            <DropdownMenuItem
+              onClick={() => router.push(`students/${student.id}`)}
+            >
               Ver Perfil do Aluno
             </DropdownMenuItem>
             <DropdownMenuItem

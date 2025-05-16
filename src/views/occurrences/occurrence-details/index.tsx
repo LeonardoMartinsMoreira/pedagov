@@ -1,6 +1,6 @@
 'use client'
 
-import BackButton from '@/components/back-button'
+import { BackButton } from '@/components/back-button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
