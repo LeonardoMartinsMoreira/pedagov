@@ -49,7 +49,7 @@ const handler = NextAuth({
 
   callbacks: {
     jwt({ user, token }) {
-      if (user.access_token) {
+      if (user?.access_token) {
         const decodedToken = jwtDecode<{ sub: string }>(user.access_token)
 
         token.access_token = user.access_token
@@ -60,7 +60,7 @@ const handler = NextAuth({
       return token
     },
     session({ session, token }) {
-      if (session.user) {
+      if (session?.user) {
         session.user.access_token = token.access_token
         session.user.email = token.email
         session.user.id = token.id
