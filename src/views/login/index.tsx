@@ -12,11 +12,11 @@ import { z } from 'zod'
 import SideLoginImage from '../../../public/full-shot-kid-cheating-school.jpg'
 import { signIn } from 'next-auth/react'
 import { toast } from '@/hooks/use-toast'
-import { errorMessages } from '@/utils/next-auth-errors-message'
+import { useState } from 'react'
 
 const loginSchema = z.object({
   email: z.string().email('E-mail inválido'),
-  password: z.string().min(8, 'A senha deve conter pelo menos 8 caracteres'),
+  password: z.string(),
 })
 
 type loginType = z.infer<typeof loginSchema>
@@ -33,23 +33,26 @@ export function LoginForm({
     resolver: zodResolver(loginSchema),
   })
 
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
   const onSubmit = async (data: loginType) => {
-    const result = await signIn('credentials', {
+    setIsSubmitting(true)
+
+    const res = await signIn('credentials', {
       redirect: false,
       email: data.email,
       password: data.password,
-      callbackUrl: '/',
     })
 
-    if (!result?.ok) {
-      console.log('teste')
-
+    if (!res?.ok) {
       toast({
         title: 'Erro ao tentar fazer login',
-        description: errorMessages[result?.error ?? 'default'],
+        description: res?.error,
         variant: 'destructive',
       })
     }
+
+    setIsSubmitting(false)
   }
 
   return (
@@ -98,7 +101,7 @@ export function LoginForm({
                   </p>
                 )}
               </div>
-              <Button type="submit" className="w-full">
+              <Button disabled={isSubmitting} type="submit" className="w-full">
                 Entrar
               </Button>
             </div>

@@ -1,6 +1,6 @@
 'use client'
 
-import { checkPrivateRoute } from '@/utils/checkPrivateRoute'
+import { checkPrivateRoute } from '@/utils/check-private-route'
 import { Loader } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import { usePathname, useRouter } from 'next/navigation'

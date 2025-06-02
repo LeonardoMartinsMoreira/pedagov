@@ -1,5 +1,9 @@
+import { api } from '@/services/api'
+import { errorMessages } from '@/utils/next-auth-errors-message'
+import { AxiosError } from 'axios'
 import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
+import { jwtDecode } from 'jwt-decode'
 
 const handler = NextAuth({
   session: {
@@ -12,34 +16,54 @@ const handler = NextAuth({
         email: { label: 'Email', type: 'text', placeholder: 'jsmith' },
         password: { label: 'Password', type: 'password' },
       },
-      async authorize(credentials) {
-        if (
-          credentials?.password === '12345678' &&
-          credentials.email === 'leo@gmail.com'
-        ) {
-          const user = { id: '1', name: 'Leonardo', email: 'leo@example.com' }
+      authorize: async (credentials) => {
+        try {
+          const res = await api.post('/sessions', {
+            email: credentials?.email,
+            password: credentials?.password,
+          })
 
-          return user
+          const user = res.data
+
+          if (user?.access_token) {
+            return {
+              ...user,
+              email: credentials?.email,
+            }
+          }
+
+          return null
+        } catch (err) {
+          const error = err as AxiosError<{ statusCode: number }>
+
+          const statusCode = error.response?.data?.statusCode
+
+          const message =
+            errorMessages[statusCode ?? 'default'] ?? errorMessages.default
+
+          throw new Error(message)
         }
-
-        return null
       },
     }),
   ],
+
   callbacks: {
     jwt({ user, token }) {
-      if (user) {
-        token.id = user.id
+      if (user.access_token) {
+        const decodedToken = jwtDecode<{ sub: string }>(user.access_token)
+
+        token.access_token = user.access_token
+        token.id = decodedToken.sub
         token.email = user.email
-        token.name = user.name
       }
 
       return token
     },
     session({ session, token }) {
       if (session.user) {
-        session.user.name = token.name
+        session.user.access_token = token.access_token
         session.user.email = token.email
+        session.user.id = token.id
       }
 
       return session
