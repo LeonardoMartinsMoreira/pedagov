@@ -72,7 +72,7 @@ export function LoginForm({
                 <Input
                   id="email"
                   type="email"
-                  placeholder="seu@email.com"
+                  placeholder="teste@example.com"
                   {...register('email')}
                 />
                 {errors.email && (
@@ -101,7 +101,12 @@ export function LoginForm({
                   </p>
                 )}
               </div>
-              <Button disabled={isSubmitting} type="submit" className="w-full">
+              <Button
+                isLoading={isSubmitting}
+                disabled={isSubmitting}
+                type="submit"
+                className="w-full"
+              >
                 Entrar
               </Button>
             </div>
