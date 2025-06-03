@@ -52,18 +52,20 @@ const handler = NextAuth({
       if (user?.access_token) {
         const decodedToken = jwtDecode<{ sub: string }>(user.access_token)
 
-        token.access_token = user.access_token
-        token.id = decodedToken.sub
+        token.accessToken = user.access_token
         token.email = user.email
+        token.isFirstLogin = user.is_first_login
+        token.id = decodedToken.sub
       }
 
       return token
     },
     session({ session, token }) {
       if (session?.user) {
-        session.user.access_token = token.access_token
+        session.user.accessToken = token.accessToken
         session.user.email = token.email
         session.user.id = token.id
+        session.user.isFirstLogin = token.isFirstLogin
       }
 
       return session

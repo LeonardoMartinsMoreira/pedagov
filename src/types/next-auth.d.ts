@@ -5,10 +5,11 @@ import { JWT } from 'next-auth/jwt'
 declare module 'next-auth' {
   interface Session {
     user: {
-      access_token: string
+      accessToken: string
       email: string
       name: string
       id: string
+      isFirstLogin: boolean
     }
   }
 
@@ -17,14 +18,16 @@ declare module 'next-auth' {
     email: string
     name: string
     id: string
+    is_first_login: boolean
   }
 }
 
 declare module 'next-auth/jwt' {
   interface JWT {
-    access_token: string
+    accessToken: string
     email: string
     name: string
     id: string
+    isFirstLogin: boolean
   }
 }
