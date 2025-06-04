@@ -16,9 +16,10 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { useChangePassword } from '@/services/mutations/change-password'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Warning } from '@phosphor-icons/react'
-import { useState } from 'react'
+import { useSession } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -27,6 +28,9 @@ const ChangePasswordSchema = z
     newPassword: z
       .string()
       .min(8, { message: 'Nova senha deve ter pelo menos 8 caracteres' }),
+    currentPassword: z.string({
+      required_error: 'É necessário inserir a senha atual',
+    }),
     confirmPassword: z
       .string()
       .min(1, { message: 'Confirmação de senha é obrigatória' }),
@@ -39,7 +43,8 @@ const ChangePasswordSchema = z
 export type IChangePassword = z.infer<typeof ChangePasswordSchema>
 
 export function ChangePasswordModal({ isVisible }: { isVisible: boolean }) {
-  const [isLoading, setIsLoading] = useState(false)
+  const { mutate, isPending } = useChangePassword()
+  const { data } = useSession()
 
   const form = useForm({
     resolver: zodResolver(ChangePasswordSchema),
@@ -49,22 +54,16 @@ export function ChangePasswordModal({ isVisible }: { isVisible: boolean }) {
     },
   })
 
-  const onSubmit = async (data: IChangePassword) => {
-    setIsLoading(true)
-
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 2000))
-
-      console.log('Alterando senha:', data)
-    } catch (error) {
-      console.error('Erro ao alterar senha:', error)
-    } finally {
-      setIsLoading(false)
-    }
+  const onSubmit = ({ newPassword, currentPassword }: IChangePassword) => {
+    mutate({
+      newPassword,
+      password: currentPassword,
+      email: data?.user.email as string,
+    })
   }
 
   const {
-    errors: { newPassword, confirmPassword },
+    errors: { currentPassword, newPassword, confirmPassword },
   } = form.formState
 
   return (
@@ -99,6 +98,25 @@ export function ChangePasswordModal({ isVisible }: { isVisible: boolean }) {
             onSubmit={form.handleSubmit(onSubmit)}
             className="flex flex-col gap-y-4"
           >
+            <FormField
+              control={form.control}
+              name="currentPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Senha Atual</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      className="h-10 pr-10"
+                      placeholder="Digite sua senha atual"
+                      error={Boolean(currentPassword)}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="newPassword"
@@ -141,9 +159,9 @@ export function ChangePasswordModal({ isVisible }: { isVisible: boolean }) {
 
             <Button
               type="submit"
-              isLoading={isLoading}
+              isLoading={isPending}
               className="w-full"
-              disabled={isLoading}
+              disabled={isPending}
             >
               Alterar Senha{' '}
             </Button>
