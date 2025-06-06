@@ -10,6 +10,7 @@ declare module 'next-auth' {
       name: string
       id: string
       isFirstLogin: boolean
+      avatar: string
     }
   }
 

@@ -24,17 +24,17 @@ export default function LocaleLayout({
     <html lang="pt-BR" suppressHydrationWarning>
       <body className={inter.className}>
         <QueryClientProvider client={queryClient}>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <SettingsProvider>
-              <TooltipProvider delayDuration={0}>
-                <SessionProvider>
+          <SessionProvider>
+            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+              <SettingsProvider>
+                <TooltipProvider delayDuration={0}>
                   <Toaster />
                   <RouteGuard />
                   <main className="w-full">{children}</main>
-                </SessionProvider>
-              </TooltipProvider>
-            </SettingsProvider>
-          </ThemeProvider>
+                </TooltipProvider>
+              </SettingsProvider>
+            </ThemeProvider>
+          </SessionProvider>
         </QueryClientProvider>
       </body>
     </html>
