@@ -19,7 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { useDialogState } from '@/hooks/useDialogState'
+import { useDialogState } from '@/hooks/use-dialog-state'
 import { SelectItem } from '@radix-ui/react-select'
 import { useEffect, useState } from 'react'
 import { Button } from '../ui/button'

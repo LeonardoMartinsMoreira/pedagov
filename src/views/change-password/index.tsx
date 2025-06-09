@@ -1,7 +1,7 @@
 'use client'
 
 import { ChangePasswordModal } from '@/components/warning-change-password-dialog'
-import { useDialogState } from '@/hooks/useDialogState'
+import { useDialogState } from '@/hooks/use-dialog-state'
 import { useSession } from 'next-auth/react'
 import { useEffect } from 'react'
 

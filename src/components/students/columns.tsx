@@ -14,7 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useDialogState } from '@/hooks/useDialogState'
+import { useDialogState } from '@/hooks/use-dialog-state'
 import { StudentProfileDialog } from './StudentProfileDialog'
 import { DeleteStudentDialog } from './DeleteStudentDialog'
 import { useRouter } from 'next/navigation'
