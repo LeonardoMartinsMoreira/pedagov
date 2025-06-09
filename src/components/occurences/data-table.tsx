@@ -30,10 +30,11 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useRouter } from 'next/navigation'
+import { EmptyState } from '../empty-state'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+  data: TData[] | undefined
 }
 
 export function OccurrencesDataTable<TData, TValue>({
@@ -48,6 +49,9 @@ export function OccurrencesDataTable<TData, TValue>({
   const handleOnNewOccurrenceClick = () =>
     router.push(`occurrences/new-occurrence/null`)
 
+  if (!data) return <></>
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const table = useReactTable({
     data,
     columns,
@@ -73,7 +77,7 @@ export function OccurrencesDataTable<TData, TValue>({
             onChange={(e) => table.setGlobalFilter(String(e.target.value))}
             className="max-w-sm"
           />
-          <div className="flex flex-wrap gap-2">
+          <div className="flex gap-2">
             <Select
               onValueChange={(value) =>
                 table.getColumn('class')?.setFilterValue(value)
@@ -159,7 +163,7 @@ export function OccurrencesDataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  Nenhuma ocorrência encontrada.
+                  <EmptyState />
                 </TableCell>
               </TableRow>
             )}

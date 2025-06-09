@@ -4,6 +4,7 @@ import { Loading } from '@/components/loading'
 import { OccurrencesDataTable } from '@/components/occurences/data-table'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { useFilters } from '@/hooks/use-filters'
 import { IOccurrence } from '@/interfaces/occurrences/occurrences-interface'
 import { useGetAllOccurrences } from '@/services/queries/get-all-occurrences'
 import type { ColumnDef } from '@tanstack/react-table'
@@ -114,11 +115,12 @@ const columns: ColumnDef<IOccurrence>[] = [
 ]
 
 export function OccurrencesList() {
-  const { data, isLoading } = useGetAllOccurrences()
+  const { filters } = useFilters()
+  const { data, isLoading } = useGetAllOccurrences(filters)
 
   const occurrences = data?.result
 
-  if (!isLoading) return <Loading />
+  if (isLoading) return <Loading />
 
   return (
     <div className="container mx-auto py-6 space-y-6">
