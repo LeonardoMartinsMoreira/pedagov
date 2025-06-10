@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { TableRow } from '@/components/ui/table'
 import { IdentificationCard, UsersFour } from '@phosphor-icons/react/dist/ssr'
 import { Mail, Phone } from 'lucide-react'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 
 export function ProfileCard() {
@@ -18,7 +19,7 @@ export function ProfileCard() {
       <div className="w-full h-full max-w-lg rounded-3xl shadow-lg border border-border">
         <div className="flex flex-col items-center p-6">
           <div className="w-32 h-32 mb-4">
-            <img
+            <Image
               alt="Profile picture"
               className="w-full h-full object-cover rounded-full grayscale"
               src="https://i.pravatar.cc/150"

@@ -1,6 +1,6 @@
 'use client'
 
-import { defaultAvatars } from '@/app/(dashboard)/settings/page'
+import { defaultAvatars } from '@/constants/avatars'
 import { useSession } from 'next-auth/react'
 import { createContext, useContext, useEffect, useState } from 'react'
 
