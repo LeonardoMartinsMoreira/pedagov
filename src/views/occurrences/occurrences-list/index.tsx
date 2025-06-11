@@ -8,8 +8,10 @@ import { useFilters } from '@/hooks/use-filters'
 import { IOccurrence } from '@/interfaces/occurrences/occurrences-interface'
 import { useGetAllOccurrences } from '@/services/queries/get-all-occurrences'
 import type { ColumnDef } from '@tanstack/react-table'
+import { format } from 'date-fns'
 import { ArrowUpDown } from 'lucide-react'
 import Link from 'next/link'
+import { ptBR } from 'date-fns/locale'
 
 const columns: ColumnDef<IOccurrence>[] = [
   {
@@ -18,7 +20,7 @@ const columns: ColumnDef<IOccurrence>[] = [
     cell: ({ row }) => <div className="font-medium">#{row.getValue('id')}</div>,
   },
   {
-    accessorKey: 'student',
+    accessorKey: 'students',
     header: ({ column }) => {
       return (
         <Button
@@ -35,7 +37,7 @@ const columns: ColumnDef<IOccurrence>[] = [
         href={`/occurrences/${row.getValue('id')}`}
         className="font-medium hover:underline"
       >
-        {row.getValue('student')}
+        {row.getValue('students')}
       </Link>
     ),
   },
@@ -79,22 +81,26 @@ const columns: ColumnDef<IOccurrence>[] = [
     filterFn: 'equals',
   },
   {
-    accessorKey: 'date',
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Data
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
+    accessorKey: 'createdAt',
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+      >
+        Data
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
+    cell: ({ row }) => {
+      const rawDate = row.getValue('createdAt') as string
+      const date = new Date(rawDate)
+
+      return format(date, 'dd/MM/yyyy', { locale: ptBR })
     },
   },
 
   {
-    accessorKey: 'class',
+    accessorKey: 'group',
     header: 'Turma',
     filterFn: 'equals',
   },

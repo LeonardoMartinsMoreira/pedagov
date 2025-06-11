@@ -30,8 +30,11 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 const occurrenceFormSchema = z.object({
-  student: z
+  studentsId: z
     .array(z.string(), { message: 'Selecione ao menos um aluno' })
+    .min(1, { message: 'Selecione ao menos um aluno' }),
+  attendeesIds: z
+    .array(z.string(), { message: 'Selecione ao menos uma pessoa presente' })
     .min(1, { message: 'Selecione ao menos um aluno' }),
   type: z
     .string({ required_error: 'Selecione o tipo da ocorrência' })
@@ -39,18 +42,7 @@ const occurrenceFormSchema = z.object({
   description: z
     .string({ required_error: 'Descreva com detalhes o acontecimento' })
     .min(10, 'A descrição deve ter pelo menos 10 caracteres'),
-  date: z
-    .string({ required_error: 'Selecione uma data' })
-    .min(1, 'Selecione uma data'),
-  time: z
-    .string({ required_error: 'Selecione um horário' })
-    .min(1, 'Selecione um horário'),
-  teacher: z.string({
-    message: 'É necessário inserir o professor responsável pela aula',
-  }),
-  subject: z.string({
-    message: 'É necessário inserir a matéria do ocorrido',
-  }),
+  title: z.string({ required_error: 'Descreva brevemente o acontecimento' }),
 })
 
 type OccurrenceFormValues = z.infer<typeof occurrenceFormSchema>
@@ -81,8 +73,7 @@ export function NewOccurrenceForm() {
     }
   }
 
-  const { date, description, student, subject, teacher, time, type } =
-    form.formState.errors
+  const { description, studentsId, type, title } = form.formState.errors
 
   return (
     <div className="container max-w-4xl py-8">
@@ -97,7 +88,25 @@ export function NewOccurrenceForm() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
                 <FormField
                   control={form.control}
-                  name="student"
+                  name="title"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Título</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Título da ocorrência"
+                          error={Boolean(title)}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="studentsId"
                   render={({ field }) => (
                     <FormItem className="mt-1.5">
                       <div className="flex flex-col gap-y-2">
@@ -109,11 +118,15 @@ export function NewOccurrenceForm() {
                               label: nome,
                               value: id.toString(),
                             }))}
-                            defaultValue={[defaultSelectedStudent!]}
+                            defaultValue={
+                              defaultSelectedStudent
+                                ? [defaultSelectedStudent]
+                                : []
+                            }
                             onValueChange={field.onChange}
                             value={field.value}
                             selectAll={false}
-                            error={Boolean(student)}
+                            error={Boolean(studentsId)}
                           />
                         </div>
                         <FormMessage />
@@ -153,64 +166,33 @@ export function NewOccurrenceForm() {
 
                 <FormField
                   control={form.control}
-                  name="date"
+                  name="attendeesIds"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Data</FormLabel>
-                      <FormControl>
-                        <Input error={Boolean(date)} type="date" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="time"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Hora</FormLabel>
-                      <FormControl>
-                        <Input error={Boolean(time)} type="time" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="teacher"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Professor</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Professor representante da sala de aula"
-                          error={Boolean(teacher)}
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="subject"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Matéria do acontecimento</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Matéria"
-                          error={Boolean(subject)}
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
+                    <FormItem className="mt-1.5">
+                      <div className="flex flex-col gap-y-2">
+                        <div className="flex flex-col gap-y-3">
+                          <FormLabel>
+                            Presente(s) no momento da ocorrência
+                          </FormLabel>
+                          <MultiSelect
+                            className="min-h-9"
+                            options={students1000.map(({ id, nome }) => ({
+                              label: nome,
+                              value: id.toString(),
+                            }))}
+                            defaultValue={
+                              defaultSelectedStudent
+                                ? [defaultSelectedStudent]
+                                : []
+                            }
+                            onValueChange={field.onChange}
+                            value={field.value}
+                            selectAll={false}
+                            error={Boolean(studentsId)}
+                          />
+                        </div>
+                        <FormMessage />
+                      </div>
                     </FormItem>
                   )}
                 />
