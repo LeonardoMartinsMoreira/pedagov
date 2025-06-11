@@ -32,7 +32,7 @@ export interface UserSettings {
 
 const defaultSettings = {
   fontSize: 16,
-  theme: 'system',
+  theme: 'light',
   layout: 'default',
   notifications: {
     email: true,

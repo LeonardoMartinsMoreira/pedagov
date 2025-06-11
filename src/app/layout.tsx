@@ -25,7 +25,7 @@ export default function LocaleLayout({
       <body className={inter.className}>
         <QueryClientProvider client={queryClient}>
           <SessionProvider>
-            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
               <SettingsProvider>
                 <TooltipProvider delayDuration={0}>
                   <Toaster />
