@@ -4,42 +4,43 @@ import { Loading } from '@/components/loading'
 import { OccurrencesDataTable } from '@/components/occurences/data-table'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Tooltip } from '@/components/ui/tooltip'
+import {
+  occurrencesColorsEnum,
+  occurrencesTypesEnum,
+} from '@/constants/occurrences-types-enum'
 import { useFilters } from '@/hooks/use-filters'
 import { IOccurrence } from '@/interfaces/occurrences/occurrences-interface'
 import { useGetAllOccurrences } from '@/services/queries/get-all-occurrences'
+import { TooltipContent, TooltipTrigger } from '@radix-ui/react-tooltip'
 import type { ColumnDef } from '@tanstack/react-table'
 import { format } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 import { ArrowUpDown } from 'lucide-react'
 import Link from 'next/link'
-import { ptBR } from 'date-fns/locale'
 
 const columns: ColumnDef<IOccurrence>[] = [
   {
-    accessorKey: 'id',
-    header: '№ Ocorrência',
-    cell: ({ row }) => <div className="font-medium">#{row.getValue('id')}</div>,
-  },
-  {
-    accessorKey: 'students',
-    header: ({ column }) => {
+    accessorKey: 'student',
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+      >
+        Aluno
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
+    cell: ({ row }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        <Link
+          href={`/occurrences/${row.original.occurrenceId}`}
+          className="font-medium hover:underline"
         >
-          Aluno
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+          {row.getValue('student')}
+        </Link>
       )
     },
-    cell: ({ row }) => (
-      <Link
-        href={`/occurrences/${row.getValue('id')}`}
-        className="font-medium hover:underline"
-      >
-        {row.getValue('students')}
-      </Link>
-    ),
   },
   {
     accessorKey: 'type',
@@ -47,38 +48,29 @@ const columns: ColumnDef<IOccurrence>[] = [
     cell: ({ row }) => {
       const type = row.getValue('type') as string
 
-      const getBadgeVariant = (type: string) => {
-        switch (type) {
-          case 'Comportamento':
-            return 'destructive'
-          case 'Atraso':
-            return 'warning'
-          case 'Falta':
-            return 'secondary'
-          case 'Uniforme':
-            return 'outline'
-          default:
-            return 'default'
-        }
-      }
-
       return (
-        <Badge
-          variant={
-            getBadgeVariant(type) as
-              | 'default'
-              | 'destructive'
-              | 'outline'
-              | 'secondary'
-              | null
-              | undefined
-          }
-        >
-          {type}
+        <Badge variant={occurrencesColorsEnum[type]}>
+          {occurrencesTypesEnum[type]}
         </Badge>
       )
     },
     filterFn: 'equals',
+  },
+  {
+    accessorKey: 'occurrenceId',
+    header: '№ Ocorrência',
+    cell: ({ row }) => {
+      return (
+        <Tooltip>
+          <TooltipTrigger className="max-w-32 text-ellipsis text-nowrap overflow-hidden whitespace-nowrap">
+            {row.original.occurrenceId}
+          </TooltipTrigger>
+          <TooltipContent className="p-1 rounded bg-muted border border-muted-foreground">
+            {row.original.occurrenceId}
+          </TooltipContent>
+        </Tooltip>
+      )
+    },
   },
   {
     accessorKey: 'createdAt',
@@ -98,18 +90,12 @@ const columns: ColumnDef<IOccurrence>[] = [
       return format(date, 'dd/MM/yyyy', { locale: ptBR })
     },
   },
-
-  {
-    accessorKey: 'group',
-    header: 'Turma',
-    filterFn: 'equals',
-  },
   {
     id: 'actions',
     cell: ({ row }) => {
       return (
         <div className="text-right">
-          <Link href={`/occurrences/${row.getValue('id')}`}>
+          <Link href={`/occurrences/${row.original.occurrenceId}`}>
             <Button variant="ghost" size="sm">
               Detalhes
             </Button>
@@ -125,6 +111,8 @@ export function OccurrencesList() {
   const { data, isLoading } = useGetAllOccurrences(filters)
 
   const occurrences = data?.result
+
+  console.log(occurrences)
 
   if (isLoading) return <Loading />
 

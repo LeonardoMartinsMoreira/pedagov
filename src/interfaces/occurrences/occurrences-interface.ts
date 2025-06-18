@@ -1,10 +1,14 @@
+import { occurrencesTypesEnum } from '@/constants/occurrences-types-enum'
+
+export type IOccurrencesTypes = typeof occurrencesTypesEnum
+
 export interface IOccurrence {
-  id: string
-  authorId: string
-  title: string
-  description: string
-  type: string
+  occurrenceId: string
+  studentId: string
+  student: string
   createdAt: string
+  title: string
+  type: IOccurrencesTypes
 }
 
 export interface IOccurrences {

@@ -11,7 +11,7 @@ interface IOccurrencesParams {
 
 const getAllOccurrences = async (params: IOccurrencesParams) => {
   return (
-    await api.get('/occurrences', {
+    await api.get('/occurrences-student', {
       params: {
         page: params.page,
         limit: params.limit,
@@ -24,6 +24,6 @@ const getAllOccurrences = async (params: IOccurrencesParams) => {
 
 export const useGetAllOccurrences = (data: IOccurrencesParams) =>
   useQuery<IOccurrences>({
-    queryKey: ['occurrences', data],
+    queryKey: ['occurrences-student', data],
     queryFn: () => getAllOccurrences(data),
   })

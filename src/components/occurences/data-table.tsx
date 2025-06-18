@@ -8,6 +8,7 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  SortingState,
   useReactTable,
 } from '@tanstack/react-table'
 
@@ -31,6 +32,7 @@ import {
 } from '@/components/ui/select'
 import { useRouter } from 'next/navigation'
 import { EmptyState } from '../empty-state'
+import { occurrencesTypesEnum } from '@/constants/occurrences-types-enum'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -43,6 +45,9 @@ export function OccurrencesDataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [globalFilter, setGlobalFilter] = useState<string>('')
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: 'createdAt', desc: true },
+  ])
 
   const router = useRouter()
 
@@ -58,13 +63,15 @@ export function OccurrencesDataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    onGlobalFilterChange: setGlobalFilter,
+    getFilteredRowModel: getFilteredRowModel(),
     state: {
       globalFilter,
       columnFilters,
+      sorting,
     },
+    onGlobalFilterChange: setGlobalFilter,
     onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
+    onSortingChange: setSorting,
   })
 
   return (
@@ -79,35 +86,25 @@ export function OccurrencesDataTable<TData, TValue>({
           />
           <div className="flex gap-2">
             <Select
-              onValueChange={(value) =>
-                table.getColumn('class')?.setFilterValue(value)
-              }
+              onValueChange={(value) => {
+                table
+                  .getColumn('type')
+                  ?.setFilterValue(value === 'all' ? null : value)
+              }}
             >
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Turma" />
+                <SelectValue defaultValue="all" placeholder="Todos" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value={null!}>Todas as turmas</SelectItem>
-                <SelectItem value="1º Ano A">1º Ano A</SelectItem>
-                <SelectItem value="2º Ano B">2º Ano B</SelectItem>
-                <SelectItem value="3º Ano C">3º Ano C</SelectItem>
-              </SelectContent>
-            </Select>
 
-            <Select
-              onValueChange={(value) =>
-                table.getColumn('type')?.setFilterValue(value)
-              }
-            >
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Tipo" />
-              </SelectTrigger>
               <SelectContent>
-                <SelectItem value={null!}>Todos os tipos</SelectItem>
-                <SelectItem value="Comportamento">Comportamento</SelectItem>
-                <SelectItem value="Atraso">Atraso</SelectItem>
-                <SelectItem value="Falta">Falta</SelectItem>
-                <SelectItem value="Uniforme">Uniforme</SelectItem>
+                <>
+                  <SelectItem value="all">Todos</SelectItem>
+                  {Object.entries(occurrencesTypesEnum).map(([key, label]) => (
+                    <SelectItem key={key} value={key}>
+                      {label}
+                    </SelectItem>
+                  ))}
+                </>
               </SelectContent>
             </Select>
           </div>
