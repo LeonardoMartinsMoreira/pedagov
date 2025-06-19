@@ -19,13 +19,19 @@ import { PedagogueProfileDialog } from './PedagogueProfileDialog'
 import { DeletePedagogueDialog } from './DeletePedagogueDialog'
 
 type TPedadogueTable = {
-  id: number
-  nome: string
+  id: string
+  name: string
+  role: string
 }
 
 export const columns: ColumnDef<TPedadogueTable>[] = [
   {
-    accessorKey: 'nome',
+    accessorKey: 'id',
+    header: 'ID',
+  },
+
+  {
+    accessorKey: 'name',
     header: ({ column }) => {
       return (
         <Button
@@ -38,7 +44,15 @@ export const columns: ColumnDef<TPedadogueTable>[] = [
       )
     },
   },
+  {
+    accessorKey: 'role',
+    header: '',
+    cell: ({ row }) => {
+      const roleLabel = row.original.role === 'ADMIN' ? 'Administrador' : ''
 
+      return <div className="flex justify-end">{roleLabel}</div>
+    },
+  },
   {
     id: 'actions',
     cell: ({ row }) => {

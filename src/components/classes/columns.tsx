@@ -15,7 +15,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useDialogState } from '@/hooks/use-dialog-state'
-import { DeletePedagogueDialog } from '../pedagogues/DeletePedagogueDialog'
 
 type TClassesTable = {
   id: number
@@ -40,7 +39,7 @@ export const columns: ColumnDef<TClassesTable>[] = [
 
   {
     id: 'actions',
-    cell: ({ row }) => {
+    cell: () => {
       const deletePedagogue = useDialogState()
 
       return (
@@ -60,12 +59,6 @@ export const columns: ColumnDef<TClassesTable>[] = [
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-
-          <DeletePedagogueDialog
-            closeDialog={deletePedagogue.closeDialog}
-            isVisible={deletePedagogue.isVisible}
-            idSelectedPedagogue={row.original.id}
-          />
         </div>
       )
     },

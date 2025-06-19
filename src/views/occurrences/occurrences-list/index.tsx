@@ -10,7 +10,7 @@ import {
   occurrencesTypesEnum,
 } from '@/constants/occurrences-types-enum'
 import { useFilters } from '@/hooks/use-filters'
-import { IOccurrence } from '@/interfaces/occurrences/occurrences-interface'
+import { IOccurrence } from '@/interfaces/occurrences/occurrences'
 import { useGetAllOccurrences } from '@/services/queries/get-all-occurrences'
 import { TooltipContent, TooltipTrigger } from '@radix-ui/react-tooltip'
 import type { ColumnDef } from '@tanstack/react-table'
@@ -111,8 +111,6 @@ export function OccurrencesList() {
   const { data, isLoading } = useGetAllOccurrences(filters)
 
   const occurrences = data?.result
-
-  console.log(occurrences)
 
   if (isLoading) return <Loading />
 

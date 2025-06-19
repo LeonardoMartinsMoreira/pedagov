@@ -15,7 +15,7 @@ export function PedagogueProfileDialog({
 }: {
   isVisible: boolean
   closeDialog: () => void
-  idSelectedPedagogue: number
+  idSelectedPedagogue: string
 }) {
   console.log(idSelectedPedagogue, 'perfil do aluno')
 

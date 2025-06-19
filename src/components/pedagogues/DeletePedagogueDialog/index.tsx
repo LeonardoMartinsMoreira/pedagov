@@ -9,11 +9,13 @@ export function DeletePedagogueDialog({
 }: {
   isVisible: boolean
   closeDialog: () => void
-  idSelectedPedagogue: number
+  idSelectedPedagogue: string
 }) {
   console.log(idSelectedPedagogue, 'perfil do aluno')
 
-  const pedagogue = fakePedagogues.find(({ id }) => id === idSelectedPedagogue)
+  const pedagogue = fakePedagogues.find(
+    ({ id }) => id.toString() === idSelectedPedagogue
+  )
 
   return (
     <Dialog open={isVisible} onOpenChange={closeDialog}>
