@@ -1,6 +1,5 @@
 'use client'
 
-import { Loading } from '@/components/loading'
 import { OccurrencesDataTable } from '@/components/occurences/data-table'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -9,9 +8,7 @@ import {
   occurrencesColorsEnum,
   occurrencesTypesEnum,
 } from '@/constants/occurrences-types-enum'
-import { useFilters } from '@/hooks/use-filters'
 import { IOccurrence } from '@/interfaces/occurrences/occurrences'
-import { useGetAllOccurrences } from '@/services/queries/get-all-occurrences'
 import { TooltipContent, TooltipTrigger } from '@radix-ui/react-tooltip'
 import type { ColumnDef } from '@tanstack/react-table'
 import { format } from 'date-fns'
@@ -107,20 +104,13 @@ const columns: ColumnDef<IOccurrence>[] = [
 ]
 
 export function OccurrencesList() {
-  const { filters } = useFilters()
-  const { data, isLoading } = useGetAllOccurrences(filters)
-
-  const occurrences = data?.result
-
-  if (isLoading) return <Loading />
-
   return (
     <div className="container mx-auto py-6 space-y-6">
       <div className="flex justify-een items-center">
         <h1 className="text-3xl font-bold">Ocorrências</h1>
       </div>
 
-      <OccurrencesDataTable columns={columns} data={occurrences} />
+      <OccurrencesDataTable columns={columns} />
     </div>
   )
 }

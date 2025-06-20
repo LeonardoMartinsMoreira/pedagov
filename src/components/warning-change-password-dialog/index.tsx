@@ -6,6 +6,7 @@ import {
   DialogContent,
   DialogDescription,
   DialogHeader,
+  DialogTitle,
 } from '@/components/ui/dialog'
 import {
   Form,
@@ -84,9 +85,9 @@ export function ChangePasswordModal({ isVisible }: { isVisible: boolean }) {
             }}
           />
           <DialogHeader>
-            <p className="flex items-center justify-center text-center font-medium gap-2 text-xl">
+            <DialogTitle className="flex items-center justify-center text-center font-medium gap-2 text-xl">
               É necessário alterar sua senha para prosseguir
-            </p>
+            </DialogTitle>
           </DialogHeader>
           <DialogDescription className="text-center">
             Por motivos de segurança, a alteração de senha deve ser feita.

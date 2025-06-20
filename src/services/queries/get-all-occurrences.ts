@@ -9,21 +9,23 @@ interface IOccurrencesParams {
   type?: string
 }
 
-const getAllOccurrences = async (params: IOccurrencesParams) => {
-  return (
-    await api.get('/occurrences-student', {
-      params: {
-        page: params.page,
-        limit: params.limit,
-        studentId: params.studentId,
-        type: params.type,
-      },
-    })
-  ).data
+interface IOccurrencesResponse {
+  result: IOccurrences[]
+  totalPages: number
+  totalItems: number
 }
 
-export const useGetAllOccurrences = (data: IOccurrencesParams) =>
-  useQuery<IOccurrences>({
-    queryKey: ['occurrences-student', data],
-    queryFn: () => getAllOccurrences(data),
+const getAllOccurrences = async (params: IOccurrencesParams) => {
+  const { page, limit, studentId, type } = params
+  const response = await api.get<IOccurrencesResponse>('/occurrences-student', {
+    params: { page, limit, studentId, type },
+  })
+
+  return response.data
+}
+
+export const useGetAllOccurrences = (params: IOccurrencesParams) =>
+  useQuery<IOccurrencesResponse>({
+    queryKey: ['occurrences', params],
+    queryFn: () => getAllOccurrences(params),
   })

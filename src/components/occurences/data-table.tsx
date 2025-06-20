@@ -8,6 +8,7 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  PaginationState,
   SortingState,
   useReactTable,
 } from '@tanstack/react-table'
@@ -33,32 +34,40 @@ import {
 import { useRouter } from 'next/navigation'
 import { EmptyState } from '../empty-state'
 import { occurrencesTypesEnum } from '@/constants/occurrences-types-enum'
+import { useGetAllOccurrences } from '@/services/queries/get-all-occurrences'
+import { Loading } from '../loading'
+import { IOccurrence } from '@/interfaces/occurrences/occurrences'
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[] | undefined
+interface OccurrencesDataTableProps {
+  columns: ColumnDef<IOccurrence>[]
 }
-
-export function OccurrencesDataTable<TData, TValue>({
-  columns,
-  data,
-}: DataTableProps<TData, TValue>) {
+export function OccurrencesDataTable({ columns }: OccurrencesDataTableProps) {
   const [globalFilter, setGlobalFilter] = useState<string>('')
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [sorting, setSorting] = useState<SortingState>([
     { id: 'createdAt', desc: true },
   ])
 
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  })
+
   const router = useRouter()
+
+  const { data, isLoading } = useGetAllOccurrences({
+    page: pagination.pageIndex + 1,
+    limit: pagination.pageSize,
+    type: columnFilters.find((filter) => filter.id === 'type')?.value as string,
+  })
+
+  const occurrences = data?.result
 
   const handleOnNewOccurrenceClick = () =>
     router.push(`occurrences/new-occurrence/null`)
 
-  if (!data) return <></>
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const table = useReactTable({
-    data,
+  const table = useReactTable<IOccurrence>({
+    data: occurrences!,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -68,10 +77,14 @@ export function OccurrencesDataTable<TData, TValue>({
       globalFilter,
       columnFilters,
       sorting,
+      pagination,
     },
     onGlobalFilterChange: setGlobalFilter,
     onColumnFiltersChange: setColumnFilters,
     onSortingChange: setSorting,
+    onPaginationChange: setPagination,
+    manualPagination: true,
+    pageCount: data?.totalPages || -1,
   })
 
   return (
@@ -95,7 +108,6 @@ export function OccurrencesDataTable<TData, TValue>({
               <SelectTrigger className="w-[180px]">
                 <SelectValue defaultValue="all" placeholder="Todos" />
               </SelectTrigger>
-
               <SelectContent>
                 <>
                   <SelectItem value="all">Todos</SelectItem>
@@ -118,12 +130,14 @@ export function OccurrencesDataTable<TData, TValue>({
         </Button>
       </div>
       <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
+        {isLoading ? (
+          <Loading />
+        ) : (
+          <Table>
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
                     <TableHead key={header.id}>
                       {header.isPlaceholder
                         ? null
@@ -132,44 +146,44 @@ export function OccurrencesDataTable<TData, TValue>({
                             header.getContext()
                           )}
                     </TableHead>
-                  )
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
                   ))}
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  <EmptyState />
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && 'selected'}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    <EmptyState />
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        )}
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredRowModel().rows.length} ocorrência(s) encontrada(s)
+          {data?.totalItems || 0} ocorrência(s) encontrada(s)
         </div>
         <div className="space-x-2">
           <Button
