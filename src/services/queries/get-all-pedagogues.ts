@@ -12,7 +12,7 @@ const getAllPedagogues = async (params: IPedagoguesParams) => {
   return (
     await api.get('/pedagogues', {
       params: {
-        page: params.page,
+        page: 2,
         limit: params.limit,
         type: params.type,
       },
@@ -22,6 +22,6 @@ const getAllPedagogues = async (params: IPedagoguesParams) => {
 
 export const useGetAllPedagogues = (data: IPedagoguesParams) =>
   useQuery<IPedagogues>({
-    queryKey: ['Pedagogues', data],
+    queryKey: ['pedagogues', data],
     queryFn: () => getAllPedagogues(data),
   })

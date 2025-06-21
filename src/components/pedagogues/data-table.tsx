@@ -50,6 +50,7 @@ export function PedagoguesDataTable<TData, TValue>({
       globalFilter,
       columnFilters,
     },
+    manualPagination: true,
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
   })

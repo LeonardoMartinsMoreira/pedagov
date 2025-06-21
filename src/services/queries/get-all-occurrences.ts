@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { api } from '../api'
-import { IOccurrences } from '@/interfaces/occurrences/occurrences'
+import { IOccurrence } from '@/interfaces/occurrences/occurrences'
 
 interface IOccurrencesParams {
   page: number
@@ -10,7 +10,7 @@ interface IOccurrencesParams {
 }
 
 interface IOccurrencesResponse {
-  result: IOccurrences[]
+  result: IOccurrence[]
   totalPages: number
   totalItems: number
 }
