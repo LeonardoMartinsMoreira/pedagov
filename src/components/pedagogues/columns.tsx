@@ -15,16 +15,11 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useDialogState } from '@/hooks/use-dialog-state'
+import { IPedagogue } from '@/interfaces/pedagogues/pedagogues'
 import { PedagogueProfileDialog } from './PedagogueProfileDialog'
 import { DeletePedagogueDialog } from './DeletePedagogueDialog'
 
-type TPedadogueTable = {
-  id: string
-  name: string
-  role: string
-}
-
-export const columns: ColumnDef<TPedadogueTable>[] = [
+export const columns: ColumnDef<IPedagogue>[] = [
   {
     accessorKey: 'id',
     header: 'ID',

@@ -12,7 +12,7 @@ const getAllPedagogues = async (params: IPedagoguesParams) => {
   return (
     await api.get('/pedagogues', {
       params: {
-        page: 2,
+        page: params.page,
         limit: params.limit,
         type: params.type,
       },
