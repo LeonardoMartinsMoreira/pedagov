@@ -84,7 +84,7 @@ export const columns: ColumnDef<IPedagogue>[] = [
           <DeletePedagogueDialog
             closeDialog={deletePedagogue.closeDialog}
             isVisible={deletePedagogue.isVisible}
-            idSelectedPedagogue={row.original.id}
+            pedagogue={row.original}
           />
         </div>
       )
