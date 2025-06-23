@@ -7,6 +7,7 @@ interface IOccurrencesParams {
   limit: number
   studentId?: string
   type?: string
+  globalFilter: string
 }
 
 interface IOccurrencesResponse {
@@ -16,9 +17,9 @@ interface IOccurrencesResponse {
 }
 
 const getAllOccurrences = async (params: IOccurrencesParams) => {
-  const { page, limit, studentId, type } = params
+  const { globalFilter: searchTerm, page, limit, studentId, type } = params
   const response = await api.get<IOccurrencesResponse>('/occurrences-student', {
-    params: { page, limit, studentId, type },
+    params: { searchTerm, page, limit, studentId, type },
   })
 
   return response.data

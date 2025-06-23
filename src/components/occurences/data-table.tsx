@@ -58,6 +58,7 @@ export function OccurrencesDataTable({ columns }: OccurrencesDataTableProps) {
   const { data, isLoading } = useGetAllOccurrences({
     page: pagination.pageIndex + 1,
     limit: pagination.pageSize,
+    globalFilter,
     type: columnFilters.find((filter) => filter.id === 'type')?.value as string,
   })
 
@@ -92,8 +93,8 @@ export function OccurrencesDataTable({ columns }: OccurrencesDataTableProps) {
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 py-4">
         <div className="w-full flex flex-col md:flex-row gap-4">
           <Input
-            placeholder="Buscar aluno..."
-            value={globalFilter ?? ''}
+            placeholder="Buscar por aluno, № Ocorrência, data..."
+            value={globalFilter}
             onChange={(e) => table.setGlobalFilter(String(e.target.value))}
             className="max-w-sm"
           />
