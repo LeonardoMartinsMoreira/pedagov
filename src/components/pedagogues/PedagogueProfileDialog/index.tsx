@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -74,7 +74,6 @@ export function PedagogueProfileDialog({
     resolver: zodResolver(EditPedagogueSchema),
     defaultValues: {
       ...pedagogue,
-      // Converte role string para isAdmin boolean
       isAdmin: pedagogue.role === 'ADMIN',
     },
   })
@@ -83,10 +82,29 @@ export function PedagogueProfileDialog({
     errors: { name },
   } = form.formState
 
-  const { mutate, isPending } = useEditPedagogue(closeDialog)
+  useEffect(() => {
+    if (pedagogue) {
+      form.reset({
+        ...pedagogue,
+        isAdmin: pedagogue.role === 'ADMIN',
+      })
+    }
+  }, [pedagogue, form])
+
+  const handleCancel = () => {
+    form.reset()
+    setIsEditing(false)
+  }
+
+  const handleCloseDialog = () => {
+    setIsEditing(false)
+    form.reset()
+    closeDialog()
+  }
+
+  const { mutate, isPending } = useEditPedagogue(handleCloseDialog)
 
   const handleSave = (data: IEditPedagogue) => {
-    // Converte isAdmin boolean de volta para role string
     const pedagogueData = {
       ...data,
       role: data.isAdmin ? 'ADMIN' : 'COMMON',
@@ -95,23 +113,6 @@ export function PedagogueProfileDialog({
     mutate({
       data: pedagogueData,
     })
-  }
-
-  const handleCancel = () => {
-    form.reset({
-      ...pedagogue,
-      isAdmin: pedagogue.role === 'ADMIN',
-    })
-    setIsEditing(false)
-  }
-
-  const handleCloseDialog = () => {
-    setIsEditing(false)
-    form.reset({
-      ...pedagogue,
-      isAdmin: pedagogue.role === 'ADMIN',
-    })
-    closeDialog()
   }
 
   return (
