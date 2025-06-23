@@ -76,7 +76,7 @@ export const columns: ColumnDef<IPedagogue>[] = [
           </DropdownMenu>
 
           <PedagogueProfileDialog
-            idSelectedPedagogue={row.original.id}
+            pedagogue={row.original}
             isVisible={pedagogueProfileDialog.isVisible}
             closeDialog={pedagogueProfileDialog.closeDialog}
           />
