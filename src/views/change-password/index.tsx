@@ -37,7 +37,6 @@ const ChangePasswordSchema = z
 export type IChangePassword = z.infer<typeof ChangePasswordSchema>
 
 export function ChangePassword() {
-  const { data: user, update } = useSession()
   const { mutate, isPending } = useChangePassword()
   const { data } = useSession()
 
@@ -62,107 +61,101 @@ export function ChangePassword() {
   } = form.formState
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      {/* Backdrop */}
-      <div className="fixed inset-0 bg-black bg-opacity-50" />
-
-      {/* Modal Content */}
-      <div className="relative bg-white rounded-lg shadow-xl max-w-md w-full mx-4 p-6">
-        <div className="flex flex-col gap-y-4">
-          <div className="flex flex-col items-center">
-            <Warning
-              size={64}
-              className="text-red-700 animate-pulse"
-              style={{
-                animationDuration: '5s',
-                animationTimingFunction: 'ease-in-out',
-              }}
-            />
-            <div className="text-center mt-4">
-              <h2 className="text-xl font-medium text-gray-900">
-                É necessário alterar sua senha para prosseguir
-              </h2>
-              <p className="text-sm text-gray-600 mt-2">
-                Por motivos de segurança, a alteração de senha deve ser feita.
-              </p>
-            </div>
+    <div className="relative bg-background rounded-lg shadow-md dark:bg-[#0D111F] max-w-md w-full mx-4 p-6 dark:bg-muted">
+      <div className="flex flex-col gap-y-4">
+        <div className="flex flex-col items-center">
+          <Warning
+            size={64}
+            className="text-red-700 animate-pulse"
+            style={{
+              animationDuration: '5s',
+              animationTimingFunction: 'ease-in-out',
+            }}
+          />
+          <div className="text-center mt-4">
+            <h2 className="text-xl font-medium text-gray-900 dark:text-white">
+              É necessário alterar sua senha para prosseguir
+            </h2>
+            <p className="text-sm mt-2 text-gray-600 dark:text-gray-400">
+              Por motivos de segurança, a alteração de senha deve ser feita.
+            </p>
           </div>
-
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="flex flex-col gap-y-4 mt-4"
-            >
-              <FormField
-                control={form.control}
-                name="currentPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Senha Atual</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        className="h-10 pr-10"
-                        placeholder="Digite sua senha atual"
-                        error={Boolean(currentPassword)}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="newPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nova Senha</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        className="h-10 pr-10"
-                        placeholder="Digite sua nova senha"
-                        error={Boolean(newPassword)}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="confirmPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Confirmar Nova Senha</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        className="h-10 pr-10"
-                        placeholder="Confirme sua nova senha"
-                        error={Boolean(confirmPassword)}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <Button
-                type="submit"
-                isLoading={isPending}
-                className="w-full mt-2"
-                disabled={isPending}
-              >
-                Alterar Senha
-              </Button>
-            </form>
-          </Form>
         </div>
+
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col gap-y-4 mt-4"
+          >
+            <FormField
+              control={form.control}
+              name="currentPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Senha Atual</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      className="h-10 pr-10"
+                      placeholder="Digite sua senha atual"
+                      error={Boolean(currentPassword)}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="newPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Nova Senha</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      className="h-10 pr-10"
+                      placeholder="Digite sua nova senha"
+                      error={Boolean(newPassword)}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirmar Nova Senha</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      className="h-10 pr-10"
+                      placeholder="Confirme sua nova senha"
+                      error={Boolean(confirmPassword)}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Button
+              type="submit"
+              isLoading={isPending}
+              className="w-full mt-2"
+              disabled={isPending}
+            >
+              Alterar Senha
+            </Button>
+          </form>
+        </Form>
       </div>
     </div>
   )
