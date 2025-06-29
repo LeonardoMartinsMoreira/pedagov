@@ -18,16 +18,15 @@ import { useDialogState } from '@/hooks/use-dialog-state'
 import { StudentProfileDialog } from './StudentProfileDialog'
 import { DeleteStudentDialog } from './DeleteStudentDialog'
 import { useRouter } from 'next/navigation'
+import { IStudent } from '@/interfaces/students/students'
 
-type TAlunoTable = {
-  id: number
-  nome: string
-  turma: string
-}
-
-export const columns: ColumnDef<TAlunoTable>[] = [
+export const columns: ColumnDef<IStudent>[] = [
   {
-    accessorKey: 'nome',
+    accessorKey: 'studentId',
+    header: 'ID',
+  },
+  {
+    accessorKey: 'student',
     header: ({ column }) => {
       return (
         <Button
@@ -42,7 +41,7 @@ export const columns: ColumnDef<TAlunoTable>[] = [
   },
 
   {
-    accessorKey: 'turma',
+    accessorKey: 'group',
     header: 'Turma',
   },
   {
@@ -66,13 +65,13 @@ export const columns: ColumnDef<TAlunoTable>[] = [
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={() => router.push(`students/${student.id}`)}
+              onClick={() => router.push(`students/${student.studentId}`)}
             >
               Ver Perfil do Aluno
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() =>
-                router.push(`/occurrences/new-occurrence/${student.id}`)
+                router.push(`/occurrences/new-occurrence/${student.studentId}`)
               }
             >
               Registrar Ocorrência
@@ -83,7 +82,7 @@ export const columns: ColumnDef<TAlunoTable>[] = [
           </DropdownMenuContent>
 
           <StudentProfileDialog
-            idSelectedStudent={student.id}
+            student={student}
             closeDialog={studentProfileDialog.closeDialog}
             isVisible={studentProfileDialog.isVisible}
           />
@@ -91,7 +90,7 @@ export const columns: ColumnDef<TAlunoTable>[] = [
           <DeleteStudentDialog
             closeDialog={deleteStudentDialog.closeDialog}
             isVisible={deleteStudentDialog.isVisible}
-            idSelectedStudent={student.id}
+            student={student}
           />
         </DropdownMenu>
       )

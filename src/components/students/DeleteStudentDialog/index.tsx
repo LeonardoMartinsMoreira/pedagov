@@ -1,18 +1,16 @@
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog'
-import { students1000 } from '@/faker/students'
+import { IStudent } from '@/interfaces/students/students'
 
 export function DeleteStudentDialog({
   isVisible,
   closeDialog,
-  idSelectedStudent,
+  student,
 }: {
   isVisible: boolean
   closeDialog: () => void
-  idSelectedStudent: number
+  student: IStudent
 }) {
-  const student = students1000.find(({ id }) => id === idSelectedStudent)
-
   return (
     <Dialog open={isVisible} onOpenChange={closeDialog}>
       <DialogContent className="flex flex-col gap-y-3 sm:max-w-[425px]">
@@ -26,7 +24,7 @@ export function DeleteStudentDialog({
           Essa ação não pode ser revertida. Você tem certeza que deseja deletar
           o aluno(a){' '}
           <span className="font-bold text-black dark:text-white ">
-            {student?.nome}?
+            {student?.student}?
           </span>
         </p>
 

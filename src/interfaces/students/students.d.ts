@@ -1,6 +1,6 @@
 export interface IStudent {
   studentId: string
-  name: string
+  student: string
   status: string
   cpf: string
   groupId: string

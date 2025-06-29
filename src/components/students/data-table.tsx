@@ -27,24 +27,26 @@ import { Input } from '../ui/input'
 import { Select, SelectContent, SelectTrigger, SelectValue } from '../ui/select'
 import { AddStudentDialog } from './AddStudentDialog'
 import { fakeClasses } from '@/faker/classes'
+import { useGetAllStudents } from '@/services/queries/get-all-students'
+import { IStudent } from '@/interfaces/students/students'
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+interface DataTableProps {
+  columns: ColumnDef<IStudent, unknown>[]
 }
 
-export function StudentsDataTable<TData, TValue>({
-  columns,
-  data,
-}: DataTableProps<TData, TValue>) {
+export function StudentsDataTable({ columns }: DataTableProps) {
   const [globalFilter, setGlobalFilter] = useState<string[]>([])
   const [filterByClass, setFilterByClass] = useState('')
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 
-  const adicionarAluno = useDialogState()
+  const { data } = useGetAllStudents()
+
+  const addStudent = useDialogState()
+
+  const students = data?.result ?? []
 
   const table = useReactTable({
-    data,
+    data: students,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -95,7 +97,7 @@ export function StudentsDataTable<TData, TValue>({
           </div>
         </div>
 
-        <Button onClick={adicionarAluno.openDialog}>Adicionar Aluno</Button>
+        <Button onClick={addStudent.openDialog}>Adicionar Aluno</Button>
       </div>
       <div className="rounded-md border">
         <Table>
@@ -170,8 +172,8 @@ export function StudentsDataTable<TData, TValue>({
       </div>
 
       <AddStudentDialog
-        closeDialog={adicionarAluno.closeDialog}
-        isVisible={adicionarAluno.isVisible}
+        closeDialog={addStudent.closeDialog}
+        isVisible={addStudent.isVisible}
       />
     </div>
   )

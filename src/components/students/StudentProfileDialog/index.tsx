@@ -5,27 +5,24 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import { IStudent } from '@/interfaces/students/students'
 import { WhatsappLogo } from '@phosphor-icons/react/dist/ssr'
 import Image from 'next/image'
 
 export function StudentProfileDialog({
   isVisible,
   closeDialog,
-  idSelectedStudent,
+  student,
 }: {
   isVisible: boolean
   closeDialog: () => void
-  idSelectedStudent: number
+  student: IStudent
 }) {
-  console.log(idSelectedStudent, 'perfil do aluno')
-
   return (
     <Dialog open={isVisible} onOpenChange={closeDialog}>
       <DialogContent className="flex flex-col gap-y-3 sm:max-w-[425px]">
         <DialogHeader className="flex w-full flex-col items-center">
-          <DialogTitle className="text-center">
-            Leonardo Martins Moreira
-          </DialogTitle>
+          <DialogTitle className="text-center">{student.student}</DialogTitle>
 
           <Image
             className="w-32 h-32 bg-black dark:bg-white rounded-full"
