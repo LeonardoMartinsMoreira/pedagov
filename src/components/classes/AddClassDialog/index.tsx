@@ -1,6 +1,4 @@
-import { MultiSelect } from '@/components/multi-select'
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
 import {
   Dialog,
   DialogContent,
@@ -10,50 +8,39 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { shiftsEnum } from '@/constants/shifts-enum'
+import { IGroup } from '@/interfaces/groups/groups'
+import { useCreateGroup } from '@/services/mutations/create-group'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-const options = [
-  {
-    schoolName: 'CEDV',
-    id: 1,
-  },
-  {
-    schoolName: 'CELV',
-    id: 2,
-  },
-  {
-    schoolName: 'CEJA',
-    id: 3,
-  },
-  {
-    schoolName: 'CEDC',
-    id: 4,
-  },
-]
+const shifts = Object.keys(shiftsEnum)
 
 const AddPedagogueSchema = z.object({
-  name: z.string().min(4, { message: 'Nome do pedagogo é obrigatório' }),
-  email: z
-    .string({ message: 'É obrigatório' })
-    .email({ message: 'Insira um email válido' }),
-  school: z
-    .array(z.string(), {
-      message: 'É obrigatório ao menos 1 escola de atuação',
-    })
-    .min(1, { message: 'É obrigatório ao menos 1 escola de atuação' }),
-  isAdmin: z.boolean(),
+  name: z.string().min(4, { message: 'Inserir o nome da turma é obrigatório' }),
+  teacherId: z
+    .string()
+    .uuid({ message: 'Selecionar um professor é obrigatório' }),
+  shift: z.string().nonempty({
+    message: 'Selecionar o turno dessa turma é obrigatório',
+  }),
 })
 
-export type IAddPedagogue = z.infer<typeof AddPedagogueSchema>
+type IAddPedagogue = z.infer<typeof AddPedagogueSchema>
 
 export function AddPedagogueDialog({
   isVisible,
@@ -65,32 +52,32 @@ export function AddPedagogueDialog({
   const form = useForm({
     resolver: zodResolver(AddPedagogueSchema),
     defaultValues: {
-      email: '',
-      school: [],
-      isAdmin: false,
       name: '',
+      shift: undefined,
+      teacherId: 'b718a62b-c8bd-4110-8309-b082741c08a4',
     },
   })
 
   const {
-    errors: { email, school, name },
+    errors: { shift, teacherId, name },
   } = form.formState
 
   const onCloseDialog = () => {
-    closeDialog()
     form.reset()
+    closeDialog()
   }
 
+  const { mutate, isPending } = useCreateGroup(onCloseDialog)
+
   const onSubmit = (data: IAddPedagogue) => {
-    console.log(data)
-    onCloseDialog()
+    mutate(data as IGroup)
   }
 
   return (
     <Dialog open={isVisible} onOpenChange={onCloseDialog}>
       <DialogContent className="flex flex-col gap-y-4">
         <DialogHeader>
-          <DialogTitle>Adicionar novo pedagogo(a)</DialogTitle>
+          <DialogTitle>Adicionar nova turma</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -102,12 +89,12 @@ export function AddPedagogueDialog({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Nome</FormLabel>
+                  <FormLabel>Turma</FormLabel>
                   <FormControl>
                     <Input
                       error={Boolean(name)}
                       className="h-10"
-                      placeholder="Nome completo"
+                      placeholder="Dê um nome a esta turma"
                       {...field}
                     />
                   </FormControl>
@@ -118,15 +105,15 @@ export function AddPedagogueDialog({
 
             <FormField
               control={form.control}
-              name="email"
+              name="teacherId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>Professor</FormLabel>
                   <FormControl>
                     <Input
-                      error={Boolean(email)}
+                      error={Boolean(teacherId)}
                       className="h-10"
-                      placeholder="Email"
+                      placeholder="Escolha o professor regente"
                       {...field}
                     />
                   </FormControl>
@@ -134,29 +121,37 @@ export function AddPedagogueDialog({
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
-              name="school"
+              name="shift"
               render={({ field }) => (
                 <FormItem>
                   <div className="flex flex-col gap-y-2">
                     <div className="flex flex-col gap-y-3">
-                      <FormLabel className={`${school?.message && '#FF0000'}`}>
-                        Escolas de atuação
-                      </FormLabel>
-                      <MultiSelect
-                        className="min-h-10"
-                        options={options.map(({ id, schoolName }) => {
-                          return {
-                            label: schoolName,
-                            value: id.toString(),
-                          }
-                        })}
-                        onValueChange={field.onChange}
+                      <Select
+                        onValueChange={(value) => {
+                          field.onChange(value)
+                        }}
+                        defaultValue={field.value}
                         value={field.value}
-                        selectAll={false}
-                        error={Boolean(school)}
-                      />
+                      >
+                        <FormLabel>Período</FormLabel>
+                        <FormControl>
+                          <SelectTrigger error={Boolean(shift)}>
+                            <SelectValue placeholder="Selecione o tipo" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {shifts.map((shift) => {
+                            return (
+                              <SelectItem key={shift} value={shift}>
+                                {shiftsEnum[shift]}
+                              </SelectItem>
+                            )
+                          })}
+                        </SelectContent>
+                      </Select>
                     </div>
                     <FormMessage />
                   </div>
@@ -164,34 +159,9 @@ export function AddPedagogueDialog({
               )}
             />
 
-            <div>
-              <FormField
-                control={form.control}
-                name="isAdmin"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4 shadow">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                    <div className="space-y-1 leading-none">
-                      <FormLabel>
-                        Marque esta caixa para conceder permissões de{' '}
-                        <strong>Administrador</strong>.
-                      </FormLabel>
-                      <FormDescription>
-                        Este usuário poderá adicionar e remover turmas, alunos e
-                        pedagogos
-                      </FormDescription>
-                    </div>
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <Button type="submit">Adicionar</Button>
+            <Button isLoading={isPending} type="submit">
+              Adicionar
+            </Button>
           </form>
         </Form>
       </DialogContent>
