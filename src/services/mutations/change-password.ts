@@ -1,8 +1,8 @@
 import { useMutation } from '@tanstack/react-query'
 import { api } from '../api'
 import { toast } from '@/hooks/use-toast'
-import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import { useFirstLogin } from '@/contexts/login-context'
 
 interface IChangePassword {
   password: string
@@ -15,18 +15,18 @@ const changePassword = async (data: IChangePassword) => {
 }
 
 export const useChangePassword = () => {
-  const { data, update } = useSession()
   const { push } = useRouter()
+  const { isFirstLogin, setIsFirstLogin } = useFirstLogin()
 
   return useMutation({
     mutationKey: ['changePassword'],
     mutationFn: changePassword,
     onSuccess: () => {
-      if (data?.user.isFirstLogin) {
-        update({ isFirstLogin: false })
-      }
-
       push('/')
+
+      if (isFirstLogin) {
+        setIsFirstLogin(false)
+      }
 
       toast({
         title: 'Senha alterada com sucesso.',

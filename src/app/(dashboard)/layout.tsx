@@ -2,7 +2,7 @@
 
 import { Sidebar } from '@/components/sidebar'
 import { TopNav } from '@/components/top-nav'
-import { useSession } from 'next-auth/react'
+import { useFirstLogin } from '@/contexts/login-context'
 import { useRouter } from 'next/navigation'
 import type React from 'react'
 import { useEffect } from 'react'
@@ -12,14 +12,14 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const { data: user } = useSession()
+  const { isFirstLogin } = useFirstLogin()
   const { push } = useRouter()
 
   useEffect(() => {
-    if (user?.user.isFirstLogin) {
+    if (isFirstLogin) {
       push('/change-password')
     }
-  }, [push, user?.user.isFirstLogin])
+  }, [isFirstLogin, push])
 
   return (
     <div className="min-h-screen flex">
