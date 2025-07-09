@@ -15,28 +15,32 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useDialogState } from '@/hooks/use-dialog-state'
+import { IGroup } from '@/interfaces/groups/groups'
+import { shiftsEnum } from '@/constants/shifts-enum'
+import { Badge } from '../ui/badge'
 
-type TClassesTable = {
-  id: number
-  class: string
-}
-
-export const columns: ColumnDef<TClassesTable>[] = [
+export const columns: ColumnDef<IGroup>[] = [
   {
-    accessorKey: 'class',
+    accessorKey: 'name',
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
+        <button
+          className="flex gap-x-2 items-center"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           Turma
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+          <ArrowUpDown className="h-4 w-4" />
+        </button>
       )
     },
   },
-
+  {
+    header: 'Período',
+    accessorKey: 'shift',
+    cell: ({ row }) => {
+      return <Badge>{shiftsEnum[row.original.shift]}</Badge>
+    },
+  },
   {
     id: 'actions',
     cell: () => {

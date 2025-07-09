@@ -1,32 +1,30 @@
 import { useQuery } from '@tanstack/react-query'
 import { api } from '../api'
-import { IOccurrence } from '@/interfaces/occurrences/occurrences'
+import { IGroup } from '@/interfaces/groups/groups'
 
-interface IOccurrencesParams {
+interface IGroupsParams {
   page: number
   limit: number
-  studentId?: string
-  type?: string
   globalFilter: string
 }
 
-interface IOccurrencesResponse {
-  result: IOccurrence[]
+interface IGroupsResponse {
+  result: IGroup[]
   totalPages: number
   totalItems: number
 }
 
-const getAllOccurrences = async (params: IOccurrencesParams) => {
-  const { globalFilter: searchTerm, page, limit, studentId, type } = params
-  const response = await api.get<IOccurrencesResponse>('/occurrences-student', {
-    params: { searchTerm, page, limit, studentId, type },
+const getAllGroups = async (params: IGroupsParams) => {
+  const { globalFilter: searchTerm, page, limit } = params
+  const response = await api.get<IGroupsResponse>('/groups', {
+    params: { searchTerm, page, limit },
   })
 
   return response.data
 }
 
-export const useGetAllOccurrences = (params: IOccurrencesParams) =>
-  useQuery<IOccurrencesResponse>({
-    queryKey: ['occurrences', params],
-    queryFn: () => getAllOccurrences(params),
+export const useGetAllGroups = (params: IGroupsParams) =>
+  useQuery<IGroupsResponse>({
+    queryKey: ['groups', params],
+    queryFn: () => getAllGroups(params),
   })

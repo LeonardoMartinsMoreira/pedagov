@@ -1,15 +1,6 @@
 'use client'
 
-import {
-  ColumnDef,
-  ColumnFiltersState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from '@tanstack/react-table'
+import { type ColumnDef, flexRender } from '@tanstack/react-table'
 
 import {
   Table,
@@ -19,40 +10,44 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { LIMIT } from '@/constants/pagination'
 import { useDialogState } from '@/hooks/use-dialog-state'
-import { useState } from 'react'
+import { usePaginatedTable } from '@/hooks/use-paginated-table'
+import { useGetAllGroups } from '@/services/queries/get-all-groups'
+import { Loading } from '../loading'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 import { AddPedagogueDialog } from './AddClassDialog'
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+interface DataTableProps<TData> {
+  columns: ColumnDef<TData, unknown>[]
 }
 
-export function ClassesDataTable<TData, TValue>({
-  columns,
-  data,
-}: DataTableProps<TData, TValue>) {
-  const [globalFilter, setGlobalFilter] = useState<string[]>([])
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-
+export function ClassesDataTable<TData>({ columns }: DataTableProps<TData>) {
   const addPedagogue = useDialogState()
 
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    onGlobalFilterChange: setGlobalFilter,
-    state: {
-      globalFilter,
-      columnFilters,
-    },
-    onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
+  const { pagination, globalFilter, setGlobalFilter, table } =
+    usePaginatedTable<TData>({
+      data: [],
+      columns,
+      totalPages: 2,
+    })
+
+  const { data, isLoading } = useGetAllGroups({
+    limit: LIMIT,
+    page: pagination.pageIndex + 1,
+    globalFilter: '',
   })
+
+  const groups = data?.result ?? []
+
+  table.setOptions((prev) => ({
+    ...prev,
+    data: groups as TData[],
+    pageCount: data?.totalPages ?? 0,
+  }))
+
+  if (isLoading) return <Loading />
 
   return (
     <div>
@@ -61,33 +56,33 @@ export function ClassesDataTable<TData, TValue>({
           <Input
             placeholder="Filtre por Nome da turma"
             value={globalFilter ?? ''}
-            onChange={(e) => table.setGlobalFilter(String(e.target.value))}
+            onChange={(e) => setGlobalFilter(e.target.value)}
             className="max-w-sm"
           />
         </div>
 
         <Button onClick={addPedagogue.openDialog}>Adicionar Turma</Button>
       </div>
+
       <div className="rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  )
-                })}
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
           </TableHeader>
+
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
@@ -118,9 +113,10 @@ export function ClassesDataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
+
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredRowModel().rows.length} turmas(s) encontrada(s)
+          {table.getFilteredRowModel().rows.length} turma(s) encontrada(s)
         </div>
         <Button
           variant="outline"
