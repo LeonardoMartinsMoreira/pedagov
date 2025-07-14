@@ -18,6 +18,7 @@ import { useDialogState } from '@/hooks/use-dialog-state'
 import { IGroup } from '@/interfaces/groups/groups'
 import { shiftsEnum } from '@/constants/shifts-enum'
 import { Badge } from '../ui/badge'
+import { DeleteGroupDialog } from './DeleteGroupDialog'
 
 export const columns: ColumnDef<IGroup>[] = [
   {
@@ -42,9 +43,13 @@ export const columns: ColumnDef<IGroup>[] = [
     },
   },
   {
+    header: '№ Alunos',
+    accessorKey: 'numberOfStudents',
+  },
+  {
     id: 'actions',
-    cell: () => {
-      const deletePedagogue = useDialogState()
+    cell: ({ row }) => {
+      const deleteGroup = useDialogState()
 
       return (
         <div className="flex justify-end">
@@ -58,11 +63,17 @@ export const columns: ColumnDef<IGroup>[] = [
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Ações</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={deletePedagogue.openDialog}>
-                Deletar Pedagogo(a)
+              <DropdownMenuItem onClick={deleteGroup.openDialog}>
+                Deletar Turma
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+
+          <DeleteGroupDialog
+            closeDialog={deleteGroup.closeDialog}
+            group={row.original}
+            isVisible={deleteGroup.isVisible}
+          />
         </div>
       )
     },

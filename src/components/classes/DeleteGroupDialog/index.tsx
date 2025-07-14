@@ -1,19 +1,22 @@
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog'
-import { fakePedagogues } from '@/faker/pedadogues'
+import { IGroup } from '@/interfaces/groups/groups'
+import { useDeleteGroup } from '@/services/mutations/delete-group'
 
-export function DeleteClassDialog({
+export function DeleteGroupDialog({
   isVisible,
   closeDialog,
-  idSelectedPedagogue,
+  group,
 }: {
   isVisible: boolean
   closeDialog: () => void
-  idSelectedPedagogue: number
+  group: IGroup
 }) {
-  console.log(idSelectedPedagogue, 'perfil do aluno')
+  const { mutate } = useDeleteGroup(closeDialog)
 
-  const pedagogue = fakePedagogues.find(({ id }) => id === idSelectedPedagogue)
+  const handleDeleteGroup = () => {
+    mutate(group.id)
+  }
 
   return (
     <Dialog open={isVisible} onOpenChange={closeDialog}>
@@ -26,17 +29,19 @@ export function DeleteClassDialog({
 
         <p className="text-center text-muted-foreground">
           Essa ação não pode ser revertida. Você tem certeza que deseja deletar
-          o pedagogo(a){' '}
+          a turma{' '}
           <span className="font-bold text-black dark:text-white ">
-            {pedagogue?.nome}?
+            {group.name}?
           </span>
         </p>
 
         <div className="flex items-center w-full justify-center gap-x-2">
-          <Button className="w-full" variant="secondary">
+          <Button onClick={closeDialog} className="w-full" variant="secondary">
             Cancelar
           </Button>
-          <Button className="w-full">Confirmar</Button>
+          <Button onClick={handleDeleteGroup} className="w-full">
+            Confirmar
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
