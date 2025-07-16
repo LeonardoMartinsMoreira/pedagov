@@ -38,6 +38,7 @@ const EditPedagogueSchema = z.object({
   isAdmin: z.boolean(),
   status: z.string(),
   id: z.string(),
+  email: z.string().email({ message: 'Insira um email válido' }),
 })
 
 export type IEditPedagogue = z.infer<typeof EditPedagogueSchema>
@@ -142,7 +143,7 @@ export function PedagogueProfileDialog({
                 </div>
                 <div className="flex items-center gap-2">
                   <Mail className="w-4 h-4 text-gray-500" />
-                  <span>{'pedagogue@example.com'}</span>
+                  <span>{pedagogue.email}</span>
                 </div>
               </div>
             </DialogHeader>
@@ -189,7 +190,7 @@ export function PedagogueProfileDialog({
                     <span>Email</span>
                   </div>
                   <Input
-                    value={'pedagogue@example.com'}
+                    value={pedagogue.email}
                     disabled
                     className="bg-muted h-10"
                   />
