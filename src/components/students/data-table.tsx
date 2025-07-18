@@ -20,15 +20,13 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useDialogState } from '@/hooks/use-dialog-state'
-import { SelectItem } from '@radix-ui/react-select'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
-import { Select, SelectContent, SelectTrigger, SelectValue } from '../ui/select'
 import { AddStudentDialog } from './AddStudentDialog'
-import { fakeClasses } from '@/faker/classes'
 import { useGetAllStudents } from '@/services/queries/get-all-students'
 import { IStudent } from '@/interfaces/students/students'
+import { Loading } from '../loading'
 
 interface DataTableProps {
   columns: ColumnDef<IStudent, unknown>[]
@@ -36,10 +34,9 @@ interface DataTableProps {
 
 export function StudentsDataTable({ columns }: DataTableProps) {
   const [globalFilter, setGlobalFilter] = useState<string[]>([])
-  const [filterByClass, setFilterByClass] = useState('')
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 
-  const { data } = useGetAllStudents()
+  const { data, isLoading } = useGetAllStudents()
 
   const addStudent = useDialogState()
 
@@ -60,13 +57,7 @@ export function StudentsDataTable({ columns }: DataTableProps) {
     getFilteredRowModel: getFilteredRowModel(),
   })
 
-  useEffect(() => {
-    if (filterByClass) {
-      setColumnFilters([{ id: 'turma', value: filterByClass }])
-    } else {
-      setColumnFilters([])
-    }
-  }, [filterByClass])
+  if (isLoading) return <Loading />
 
   return (
     <div>
@@ -78,23 +69,6 @@ export function StudentsDataTable({ columns }: DataTableProps) {
             onChange={(e) => table.setGlobalFilter(String(e.target.value))}
             className="max-w-sm"
           />
-
-          <div className="space-y-2">
-            <Select value={filterByClass} onValueChange={setFilterByClass}>
-              <SelectTrigger id="class">
-                <SelectValue placeholder="Selecione uma turma">
-                  {filterByClass && <span>{filterByClass}</span>}
-                </SelectValue>
-              </SelectTrigger>
-              <SelectContent className="p-2">
-                {fakeClasses.map(({ class: className }) => (
-                  <SelectItem key={className} value={className}>
-                    {className}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
         </div>
 
         <Button onClick={addStudent.openDialog}>Adicionar Aluno</Button>

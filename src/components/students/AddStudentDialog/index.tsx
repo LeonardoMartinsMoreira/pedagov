@@ -14,14 +14,12 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { UploadImage } from '@/components/upload-image'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { cpf as cpfValidator } from 'cpf-cnpj-validator'
 import InputMask from 'react-input-mask'
 import { InputProps } from 'react-day-picker'
-import { fakeClasses } from '@/faker/classes'
 import {
   Select,
   SelectContent,
@@ -29,11 +27,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { useGetAllGroups } from '@/services/queries/get-all-groups'
+import { useCreateStudent } from '@/services/mutations/create-student'
 
-const AddStdudentSchema = z.object({
+const AddStudentSchema = z.object({
   name: z.string({ message: 'Nome do aluno é obrigatório' }),
   class: z.string({ message: 'Selecione uma turma' }),
-  responsablePhone: z.string().optional(),
+  responsiblePhone: z.string({ message: 'Insira o telefone do responsável' }),
+  responsibleEmail: z.string({ message: 'Insira o email do responsável' }),
   photo: z.string().optional(),
   cpf: z
     .string({ message: 'CPF é obrigatório' })
@@ -44,7 +45,7 @@ const AddStdudentSchema = z.object({
     }),
 })
 
-export type IAddStudent = z.infer<typeof AddStdudentSchema>
+export type IAddStudent = z.infer<typeof AddStudentSchema>
 
 export function AddStudentDialog({
   isVisible,
@@ -53,8 +54,16 @@ export function AddStudentDialog({
   isVisible: boolean
   closeDialog: () => void
 }) {
+  const { data, isLoading } = useGetAllGroups({
+    page: 1,
+    limit: 100,
+    globalFilter: '',
+  })
+
+  const { mutate } = useCreateStudent(closeDialog)
+
   const form = useForm({
-    resolver: zodResolver(AddStdudentSchema),
+    resolver: zodResolver(AddStudentSchema),
   })
 
   const onCloseDialog = () => {
@@ -63,7 +72,14 @@ export function AddStudentDialog({
   }
 
   const onSubmit = (data: IAddStudent) => {
-    console.log(data)
+    mutate({
+      status: 'ACTIVE',
+      cpf: data.cpf,
+      groupId: data.class,
+      name: data.name,
+      responsiblePhone: data.responsiblePhone ?? '',
+      responsibleEmail: data.responsibleEmail ?? '',
+    })
     onCloseDialog()
   }
 
@@ -116,15 +132,15 @@ export function AddStudentDialog({
                             <SelectValue placeholder="Selecione uma turma" />
                           </SelectTrigger>
                           <SelectContent>
-                            {fakeClasses.map(({ class: group, id }) => (
-                              <SelectItem
-                                className="h-8"
-                                key={id}
-                                value={id.toString()}
-                              >
-                                {group}
-                              </SelectItem>
-                            ))}
+                            {isLoading ? (
+                              <div>Carregando turmas...</div>
+                            ) : (
+                              data?.result.map((group) => (
+                                <SelectItem key={group.id} value={group.id}>
+                                  {group.name}
+                                </SelectItem>
+                              ))
+                            )}
                           </SelectContent>
                         </Select>
                       </FormControl>
@@ -159,15 +175,10 @@ export function AddStudentDialog({
 
             <FormField
               control={form.control}
-              name="responsablePhone"
+              name="responsiblePhone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    Telefone do responsável{' '}
-                    <span className="text-xs text-muted-foreground">
-                      (Opcional)
-                    </span>
-                  </FormLabel>
+                  <FormLabel>Telefone do responsável</FormLabel>
                   <FormControl>
                     <Input
                       defaultValue=""
@@ -182,20 +193,12 @@ export function AddStudentDialog({
 
             <FormField
               control={form.control}
-              name="photo"
-              render={() => (
+              name="responsibleEmail"
+              render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    Foto do aluno{' '}
-                    <span className="text-xs text-muted-foreground">
-                      (Opcional)
-                    </span>
-                  </FormLabel>
+                  <FormLabel>Email do responsável</FormLabel>
                   <FormControl>
-                    <UploadImage
-                      trigger={form.trigger}
-                      setValue={form.setValue}
-                    />
+                    <Input defaultValue="" placeholder="Email" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

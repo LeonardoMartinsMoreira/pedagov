@@ -1,21 +1,24 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '../api'
 import { toast } from '@/hooks/use-toast'
-import { IStudent } from '@/interfaces/students/students'
 
-interface ICreateStudentPayload extends IStudent {
-  responsibleEmail: string
-  responsiblePhone: string
+interface ICreateStudentPayload {
+  responsibleEmail: string | undefined
+  responsiblePhone: string | undefined
   name: string
+  status: string
+  cpf: string
+  groupId: string
 }
 
 const createStudent = async (data: ICreateStudentPayload) => {
-  return await api.post('/students', {
-    status: 'ACTIVE',
-    name: data.student,
+  return await api.post('/accounts/student', {
+    status: data.status,
+    name: data.name,
     responsibleEmail: data.responsibleEmail,
     responsiblePhone: data.responsiblePhone,
     groupId: data.groupId,
+    cpf: data.cpf,
   })
 }
 

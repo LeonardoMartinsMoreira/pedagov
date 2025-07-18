@@ -5,6 +5,7 @@ export interface IStudent {
   cpf: string
   groupId: string
   group: string
+  photo?: string
 }
 
 export interface IStudents {
