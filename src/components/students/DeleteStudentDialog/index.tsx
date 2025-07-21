@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog'
 import { IStudent } from '@/interfaces/students/students'
+import { useDeleteStudent } from '@/services/mutations/delete-student'
 
 export function DeleteStudentDialog({
   isVisible,
@@ -11,6 +12,12 @@ export function DeleteStudentDialog({
   closeDialog: () => void
   student: IStudent
 }) {
+  const { mutate, isPending } = useDeleteStudent(closeDialog)
+
+  const handleDeleteStudent = () => {
+    mutate(student.studentId)
+  }
+
   return (
     <Dialog open={isVisible} onOpenChange={closeDialog}>
       <DialogContent className="flex flex-col gap-y-3 sm:max-w-[425px]">
@@ -32,7 +39,13 @@ export function DeleteStudentDialog({
           <Button className="w-full" variant="secondary">
             Cancelar
           </Button>
-          <Button className="w-full">Confirmar</Button>
+          <Button
+            isLoading={isPending}
+            onClick={handleDeleteStudent}
+            className="w-full"
+          >
+            Confirmar
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
