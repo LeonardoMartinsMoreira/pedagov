@@ -1,3 +1,5 @@
+import { IOccurrence } from '../occurrences/occurrences'
+
 export interface IStudent {
   studentId: string
   student: string
@@ -6,6 +8,9 @@ export interface IStudent {
   groupId: string
   group: string
   photo?: string
+  occurrences: IOccurrence[]
+  responsibleEmail?: string
+  responsiblePhone?: string
 }
 
 export interface IStudents {

@@ -8,7 +8,7 @@ export interface IOccurrence {
   student: string
   createdAt: string
   title: string
-  type: IOccurrencesTypes
+  type: string
 }
 
 export interface IOccurrences {

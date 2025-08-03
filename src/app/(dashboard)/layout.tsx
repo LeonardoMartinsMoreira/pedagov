@@ -13,6 +13,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   const { isFirstLogin } = useFirstLogin()
+  console.log(isFirstLogin)
   const { push } = useRouter()
 
   useEffect(() => {
