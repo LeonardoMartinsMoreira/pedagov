@@ -1,7 +1,7 @@
 import { StudentsList } from '@/views/students/students-list'
 
 export const metadata = {
-  title: 'PedaGov - Alunos',
+  title: 'Mais Ocorrências - Alunos',
 }
 
 export default function StudentsPage() {

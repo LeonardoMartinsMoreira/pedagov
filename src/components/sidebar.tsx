@@ -109,7 +109,11 @@ export function Sidebar() {
             >
               {!isCollapsed && (
                 <Link href="/" className="flex items-center font-semibold">
-                  <Image alt="PedaGov Logo" src={logo} className="h-14" />
+                  <Image
+                    alt="Mais Ocorrências Logo"
+                    src={logo}
+                    className="h-14"
+                  />
                 </Link>
               )}
               <Button

@@ -1,7 +1,7 @@
 import { LoginForm } from '@/views/login'
 
 export const metadata = {
-  title: 'PedaGov - Conectar-se',
+  title: 'Mais Ocorrências - Conectar-se',
 }
 
 function LoginPage() {

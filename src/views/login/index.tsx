@@ -64,7 +64,7 @@ export function LoginForm({
               <div className="flex flex-col items-center text-center">
                 <h1 className="text-2xl font-bold">Bem-vindo de volta</h1>
                 <p className="text-balance text-muted-foreground">
-                  Entre com sua conta PedaGov
+                  Entre com sua conta Mais Ocorrências
                 </p>
               </div>
               <div className="grid gap-2">

@@ -1,7 +1,7 @@
 import { StudentProfile } from '@/views/students/student-profile'
 
 export const metadata = {
-  title: 'PedaGov - Perfil aluno',
+  title: 'Mais Ocorrências - Perfil aluno',
 }
 
 export default function StudentProfilePage() {

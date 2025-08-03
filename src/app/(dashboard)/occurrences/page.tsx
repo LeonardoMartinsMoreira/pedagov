@@ -1,7 +1,7 @@
 import { OccurrencesList } from '@/views/occurrences/occurrences-list'
 
 export const metadata = {
-  title: 'PedaGov - Ocorrências',
+  title: 'Mais Ocorrências - Ocorrências',
 }
 
 export default function OccurrencesListPage() {
