@@ -24,7 +24,7 @@ export const useCreateGroup = (closeDialog: () => void) => {
         variant: 'success',
       })
 
-      query.invalidateQueries({ queryKey: ['groups'] })
+      query.invalidateQueries({ queryKey: ['create-group'] })
 
       closeDialog()
     },

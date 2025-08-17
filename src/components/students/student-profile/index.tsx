@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/table'
 import { occurrencesTypesEnum } from '@/constants/occurrences-types-enum'
 import { statusEnum } from '@/constants/status-enum'
+import { useDialogState } from '@/hooks/use-dialog-state'
 import { IOccurrence } from '@/interfaces/occurrences/occurrences'
 import { useGetStudent } from '@/services/queries/get-student'
 import { cpfMask } from '@/utils/cpf-mask'
@@ -34,6 +35,7 @@ import { ChevronLeft, ChevronRight, Mail, Phone } from 'lucide-react'
 import Image from 'next/image'
 import { useParams, useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
+import { EditStudentDialog } from '../EditStudentDialog'
 
 export function ProfileCard() {
   const router = useRouter()
@@ -86,6 +88,8 @@ export function ProfileCard() {
     [handleOnOccurrenceDetailsClick]
   )
 
+  const editStudentDialog = useDialogState()
+
   const {
     cpf,
     group,
@@ -111,6 +115,10 @@ export function ProfileCard() {
   if (isLoading) return <Loading />
 
   const lastOccurrence = occurrences?.at(-1)
+
+  const handleOnEditClick = () => {
+    editStudentDialog.openDialog()
+  }
 
   return (
     <div className="w-full flex gap-8 justify-center">
@@ -185,7 +193,9 @@ export function ProfileCard() {
               )}
             </div>
 
-            <Button className="w-full py-2.5 px-4">Editar</Button>
+            <Button onClick={handleOnEditClick} className="w-full py-2.5 px-4">
+              Editar
+            </Button>
           </div>
         </div>
       </div>
@@ -288,6 +298,12 @@ export function ProfileCard() {
           </div>
         </div>
       </div>
+
+      <EditStudentDialog
+        student={data}
+        closeDialog={editStudentDialog.closeDialog}
+        isVisible={editStudentDialog.isVisible}
+      />
     </div>
   )
 }

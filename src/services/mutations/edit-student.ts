@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '../api'
 import { toast } from '@/hooks/use-toast'
 
-interface ICreateStudentPayload {
+interface IEditStudentPayload {
   responsibleEmail: string | undefined
   responsiblePhone: string | undefined
   name: string
@@ -11,7 +11,7 @@ interface ICreateStudentPayload {
   groupId: string
 }
 
-const createStudent = async (data: ICreateStudentPayload) => {
+const editStudent = async (data: IEditStudentPayload) => {
   return await api.post('/accounts/student', {
     status: data.status,
     name: data.name,
@@ -22,25 +22,25 @@ const createStudent = async (data: ICreateStudentPayload) => {
   })
 }
 
-export const useCreateStudent = (closeDialog: () => void) => {
+export const useEditStudent = (closeDialog: () => void) => {
   const query = useQueryClient()
 
   return useMutation({
-    mutationKey: ['create-student'],
-    mutationFn: createStudent,
+    mutationKey: ['edit-student'],
+    mutationFn: editStudent,
     onSuccess: () => {
       toast({
-        title: 'Aluno criado com sucesso.',
+        title: 'Aluno editado com sucesso.',
         variant: 'success',
       })
 
-      query.invalidateQueries({ queryKey: ['create-student'] })
+      query.invalidateQueries({ queryKey: ['edit-student'] })
 
       closeDialog()
     },
     onError: () => {
       toast({
-        title: 'Falha ao tentar criar aluno(a).',
+        title: 'Falha ao tentar editado aluno(a).',
         description: 'Caso o erro persistir, contate nosso suporte.',
         variant: 'destructive',
       })

@@ -19,7 +19,7 @@ export const useChangePassword = () => {
   const { isFirstLogin, setIsFirstLogin } = useFirstLogin()
 
   return useMutation({
-    mutationKey: ['changePassword'],
+    mutationKey: ['change-password'],
     mutationFn: changePassword,
     onSuccess: () => {
       push('/')
