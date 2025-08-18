@@ -12,7 +12,3 @@ export interface IStudent {
   responsibleEmail?: string
   responsiblePhone?: string
 }
-
-export interface IStudents {
-  result: Array<IStudent>
-}

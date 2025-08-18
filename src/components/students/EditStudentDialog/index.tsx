@@ -26,9 +26,9 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useGetAllGroups } from '@/services/queries/get-all-groups'
-import { useCreateStudent } from '@/services/mutations/create-student'
 import { IStudent } from '@/interfaces/students/students'
 import { cpfMask } from '@/utils/cpf-mask'
+import { useEditStudent } from '@/services/mutations/edit-student'
 
 const EditStudentSchema = z.object({
   name: z.string({ message: 'Nome do aluno é obrigatório' }),
@@ -62,7 +62,7 @@ export function EditStudentDialog({
     globalFilter: '',
   })
 
-  const { mutate } = useCreateStudent(closeDialog)
+  const { mutate } = useEditStudent(closeDialog)
 
   const form = useForm({
     resolver: zodResolver(EditStudentSchema),
@@ -114,7 +114,6 @@ export function EditStudentDialog({
                         <Input
                           className="w-full"
                           placeholder="Nome completo"
-                          disabled
                           {...field}
                         />
                       </FormControl>

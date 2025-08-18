@@ -1,6 +1,7 @@
 'use client'
 
 import { BackButton } from '@/components/back-button'
+import { Loading } from '@/components/loading'
 import { MultiSelect } from '@/components/multi-select'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -21,11 +22,13 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { students1000 } from '@/faker/students'
+import { LIMIT } from '@/constants/pagination'
+import { useGetAllAttendees } from '@/services/queries/get-all-attendees'
+import { useGetAllStudents } from '@/services/queries/get-all-students'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Save } from 'lucide-react'
 import { useParams } from 'next/navigation'
-import React, { useEffect } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -49,31 +52,38 @@ type OccurrenceFormValues = z.infer<typeof occurrenceFormSchema>
 
 export function NewOccurrenceForm() {
   const idSelectedStudent = useParams<{ id: string }>().id
-  const [defaultSelectedStudent, setDefaultSelectedStudent] = React.useState<
-    string | undefined
-  >(undefined)
+  const [page, setPage] = useState(1)
+
+  const { data: attendees } = useGetAllAttendees({
+    limit: LIMIT,
+    page,
+  })
 
   const form = useForm<OccurrenceFormValues>({
     resolver: zodResolver(occurrenceFormSchema),
+    defaultValues: {
+      studentsId: idSelectedStudent ? [idSelectedStudent] : [],
+      attendeesIds: [],
+      type: '',
+      description: '',
+      title: '',
+    },
   })
-
-  useEffect(() => {
-    if (idSelectedStudent) {
-      setDefaultSelectedStudent(idSelectedStudent)
-    }
-  }, [defaultSelectedStudent, form, idSelectedStudent])
 
   const onSubmit = async (data: OccurrenceFormValues) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000))
       console.log('Dados da ocorrência:', data)
-      window.location.href = '/'
     } catch (error) {
       console.error('Erro ao salvar ocorrência:', error)
     }
   }
 
-  const { description, studentsId, type, title } = form.formState.errors
+  const { data, isLoading } = useGetAllStudents()
+
+  const { description, studentsId, type, title, attendeesIds } =
+    form.formState.errors
+
+  if (isLoading || !data) return <Loading />
 
   return (
     <div className="container max-w-4xl py-8">
@@ -114,17 +124,16 @@ export function NewOccurrenceForm() {
                           <FormLabel>Aluno(s)</FormLabel>
                           <MultiSelect
                             className="min-h-9"
-                            options={students1000.map(({ id, nome }) => ({
-                              label: nome,
-                              value: id.toString(),
+                            options={data.map(({ student, studentId }) => ({
+                              label: student,
+                              value: String(studentId),
                             }))}
-                            defaultValue={
-                              defaultSelectedStudent
-                                ? [defaultSelectedStudent]
-                                : []
+                            defaultValue={field.value}
+                            onValueChange={(val) =>
+                              form.setValue(field.name, val, {
+                                shouldValidate: true,
+                              })
                             }
-                            onValueChange={field.onChange}
-                            value={field.value}
                             selectAll={false}
                             error={Boolean(studentsId)}
                           />
@@ -163,7 +172,6 @@ export function NewOccurrenceForm() {
                     </FormItem>
                   )}
                 />
-
                 <FormField
                   control={form.control}
                   name="attendeesIds"
@@ -176,19 +184,15 @@ export function NewOccurrenceForm() {
                           </FormLabel>
                           <MultiSelect
                             className="min-h-9"
-                            options={students1000.map(({ id, nome }) => ({
-                              label: nome,
-                              value: id.toString(),
+                            options={attendees!.map(({ id, name }) => ({
+                              label: name,
+                              value: id,
                             }))}
-                            defaultValue={
-                              defaultSelectedStudent
-                                ? [defaultSelectedStudent]
-                                : []
-                            }
-                            onValueChange={field.onChange}
                             value={field.value}
+                            onValueChange={field.onChange}
                             selectAll={false}
-                            error={Boolean(studentsId)}
+                            error={Boolean(attendeesIds)}
+                            onDragEnd={() => setPage((prev) => prev + 1)}
                           />
                         </div>
                         <FormMessage />

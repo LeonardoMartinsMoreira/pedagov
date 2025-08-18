@@ -40,10 +40,8 @@ export function StudentsDataTable({ columns }: DataTableProps) {
 
   const addStudent = useDialogState()
 
-  const students = data?.result ?? []
-
   const table = useReactTable({
-    data: students,
+    data: data ?? [],
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
