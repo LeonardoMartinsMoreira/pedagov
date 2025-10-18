@@ -24,6 +24,7 @@ import {
 import { shiftsEnum } from '@/constants/shifts-enum'
 import { IGroup } from '@/interfaces/groups/groups'
 import { useCreateGroup } from '@/services/mutations/create-group'
+import { useGetAllGroups } from '@/services/queries/get-all-groups'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -38,8 +39,8 @@ const AddPedagogueSchema = z.object({
     .string()
     .min(1, { message: 'Digite o nome ou letra da turma (ex: A)' }),
   teacherId: z
-    .string()
-    .uuid({ message: 'Selecionar um professor é obrigatório' }),
+    .string({ message: 'Selecionar um professor é obrigatório' })
+    .uuid(),
   shift: z
     .string({ message: 'Selecionar o turno dessa turma é obrigatório' })
     .nonempty({
@@ -56,18 +57,24 @@ export function AddPedagogueDialog({
   isVisible: boolean
   closeDialog: () => void
 }) {
+  const { data, isLoading } = useGetAllGroups({
+    page: 1,
+    limit: 100,
+    globalFilter: '',
+  })
+
   const form = useForm<IAddPedagogue>({
     resolver: zodResolver(AddPedagogueSchema),
     defaultValues: {
       serie: '',
       name: '',
       shift: undefined,
-      teacherId: 'e2b1d647-172b-47b8-9b75-ff4bbae7c0ef',
+      teacherId: undefined,
     },
   })
 
   const {
-    errors: { shift, teacherId, name },
+    errors: { shift, name },
   } = form.formState
 
   const onCloseDialog = () => {
@@ -106,7 +113,7 @@ export function AddPedagogueDialog({
                 name="serie"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Série</FormLabel>
+                    <FormLabel>Turma</FormLabel>
                     <div className="flex items-center">
                       <FormControl>
                         <Input
@@ -115,7 +122,7 @@ export function AddPedagogueDialog({
                           {...field}
                         />
                       </FormControl>
-                      <span className="ml-1 text-3xl text-gray-700">º</span>
+                      <span className="ml-1 text-xl text-gray-700">º</span>
                     </div>
                     <FormMessage />
                   </FormItem>
@@ -130,7 +137,7 @@ export function AddPedagogueDialog({
                     <FormControl>
                       <Input
                         error={Boolean(name)}
-                        className="h-10 w-full text-center"
+                        className="h-10 w-full"
                         placeholder="Nome da turma (ex: A)"
                         {...field}
                       />
@@ -146,14 +153,28 @@ export function AddPedagogueDialog({
               name="teacherId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Professor</FormLabel>
+                  <FormLabel>Turma</FormLabel>
                   <FormControl>
-                    <Input
-                      error={Boolean(teacherId)}
-                      className="h-10"
-                      placeholder="Escolha o professor regente"
-                      {...field}
-                    />
+                    <Select
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Escolha o professor" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {isLoading ? (
+                          <div>Carregando professores...</div>
+                        ) : (
+                          data?.result.map((group) => (
+                            <SelectItem key={group.id} value={group.id}>
+                              {group.name}
+                            </SelectItem>
+                          ))
+                        )}
+                      </SelectContent>
+                    </Select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

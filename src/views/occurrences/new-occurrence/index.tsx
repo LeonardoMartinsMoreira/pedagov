@@ -45,7 +45,9 @@ const occurrenceFormSchema = z.object({
   description: z
     .string({ required_error: 'Descreva com detalhes o acontecimento' })
     .min(10, 'A descrição deve ter pelo menos 10 caracteres'),
-  title: z.string({ required_error: 'Descreva brevemente o acontecimento' }),
+  title: z
+    .string({ required_error: 'Descreva brevemente o acontecimento' })
+    .min(1, 'Dê um título para a ocorrência'),
 })
 
 type OccurrenceFormValues = z.infer<typeof occurrenceFormSchema>
@@ -54,16 +56,21 @@ export function NewOccurrenceForm() {
   const idSelectedStudent = useParams<{ id: string }>().id
   const [page, setPage] = useState(1)
 
-  const { data: attendees } = useGetAllAttendees({
-    limit: LIMIT,
-    page,
-  })
+  const { data: attendees, isLoading: isLoadingAttendees } = useGetAllAttendees(
+    {
+      limit: LIMIT,
+      page,
+    }
+  )
 
   const form = useForm<OccurrenceFormValues>({
     resolver: zodResolver(occurrenceFormSchema),
     defaultValues: {
-      studentsId: idSelectedStudent ? [idSelectedStudent] : [],
-      attendeesIds: [],
+      studentsId:
+        idSelectedStudent && idSelectedStudent !== 'null'
+          ? [idSelectedStudent]
+          : [],
+      attendeesIds: undefined,
       type: '',
       description: '',
       title: '',
@@ -78,7 +85,9 @@ export function NewOccurrenceForm() {
     }
   }
 
-  const { data, isLoading } = useGetAllStudents()
+  const { data, isLoading: isLoadingStudents } = useGetAllStudents()
+
+  const isLoading = isLoadingAttendees || isLoadingStudents
 
   const { description, studentsId, type, title, attendeesIds } =
     form.formState.errors
