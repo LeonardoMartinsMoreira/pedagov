@@ -8,6 +8,6 @@ const getStudent = async (id: string) => {
 
 export const useGetStudent = (id: string) =>
   useQuery<IStudent>({
-    queryKey: ['student'],
+    queryKey: ['student', id],
     queryFn: () => getStudent(id),
   })

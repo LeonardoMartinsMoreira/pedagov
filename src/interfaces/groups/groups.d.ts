@@ -4,4 +4,5 @@ export interface IGroup {
   shift: 'morning' | 'afternoon' | 'night'
   id: string
   numberOfStudents: number
+  serie: string
 }

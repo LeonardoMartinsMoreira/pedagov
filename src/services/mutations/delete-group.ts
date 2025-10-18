@@ -16,7 +16,7 @@ export function useDeleteGroup(closeDialog: () => void) {
         title: 'Turma deletada com sucesso.',
         variant: 'success',
       })
-      await queryClient.invalidateQueries({ queryKey: ['delete-group'] })
+      await queryClient.invalidateQueries({ queryKey: ['groups'] })
       closeDialog()
     },
     onError: () => {

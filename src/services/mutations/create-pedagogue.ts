@@ -29,7 +29,7 @@ export const useCreatePedagogue = (closeDialog: () => void) => {
         variant: 'success',
       })
 
-      query.invalidateQueries({ queryKey: ['create-pedagogue'] })
+      query.invalidateQueries({ queryKey: ['pedagogues'] })
 
       closeDialog()
     },

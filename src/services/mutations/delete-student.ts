@@ -17,7 +17,7 @@ export function useDeleteStudent(closeDialog: () => void) {
         variant: 'success',
       })
 
-      await queryClient.invalidateQueries({ queryKey: ['delete-student'] })
+      await queryClient.invalidateQueries({ queryKey: ['pedagogues'] })
       closeDialog()
     },
     onError: (err) => {

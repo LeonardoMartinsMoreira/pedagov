@@ -12,7 +12,7 @@ interface IEditStudentPayload {
 }
 
 const editStudent = async (data: IEditStudentPayload) => {
-  return await api.post('/accounts/student', {
+  return await api.put('/accounts/student', {
     status: data.status,
     name: data.name,
     responsibleEmail: data.responsibleEmail,
@@ -28,13 +28,13 @@ export const useEditStudent = (closeDialog: () => void) => {
   return useMutation({
     mutationKey: ['edit-student'],
     mutationFn: editStudent,
-    onSuccess: () => {
+    onSuccess: ({ data }) => {
       toast({
         title: 'Aluno editado com sucesso.',
         variant: 'success',
       })
 
-      query.invalidateQueries({ queryKey: ['edit-student'] })
+      query.invalidateQueries({ queryKey: ['student', data.id] })
 
       closeDialog()
     },

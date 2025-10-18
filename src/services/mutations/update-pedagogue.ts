@@ -21,7 +21,7 @@ export function useEditPedagogue(closeDialog: () => void) {
         title: 'Pedagogo editado com sucesso.',
         variant: 'success',
       })
-      await queryClient.invalidateQueries({ queryKey: ['update-pedagogue'] })
+      await queryClient.invalidateQueries({ queryKey: ['pedagogues'] })
       closeDialog()
     },
     onError: () => {

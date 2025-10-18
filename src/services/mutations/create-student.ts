@@ -34,7 +34,7 @@ export const useCreateStudent = (closeDialog: () => void) => {
         variant: 'success',
       })
 
-      query.invalidateQueries({ queryKey: ['create-student'] })
+      query.invalidateQueries({ queryKey: ['students'] })
 
       closeDialog()
     },

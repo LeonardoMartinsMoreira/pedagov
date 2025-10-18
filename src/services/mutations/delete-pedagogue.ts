@@ -16,7 +16,7 @@ export function useDeletePedagogue(closeDialog: () => void) {
         title: 'Pedagogo deletado com sucesso.',
         variant: 'success',
       })
-      await queryClient.invalidateQueries({ queryKey: ['delete-pedagogue'] })
+      await queryClient.invalidateQueries({ queryKey: ['pedagogues'] })
       closeDialog()
     },
     onError: () => {

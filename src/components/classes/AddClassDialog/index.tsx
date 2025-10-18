@@ -31,13 +31,20 @@ import { z } from 'zod'
 const shifts = Object.keys(shiftsEnum)
 
 const AddPedagogueSchema = z.object({
-  name: z.string().min(4, { message: 'Inserir o nome da turma é obrigatório' }),
+  serie: z
+    .string()
+    .regex(/^[1-9]{1}$/, { message: 'Digite apenas um número (ex: 1)' }),
+  name: z
+    .string()
+    .min(1, { message: 'Digite o nome ou letra da turma (ex: A)' }),
   teacherId: z
     .string()
     .uuid({ message: 'Selecionar um professor é obrigatório' }),
-  shift: z.string().nonempty({
-    message: 'Selecionar o turno dessa turma é obrigatório',
-  }),
+  shift: z
+    .string({ message: 'Selecionar o turno dessa turma é obrigatório' })
+    .nonempty({
+      message: 'Selecionar o turno dessa turma é obrigatório',
+    }),
 })
 
 type IAddPedagogue = z.infer<typeof AddPedagogueSchema>
@@ -49,12 +56,13 @@ export function AddPedagogueDialog({
   isVisible: boolean
   closeDialog: () => void
 }) {
-  const form = useForm({
+  const form = useForm<IAddPedagogue>({
     resolver: zodResolver(AddPedagogueSchema),
     defaultValues: {
+      serie: '',
       name: '',
       shift: undefined,
-      teacherId: 'b718a62b-c8bd-4110-8309-b082741c08a4',
+      teacherId: 'e2b1d647-172b-47b8-9b75-ff4bbae7c0ef',
     },
   })
 
@@ -70,7 +78,14 @@ export function AddPedagogueDialog({
   const { mutate, isPending } = useCreateGroup(onCloseDialog)
 
   const onSubmit = (data: IAddPedagogue) => {
-    mutate(data as IGroup)
+    const formattedName = `${data.serie}º ${data.name.trim().toUpperCase()}`
+
+    const groupData = {
+      ...data,
+      name: formattedName,
+    }
+
+    mutate(groupData as IGroup)
   }
 
   return (
@@ -79,29 +94,52 @@ export function AddPedagogueDialog({
         <DialogHeader>
           <DialogTitle>Adicionar nova turma</DialogTitle>
         </DialogHeader>
+
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             className="flex flex-col gap-y-4"
           >
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Turma</FormLabel>
-                  <FormControl>
-                    <Input
-                      error={Boolean(name)}
-                      className="h-10"
-                      placeholder="Dê um nome a esta turma"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="flex gap-2">
+              <FormField
+                control={form.control}
+                name="serie"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Série</FormLabel>
+                    <div className="flex items-center">
+                      <FormControl>
+                        <Input
+                          maxLength={1}
+                          className="h-10 w-10 text-center"
+                          {...field}
+                        />
+                      </FormControl>
+                      <span className="ml-1 text-3xl text-gray-700">º</span>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem className="mt-8 w-full">
+                    <FormControl>
+                      <Input
+                        error={Boolean(name)}
+                        className="h-10 w-full text-center"
+                        placeholder="Nome da turma (ex: A)"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <FormField
               control={form.control}
