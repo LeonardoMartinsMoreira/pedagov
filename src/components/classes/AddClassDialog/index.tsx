@@ -24,7 +24,7 @@ import {
 import { shiftsEnum } from '@/constants/shifts-enum'
 import { IGroup } from '@/interfaces/groups/groups'
 import { useCreateGroup } from '@/services/mutations/create-group'
-import { useGetAllGroups } from '@/services/queries/get-all-groups'
+import { useGetAllTeachers } from '@/services/queries/get-all-teachers'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -57,10 +57,9 @@ export function AddPedagogueDialog({
   isVisible: boolean
   closeDialog: () => void
 }) {
-  const { data, isLoading } = useGetAllGroups({
+  const { data, isLoading } = useGetAllTeachers({
     page: 1,
     limit: 100,
-    globalFilter: '',
   })
 
   const form = useForm<IAddPedagogue>({
@@ -161,15 +160,15 @@ export function AddPedagogueDialog({
                       defaultValue={field.value}
                     >
                       <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Escolha o professor" />
+                        <SelectValue placeholder="Escolha o responsável pela turma" />
                       </SelectTrigger>
                       <SelectContent>
                         {isLoading ? (
-                          <div>Carregando professores...</div>
+                          <div>Carregando responsáveis...</div>
                         ) : (
-                          data?.result.map((group) => (
-                            <SelectItem key={group.id} value={group.id}>
-                              {group.name}
+                          data?.map((teacher) => (
+                            <SelectItem key={teacher.id} value={teacher.id}>
+                              {teacher.name}
                             </SelectItem>
                           ))
                         )}

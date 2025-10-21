@@ -9,6 +9,7 @@ export interface IOccurrence {
   createdAt: string
   title: string
   type: string
+  description: string
 }
 
 export interface IOccurrences {
