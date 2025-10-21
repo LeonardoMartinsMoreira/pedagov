@@ -5,6 +5,7 @@ import { Loading } from '@/components/loading'
 import { MultiSelect } from '@/components/multi-select'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   Form,
   FormControl,
@@ -22,23 +23,28 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import { Tooltip, TooltipTrigger } from '@/components/ui/tooltip'
 import { LIMIT } from '@/constants/pagination'
+import { useCreateOccurrence } from '@/services/mutations/create-occurrence'
 import { useGetAllAttendees } from '@/services/queries/get-all-attendees'
 import { useGetAllStudents } from '@/services/queries/get-all-students'
+import { useGetAllTeachers } from '@/services/queries/get-all-teachers'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { TooltipContent } from '@radix-ui/react-tooltip'
 import { Save } from 'lucide-react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 const occurrenceFormSchema = z.object({
-  studentsId: z
+  studentsIds: z
     .array(z.string(), { message: 'Selecione ao menos um aluno' })
     .min(1, { message: 'Selecione ao menos um aluno' }),
   attendeesIds: z
     .array(z.string(), { message: 'Selecione ao menos uma pessoa presente' })
     .min(1, { message: 'Selecione ao menos um aluno' }),
+  teacherId: z.string({ message: 'Selecione o professor presente na matéria' }),
   type: z
     .string({ required_error: 'Selecione o tipo da ocorrência' })
     .min(1, 'Selecione um tipo de ocorrência'),
@@ -55,6 +61,9 @@ type OccurrenceFormValues = z.infer<typeof occurrenceFormSchema>
 export function NewOccurrenceForm() {
   const idSelectedStudent = useParams<{ id: string }>().id
   const [page, setPage] = useState(1)
+  const [shouldSendEmail, setShouldSendEmail] = useState(true)
+
+  const router = useRouter()
 
   const { data: attendees, isLoading: isLoadingAttendees } = useGetAllAttendees(
     {
@@ -63,10 +72,15 @@ export function NewOccurrenceForm() {
     }
   )
 
+  const { data: teachers, isLoading: isLoadingTeachers } = useGetAllTeachers({
+    limit: LIMIT,
+    page,
+  })
+
   const form = useForm<OccurrenceFormValues>({
     resolver: zodResolver(occurrenceFormSchema),
     defaultValues: {
-      studentsId:
+      studentsIds:
         idSelectedStudent && idSelectedStudent !== 'null'
           ? [idSelectedStudent]
           : [],
@@ -74,12 +88,19 @@ export function NewOccurrenceForm() {
       type: '',
       description: '',
       title: '',
+      teacherId: undefined,
     },
   })
 
+  const { mutate } = useCreateOccurrence(router)
+
   const onSubmit = async (data: OccurrenceFormValues) => {
     try {
-      console.log('Dados da ocorrência:', data)
+      mutate({
+        ...data,
+        shouldSendEmail: true,
+        attachmentsIds: [],
+      })
     } catch (error) {
       console.error('Erro ao salvar ocorrência:', error)
     }
@@ -87,9 +108,9 @@ export function NewOccurrenceForm() {
 
   const { data, isLoading: isLoadingStudents } = useGetAllStudents()
 
-  const isLoading = isLoadingAttendees || isLoadingStudents
+  const isLoading = isLoadingAttendees || isLoadingStudents || isLoadingTeachers
 
-  const { description, studentsId, type, title, attendeesIds } =
+  const { description, studentsIds, type, title, attendeesIds } =
     form.formState.errors
 
   if (isLoading || !data) return <Loading />
@@ -125,7 +146,7 @@ export function NewOccurrenceForm() {
 
                 <FormField
                   control={form.control}
-                  name="studentsId"
+                  name="studentsIds"
                   render={({ field }) => (
                     <FormItem className="mt-1.5">
                       <div className="flex flex-col gap-y-2">
@@ -144,7 +165,7 @@ export function NewOccurrenceForm() {
                               })
                             }
                             selectAll={false}
-                            error={Boolean(studentsId)}
+                            error={Boolean(studentsIds)}
                           />
                         </div>
                         <FormMessage />
@@ -169,12 +190,12 @@ export function NewOccurrenceForm() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="comportamento">
+                          <SelectItem value="DISCIPLINE">
                             Comportamento
                           </SelectItem>
-                          <SelectItem value="atraso">Atraso</SelectItem>
-                          <SelectItem value="falta">Falta</SelectItem>
-                          <SelectItem value="uniforme">Uniforme</SelectItem>
+                          <SelectItem value="TARDINESS">Atraso</SelectItem>
+                          <SelectItem value="ABSENCES">Falta</SelectItem>
+                          <SelectItem value="UNIFORM">Uniforme</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -209,6 +230,36 @@ export function NewOccurrenceForm() {
                     </FormItem>
                   )}
                 />
+
+                <FormField
+                  control={form.control}
+                  name="teacherId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Professor(a) presente</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger error={Boolean(type)}>
+                            <SelectValue placeholder="Selecione o professor(a) presente na ocorrência" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {teachers?.map((teacher) => {
+                            return (
+                              <SelectItem key={teacher.id} value={teacher.id}>
+                                {teacher.name}
+                              </SelectItem>
+                            )
+                          })}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
 
               <FormField
@@ -229,7 +280,29 @@ export function NewOccurrenceForm() {
                   </FormItem>
                 )}
               />
+              <Tooltip>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="sendEmail"
+                    checked={shouldSendEmail}
+                    onCheckedChange={(checked) =>
+                      setShouldSendEmail(checked as boolean)
+                    }
+                  />
+                  <TooltipTrigger asChild>
+                    <label htmlFor="sendEmail" className="text-sm">
+                      Enviar email para responsáveis
+                    </label>
+                  </TooltipTrigger>
+                </div>
 
+                <TooltipContent>
+                  <p className="text-xs">
+                    Ao marcar está opção, será enviado automaticamente um email
+                    para o responsável do aluno.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
               <div className="flex justify-end">
                 <Button type="submit" disabled={form.formState.isSubmitting}>
                   <Save className="mr-2 h-4 w-4" />
