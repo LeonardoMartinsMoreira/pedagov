@@ -98,7 +98,7 @@ export function NewOccurrenceForm() {
     try {
       mutate({
         ...data,
-        shouldSendEmail: true,
+        shouldSendEmail,
         attachmentsIds: [],
       })
     } catch (error) {
