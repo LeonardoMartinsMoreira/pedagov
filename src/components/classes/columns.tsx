@@ -19,6 +19,7 @@ import { IGroup } from '@/interfaces/groups/groups'
 import { shiftsEnum } from '@/constants/shifts-enum'
 import { Badge } from '../ui/badge'
 import { DeleteGroupDialog } from './DeleteGroupDialog'
+import { ImportStudentsDialog } from './InsertStudentsDialog'
 
 export const columns: ColumnDef<IGroup>[] = [
   {
@@ -50,6 +51,7 @@ export const columns: ColumnDef<IGroup>[] = [
     id: 'actions',
     cell: ({ row }) => {
       const deleteGroup = useDialogState()
+      const insertStudents = useDialogState()
 
       return (
         <div className="flex justify-end">
@@ -63,6 +65,9 @@ export const columns: ColumnDef<IGroup>[] = [
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Ações</DropdownMenuLabel>
               <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={insertStudents.openDialog}>
+                Inserir alunos
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={deleteGroup.openDialog}>
                 Deletar Turma
               </DropdownMenuItem>
@@ -73,6 +78,12 @@ export const columns: ColumnDef<IGroup>[] = [
             closeDialog={deleteGroup.closeDialog}
             group={row.original}
             isVisible={deleteGroup.isVisible}
+          />
+
+          <ImportStudentsDialog
+            closeDialog={insertStudents.closeDialog}
+            isVisible={insertStudents.isVisible}
+            groupId={row.original.id}
           />
         </div>
       )
