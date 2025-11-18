@@ -7,21 +7,21 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { IPedagogue } from '@/interfaces/pedagogues/pedagogues'
-import { useDeletePedagogue } from '@/services/mutations/delete-pedagogue'
+import { ITeacher } from '@/interfaces/teachers/teacher'
+import { useDeleteTeacher } from '@/services/mutations/delete-teacher'
 
-export function DeletePedagogueDialog({
+export function DeleteTeacherDialog({
   isVisible,
   closeDialog,
-  pedagogue,
+  teacher,
 }: {
   isVisible: boolean
   closeDialog: () => void
-  pedagogue: IPedagogue
+  teacher: ITeacher
 }) {
-  const { mutate, isPending } = useDeletePedagogue(closeDialog)
+  const { mutate, isPending } = useDeleteTeacher(closeDialog)
 
-  const handleDeletePedagogue = () => mutate(pedagogue.id)
+  const handleDeleteTeacher = () => mutate(teacher.id)
 
   return (
     <Dialog open={isVisible} onOpenChange={isPending ? undefined : closeDialog}>
@@ -34,9 +34,9 @@ export function DeletePedagogueDialog({
 
         <p className="text-center text-muted-foreground">
           Essa ação não pode ser revertida. Você tem certeza que deseja deletar
-          o pedagogo(a){' '}
+          o professor(a){' '}
           <span className="font-bold text-black dark:text-white ">
-            {pedagogue?.name}?
+            {teacher?.name}?
           </span>
         </p>
 
@@ -45,7 +45,7 @@ export function DeletePedagogueDialog({
             Cancelar
           </Button>
           <Button
-            onClick={handleDeletePedagogue}
+            onClick={handleDeleteTeacher}
             isLoading={isPending}
             className="w-full"
           >

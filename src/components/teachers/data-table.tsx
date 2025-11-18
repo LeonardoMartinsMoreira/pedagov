@@ -18,6 +18,7 @@ import {
   TableRow,
 } from '../ui/table'
 import { useGetAllTeachers } from '@/services/queries/get-all-teachers'
+import { AddTeacherDialog } from './AddTeachersDialog'
 
 interface DataTableProps {
   columns: ColumnDef<ITeacher, unknown>[]
@@ -60,7 +61,7 @@ export function TeachersDataTable({ columns }: DataTableProps) {
           />
         </div>
 
-        <Button onClick={addTeacher.openDialog}>Adicionar Pedagogo(a)</Button>
+        <Button onClick={addTeacher.openDialog}>Adicionar Professor(a)</Button>
       </div>
 
       <div className="rounded-md border">
@@ -131,6 +132,11 @@ export function TeachersDataTable({ columns }: DataTableProps) {
           Próximo
         </Button>
       </div>
+
+      <AddTeacherDialog
+        closeDialog={addTeacher.closeDialog}
+        isVisible={addTeacher.isVisible}
+      />
     </div>
   )
 }

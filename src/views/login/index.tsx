@@ -72,7 +72,7 @@ export function LoginForm({
                 <Input
                   id="email"
                   type="email"
-                  placeholder="teste@example.com"
+                  placeholder="pedagogo@exemplo.com"
                   {...register('email')}
                 />
                 {errors.email && (

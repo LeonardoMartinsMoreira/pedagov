@@ -15,10 +15,10 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useDialogState } from '@/hooks/use-dialog-state'
-import { IPedagogue } from '@/interfaces/pedagogues/pedagogues'
-import { DeletePedagogueDialog } from './DeleteTeachersDialog'
+import { DeleteTeacherDialog } from './DeleteTeachersDialog'
+import { ITeacher } from '@/interfaces/teachers/teacher'
 
-export const columns: ColumnDef<IPedagogue>[] = [
+export const columns: ColumnDef<ITeacher>[] = [
   {
     accessorKey: 'id',
     header: 'ID',
@@ -39,19 +39,9 @@ export const columns: ColumnDef<IPedagogue>[] = [
     },
   },
   {
-    accessorKey: 'role',
-    header: '',
-    cell: ({ row }) => {
-      const roleLabel = row.original.role === 'ADMIN' ? 'Administrador' : ''
-
-      return <div className="flex justify-end">{roleLabel}</div>
-    },
-  },
-  {
     id: 'actions',
     cell: ({ row }) => {
-      const deletePedagogue = useDialogState()
-      const pedagogueProfileDialog = useDialogState()
+      const deleteTeacher = useDialogState()
 
       return (
         <div className="flex justify-end">
@@ -65,19 +55,16 @@ export const columns: ColumnDef<IPedagogue>[] = [
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Ações</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={pedagogueProfileDialog.openDialog}>
-                Ver Perfil do Pedagogo(a)
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={deletePedagogue.openDialog}>
+              <DropdownMenuItem onClick={deleteTeacher.openDialog}>
                 Deletar Pedagogo(a)
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <DeletePedagogueDialog
-            closeDialog={deletePedagogue.closeDialog}
-            isVisible={deletePedagogue.isVisible}
-            pedagogue={row.original}
+          <DeleteTeacherDialog
+            teacher={row.original}
+            closeDialog={deleteTeacher.closeDialog}
+            isVisible={deleteTeacher.isVisible}
           />
         </div>
       )
