@@ -5,12 +5,10 @@ import { type ColumnDef, flexRender } from '@tanstack/react-table'
 import { LIMIT } from '@/constants/pagination'
 import { useDialogState } from '@/hooks/use-dialog-state'
 import { usePaginatedTable } from '@/hooks/use-paginated-table'
-import { IPedagogue } from '@/interfaces/pedagogues/pedagogues'
-import { useGetAllPedagogues } from '@/services/queries/get-all-pedagogues'
+import { ITeacher } from '@/interfaces/teachers/teacher'
 import { Loading } from '../loading'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
-import { AddPedagogueDialog } from './AddPedagogueDialog'
 import {
   Table,
   TableBody,
@@ -19,31 +17,32 @@ import {
   TableHeader,
   TableRow,
 } from '../ui/table'
+import { useGetAllTeachers } from '@/services/queries/get-all-teachers'
 
 interface DataTableProps {
-  columns: ColumnDef<IPedagogue, unknown>[]
+  columns: ColumnDef<ITeacher, unknown>[]
 }
 
-export function PedagoguesDataTable({ columns }: DataTableProps) {
-  const addPedagogue = useDialogState()
+export function TeachersDataTable({ columns }: DataTableProps) {
+  const addTeacher = useDialogState()
 
   const { pagination, globalFilter, setGlobalFilter, table } =
-    usePaginatedTable<IPedagogue>({
+    usePaginatedTable<ITeacher>({
       data: [],
       columns,
       totalPages: 2,
     })
 
-  const { data, isLoading } = useGetAllPedagogues({
+  const { data, isLoading } = useGetAllTeachers({
     limit: LIMIT,
     page: pagination.pageIndex + 1,
   })
 
-  const pedagogues = data?.result ?? []
+  const teachers = data?.result ?? []
 
   table.setOptions((prev) => ({
     ...prev,
-    data: pedagogues,
+    data: teachers,
     pageCount: 10,
   }))
 
@@ -61,7 +60,7 @@ export function PedagoguesDataTable({ columns }: DataTableProps) {
           />
         </div>
 
-        <Button onClick={addPedagogue.openDialog}>Adicionar Pedagogo(a)</Button>
+        <Button onClick={addTeacher.openDialog}>Adicionar Pedagogo(a)</Button>
       </div>
 
       <div className="rounded-md border">
@@ -132,11 +131,6 @@ export function PedagoguesDataTable({ columns }: DataTableProps) {
           Próximo
         </Button>
       </div>
-
-      <AddPedagogueDialog
-        isVisible={addPedagogue.isVisible}
-        closeDialog={addPedagogue.closeDialog}
-      />
     </div>
   )
 }

@@ -3,3 +3,7 @@ export interface ITeacher {
   name: string
   status: 'active' | 'inactive'
 }
+
+export interface ITeachers {
+  result: Array<ITeacher>
+}
