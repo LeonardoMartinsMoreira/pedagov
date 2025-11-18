@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { api } from '../api'
-import { ITeachers } from '@/interfaces/teachers/teacher'
+import { ITeacher } from '@/interfaces/teachers/teacher'
 
 interface ITeachersParams {
   page: number
@@ -21,7 +21,7 @@ const getAllTeachers = async (params: ITeachersParams) => {
 }
 
 export const useGetAllTeachers = (data: ITeachersParams) =>
-  useQuery<ITeachers>({
+  useQuery<ITeacher[]>({
     queryKey: ['teachers', data],
     queryFn: () => getAllTeachers(data),
   })

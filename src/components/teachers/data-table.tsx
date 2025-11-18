@@ -31,7 +31,7 @@ export function TeachersDataTable({ columns }: DataTableProps) {
     usePaginatedTable<ITeacher>({
       data: [],
       columns,
-      totalPages: 2,
+      totalPages: 1,
     })
 
   const { data, isLoading } = useGetAllTeachers({
@@ -39,7 +39,7 @@ export function TeachersDataTable({ columns }: DataTableProps) {
     page: pagination.pageIndex + 1,
   })
 
-  const teachers = data?.result ?? []
+  const teachers = data ?? []
 
   table.setOptions((prev) => ({
     ...prev,
