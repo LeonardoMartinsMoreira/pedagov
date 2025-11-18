@@ -1,4 +1,4 @@
-import { columns } from '@/components/pedagogues/columns'
+import { columns } from '@/components/teachers/columns'
 import { TeachersDataTable } from '@/components/teachers/data-table'
 
 export function TeachersList() {

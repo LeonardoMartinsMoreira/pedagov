@@ -56,7 +56,7 @@ export const columns: ColumnDef<ITeacher>[] = [
               <DropdownMenuLabel>Ações</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={deleteTeacher.openDialog}>
-                Deletar Pedagogo(a)
+                Deletar Professor(a)
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

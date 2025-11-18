@@ -4,6 +4,6 @@ export const metadata = {
   title: 'Mais Ocorrências - Professores',
 }
 
-export default function PedagoguesPage() {
+export default function TeachersPage() {
   return <TeachersList />
 }
