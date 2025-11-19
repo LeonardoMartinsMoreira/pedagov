@@ -9,11 +9,13 @@ import {
   occurrencesTypesEnum,
 } from '@/constants/occurrences-types-enum'
 import { IOccurrence } from '@/interfaces/occurrences/occurrences'
+import { useDeleteOccurrence } from '@/services/mutations/delete-occurrence'
+import { Trash } from '@phosphor-icons/react'
 import { TooltipContent, TooltipTrigger } from '@radix-ui/react-tooltip'
 import type { ColumnDef } from '@tanstack/react-table'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { ArrowUpDown } from 'lucide-react'
+import { ArrowUpDown, Loader } from 'lucide-react'
 import Link from 'next/link'
 
 const columns: ColumnDef<IOccurrence>[] = [
@@ -28,16 +30,6 @@ const columns: ColumnDef<IOccurrence>[] = [
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
-    cell: ({ row }) => {
-      return (
-        <Link
-          href={`/occurrences/${row.original.occurrenceId}`}
-          className="font-medium hover:underline"
-        >
-          {row.getValue('student')}
-        </Link>
-      )
-    },
   },
   {
     accessorKey: 'type',
@@ -90,13 +82,38 @@ const columns: ColumnDef<IOccurrence>[] = [
   {
     id: 'actions',
     cell: ({ row }) => {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const { mutate, isPending } = useDeleteOccurrence()
+
       return (
-        <div className="text-right">
-          <Link href={`/occurrences/${row.original.occurrenceId}`}>
-            <Button variant="ghost" size="sm">
+        <div className="flex items-center justify-end gap-3">
+          <Link
+            href={{
+              pathname: `/occurrences/${row.original.occurrenceId}`,
+              query: {
+                studentId: row.original.studentId,
+              },
+            }}
+          >
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-1"
+            >
               Detalhes
             </Button>
           </Link>
+
+          <button
+            onClick={() => mutate(row.original.occurrenceId)}
+            className="p-2 rounded-md hover:bg-destructive/10 transition-colors"
+          >
+            {isPending ? (
+              <Loader className="h-4 w-4 animate-spin text-destructive" />
+            ) : (
+              <Trash className="h-4 w-4 text-destructive" />
+            )}
+          </button>
         </div>
       )
     },
