@@ -3,8 +3,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '../api'
 
 async function deleteOccurrenceApi(id: string) {
-  console.log(id)
-
   await api.delete(`/occurrences/${id}`)
 }
 

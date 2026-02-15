@@ -90,7 +90,7 @@ export function PedagogueProfileDialog({
         isAdmin: pedagogue.role === 'ADMIN',
       })
     }
-  }, [pedagogue, form])
+  }, [form, pedagogue])
 
   const handleCancel = () => {
     form.reset()

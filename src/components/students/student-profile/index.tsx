@@ -80,27 +80,16 @@ export function ProfileCard() {
       {
         id: 'actions',
         header: '',
-        cell: ({ row }) => {
-          console.log(row.original)
-
-          return (
-            <Link
-              href={{
-                pathname: `/occurrences/${row.original.id}`,
-                query: {
-                  studentId: id,
-                },
-              }}
-            >
-              <Button variant="ghost" size="sm">
-                Detalhes
-              </Button>
-            </Link>
-          )
-        },
+        cell: ({ row }) => (
+          <Link href={`/occurrences/${row.original.id}?studentId=${id}`}>
+            <Button variant="ghost" size="sm">
+              Detalhes
+            </Button>
+          </Link>
+        ),
       },
     ],
-    []
+    [id]
   )
 
   const table = useReactTable({

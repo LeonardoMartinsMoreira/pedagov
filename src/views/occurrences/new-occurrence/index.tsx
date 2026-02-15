@@ -43,7 +43,7 @@ const occurrenceFormSchema = z.object({
     .min(1, { message: 'Selecione ao menos um aluno' }),
   attendeesIds: z
     .array(z.string(), { message: 'Selecione ao menos uma pessoa presente' })
-    .min(1, { message: 'Selecione ao menos um aluno' }),
+    .min(1, { message: 'Selecione ao menos uma pessoa presente' }),
   teacherId: z.string({ message: 'Selecione o professor presente na matéria' }),
   type: z
     .string({ required_error: 'Selecione o tipo da ocorrência' })
@@ -60,7 +60,6 @@ type OccurrenceFormValues = z.infer<typeof occurrenceFormSchema>
 
 export function NewOccurrenceForm() {
   const idSelectedStudent = useParams<{ id: string }>().id
-  const [page, setPage] = useState(1)
   const [shouldSendEmail, setShouldSendEmail] = useState(true)
 
   const router = useRouter()
@@ -68,13 +67,13 @@ export function NewOccurrenceForm() {
   const { data: attendees, isLoading: isLoadingAttendees } = useGetAllAttendees(
     {
       limit: LIMIT,
-      page,
+      page: 1,
     }
   )
 
   const { data: teachers, isLoading: isLoadingTeachers } = useGetAllTeachers({
     limit: LIMIT,
-    page,
+    page: 1,
   })
 
   const form = useForm<OccurrenceFormValues>({
@@ -101,16 +100,14 @@ export function NewOccurrenceForm() {
         shouldSendEmail,
         attachmentsIds: [],
       })
-    } catch (error) {
-      console.error('Erro ao salvar ocorrência:', error)
-    }
+    } catch {}
   }
 
   const { data, isLoading: isLoadingStudents } = useGetAllStudents()
 
   const isLoading = isLoadingAttendees || isLoadingStudents || isLoadingTeachers
 
-  const { description, studentsIds, type, title, attendeesIds } =
+  const { description, studentsIds, type, title, attendeesIds, teacherId } =
     form.formState.errors
 
   if (isLoading || !data) return <Loading />
@@ -214,7 +211,7 @@ export function NewOccurrenceForm() {
                           </FormLabel>
                           <MultiSelect
                             className="min-h-9"
-                            options={attendees!.map(({ id, name }) => ({
+                            options={(attendees ?? []).map(({ id, name }) => ({
                               label: name,
                               value: id,
                             }))}
@@ -222,7 +219,6 @@ export function NewOccurrenceForm() {
                             onValueChange={field.onChange}
                             selectAll={false}
                             error={Boolean(attendeesIds)}
-                            onDragEnd={() => setPage((prev) => prev + 1)}
                           />
                         </div>
                         <FormMessage />
@@ -242,7 +238,7 @@ export function NewOccurrenceForm() {
                         defaultValue={field.value}
                       >
                         <FormControl>
-                          <SelectTrigger error={Boolean(type)}>
+                          <SelectTrigger error={Boolean(teacherId)}>
                             <SelectValue placeholder="Selecione o professor(a) presente na ocorrência" />
                           </SelectTrigger>
                         </FormControl>

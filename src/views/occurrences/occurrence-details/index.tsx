@@ -18,6 +18,10 @@ import {
 
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
+import {
+  occurrencesColorsEnum,
+  occurrencesTypesEnum,
+} from '@/constants/occurrences-types-enum'
 import { useGetOccurrence } from '@/services/queries/get-occurrence'
 import { useSearchParams } from 'next/navigation'
 import { Loading } from '@/components/loading'
@@ -62,26 +66,12 @@ export default function OccurrenceDetails({
     )
   }
 
-  const formattedDate = format(new Date(occurrence.createdAt), 'dd/MM/yyyy', {
-    locale: ptBR,
-  })
-
-  const getBadgeVariant = (type: string) => {
-    switch (type) {
-      case 'BEHAVIOR':
-        return 'destructive'
-      case 'ABSENCES':
-        return 'secondary'
-      case 'UNIFORM':
-        return 'outline'
-      default:
-        return 'default'
-    }
-  }
+  const createdAt = new Date(occurrence.createdAt)
+  const formattedDate = format(createdAt, 'dd/MM/yyyy', { locale: ptBR })
+  const formattedTime = format(createdAt, 'HH:mm', { locale: ptBR })
 
   return (
     <div className="container mx-auto py-6 max-w-5xl">
-      {/* HEADER */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
         <div className="flex flex-col items-start gap-y-2">
           <BackButton />
@@ -91,13 +81,16 @@ export default function OccurrenceDetails({
               Ocorrência #{occurrence.occurrenceId}
             </h1>
 
-            <Badge variant={getBadgeVariant(occurrence.type)}>
-              {occurrence.type}
+            <Badge
+              variant={occurrencesColorsEnum[occurrence.type] ?? 'default'}
+            >
+              {occurrencesTypesEnum[occurrence.type] ?? occurrence.type}
             </Badge>
           </div>
 
           <p className="text-muted-foreground">
-            Registrada em {formattedDate} às 14:30 por {occurrence.author}
+            Registrada em {formattedDate} às {formattedTime} por{' '}
+            {occurrence.author}
           </p>
         </div>
       </div>
@@ -189,7 +182,7 @@ export default function OccurrenceDetails({
                   <Clock className="h-5 w-5 text-muted-foreground mt-0.5" />
                   <div>
                     <h3 className="font-medium text-sm">Hora</h3>
-                    <p>14:30</p>
+                    <p>{formattedTime}</p>
                   </div>
                 </div>
 
@@ -236,7 +229,7 @@ export default function OccurrenceDetails({
                         target="_blank"
                         className="text-sm underline text-primary"
                       >
-                        📄 {file.title}
+                        <FileText className="h-4 w-4" /> {file.title}
                       </a>
                     ))}
                   </div>

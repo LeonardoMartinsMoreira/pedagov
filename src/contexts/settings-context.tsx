@@ -78,12 +78,15 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (data?.user) {
+      const email = data.user.email ?? 'no-email'
+      const name = data.user.name ?? 'no-name'
+      const avatar = data.user.avatar ?? defaultAvatars[0]
       setSettings((prev) => ({
         ...prev,
-        email: data.user.email ?? 'no-email',
-        name: data.user.name ?? 'no-name',
-        avatar: data.user.avatar ?? defaultAvatars[0],
         ...defaultSettings,
+        email,
+        name,
+        avatar,
       }))
     }
   }, [data?.user])

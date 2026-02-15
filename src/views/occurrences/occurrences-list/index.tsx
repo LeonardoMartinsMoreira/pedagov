@@ -17,83 +17,79 @@ import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { ArrowUpDown, Loader } from 'lucide-react'
 import Link from 'next/link'
+import { useMemo } from 'react'
 
-const columns: ColumnDef<IOccurrence>[] = [
-  {
-    accessorKey: 'student',
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-      >
-        Aluno
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
-  },
-  {
-    accessorKey: 'type',
-    header: 'Tipo',
-    cell: ({ row }) => {
-      const type = row.getValue('type') as string
-
-      return (
-        <Badge variant={occurrencesColorsEnum[type]}>
-          {occurrencesTypesEnum[type]}
-        </Badge>
-      )
+function createColumns(
+  mutate: (occurrenceId: string) => void,
+  isPending: boolean
+): ColumnDef<IOccurrence>[] {
+  return [
+    {
+      accessorKey: 'student',
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Aluno
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      ),
     },
-    filterFn: 'equals',
-  },
-  {
-    accessorKey: 'occurrenceId',
-    header: '№ Ocorrência',
-    cell: ({ row }) => {
-      return (
-        <Tooltip>
-          <TooltipTrigger className="max-w-32 text-ellipsis text-nowrap overflow-hidden whitespace-nowrap">
-            {row.original.occurrenceId}
-          </TooltipTrigger>
-          <TooltipContent className="p-1 rounded bg-muted border border-muted-foreground">
-            {row.original.occurrenceId}
-          </TooltipContent>
-        </Tooltip>
-      )
-    },
-  },
-  {
-    accessorKey: 'createdAt',
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-      >
-        Data
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) => {
-      const rawDate = row.getValue('createdAt') as string
-      const date = new Date(rawDate)
+    {
+      accessorKey: 'type',
+      header: 'Tipo',
+      cell: ({ row }) => {
+        const type = row.getValue('type') as string
 
-      return format(date, 'dd/MM/yyyy', { locale: ptBR })
+        return (
+          <Badge variant={occurrencesColorsEnum[type]}>
+            {occurrencesTypesEnum[type]}
+          </Badge>
+        )
+      },
+      filterFn: 'equals',
     },
-  },
-  {
-    id: 'actions',
-    cell: ({ row }) => {
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      const { mutate, isPending } = useDeleteOccurrence()
+    {
+      accessorKey: 'occurrenceId',
+      header: '№ Ocorrência',
+      cell: ({ row }) => {
+        return (
+          <Tooltip>
+            <TooltipTrigger className="max-w-32 text-ellipsis text-nowrap overflow-hidden whitespace-nowrap">
+              {row.original.occurrenceId}
+            </TooltipTrigger>
+            <TooltipContent className="p-1 rounded bg-muted border border-muted-foreground">
+              {row.original.occurrenceId}
+            </TooltipContent>
+          </Tooltip>
+        )
+      },
+    },
+    {
+      accessorKey: 'createdAt',
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Data
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => {
+        const rawDate = row.getValue('createdAt') as string
+        const date = new Date(rawDate)
 
-      return (
+        return format(date, 'dd/MM/yyyy', { locale: ptBR })
+      },
+    },
+    {
+      id: 'actions',
+      cell: ({ row }) => (
         <div className="flex items-center justify-end gap-3">
           <Link
-            href={{
-              pathname: `/occurrences/${row.original.occurrenceId}`,
-              query: {
-                studentId: row.original.studentId,
-              },
-            }}
+            href={`/occurrences/${row.original.occurrenceId}?studentId=${row.original.studentId}`}
           >
             <Button
               variant="outline"
@@ -106,7 +102,8 @@ const columns: ColumnDef<IOccurrence>[] = [
 
           <button
             onClick={() => mutate(row.original.occurrenceId)}
-            className="p-2 rounded-md hover:bg-destructive/10 transition-colors"
+            disabled={isPending}
+            className="p-2 rounded-md hover:bg-destructive/10 transition-colors disabled:opacity-50"
           >
             {isPending ? (
               <Loader className="h-4 w-4 animate-spin text-destructive" />
@@ -115,15 +112,21 @@ const columns: ColumnDef<IOccurrence>[] = [
             )}
           </button>
         </div>
-      )
+      ),
     },
-  },
-]
+  ]
+}
 
 export function OccurrencesList() {
+  const { mutate, isPending } = useDeleteOccurrence()
+  const columns = useMemo(
+    () => createColumns(mutate, isPending),
+    [mutate, isPending]
+  )
+
   return (
     <div className="container mx-auto py-6 space-y-6">
-      <div className="flex justify-een items-center">
+      <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold">Ocorrências</h1>
       </div>
 

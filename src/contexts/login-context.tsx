@@ -6,6 +6,7 @@ import {
   Dispatch,
   SetStateAction,
   useContext,
+  useEffect,
   useState,
 } from 'react'
 
@@ -22,9 +23,13 @@ export function FirstLoginProvider({
   children: React.ReactNode
 }) {
   const { data } = useSession()
-  const [isFirstLogin, setIsFirstLogin] = useState(
-    Boolean(data?.user.isFirstLogin)
-  )
+  const [isFirstLogin, setIsFirstLogin] = useState(false)
+
+  useEffect(() => {
+    if (data?.user) {
+      setIsFirstLogin(Boolean((data.user as { isFirstLogin?: boolean }).isFirstLogin))
+    }
+  }, [data?.user])
 
   return (
     <FirstLoginContext.Provider
