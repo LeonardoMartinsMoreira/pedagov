@@ -80,7 +80,6 @@ export function AddStudentDialog({
       responsiblePhone: data.responsiblePhone ?? '',
       responsibleEmail: data.responsibleEmail ?? '',
     })
-    onCloseDialog()
   }
 
   return (

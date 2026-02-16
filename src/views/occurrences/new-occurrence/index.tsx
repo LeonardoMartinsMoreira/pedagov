@@ -91,7 +91,7 @@ export function NewOccurrenceForm() {
     },
   })
 
-  const { mutate } = useCreateOccurrence(router)
+  const { mutate, isPending } = useCreateOccurrence(router)
 
   const onSubmit = async (data: OccurrenceFormValues) => {
     try {
@@ -300,9 +300,9 @@ export function NewOccurrenceForm() {
                 </TooltipContent>
               </Tooltip>
               <div className="flex justify-end">
-                <Button type="submit" disabled={form.formState.isSubmitting}>
+                <Button type="submit" disabled={isPending}>
                   <Save className="mr-2 h-4 w-4" />
-                  {form.formState.isSubmitting ? 'Salvando...' : 'Salvar'}
+                  {isPending ? 'Salvando...' : 'Salvar'}
                 </Button>
               </div>
             </form>

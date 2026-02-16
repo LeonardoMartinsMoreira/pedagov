@@ -88,7 +88,6 @@ export function EditStudentDialog({
       responsiblePhone: data.responsiblePhone ?? '',
       responsibleEmail: data.responsibleEmail ?? '',
     })
-    onCloseDialog()
   }
 
   return (

@@ -1,7 +1,7 @@
 'use client'
 
 import { type ColumnDef } from '@tanstack/react-table'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { DataTable } from '@/components/data-table'
 import { LIMIT } from '@/constants/pagination'
@@ -18,26 +18,23 @@ interface DataTableProps<TData> {
 
 export function ClassesDataTable<TData>({ columns }: DataTableProps<TData>) {
   const addClass = useDialogState()
-
-  const { pagination, table } = usePaginatedTable<TData>({
-    data: [],
-    columns,
-    totalPages: 2,
-  })
+  const [pageIndex, setPageIndex] = useState(0)
 
   const { data, isLoading } = useGetAllGroups({
     limit: LIMIT,
-    page: pagination.pageIndex + 1,
+    page: pageIndex + 1,
     globalFilter: '',
   })
 
+  const { pagination, table } = usePaginatedTable<TData>({
+    data: (data?.result ?? []) as TData[],
+    columns,
+    totalPages: data?.totalPages ?? 0,
+  })
+
   useEffect(() => {
-    table.setOptions((prev) => ({
-      ...prev,
-      data: (data?.result ?? []) as TData[],
-      pageCount: data?.totalPages ?? 0,
-    }))
-  }, [table, data])
+    if (pagination.pageIndex !== pageIndex) setPageIndex(pagination.pageIndex)
+  }, [pagination.pageIndex, pageIndex])
 
   if (isLoading) return <Loading />
 
@@ -50,9 +47,7 @@ export function ClassesDataTable<TData>({ columns }: DataTableProps<TData>) {
           <Button onClick={addClass.openDialog}>Adicionar Turma</Button>
         }
         footerLeft={
-          <>
-            {table.getFilteredRowModel().rows.length} turma(s) encontrada(s)
-          </>
+          <>{table.getFilteredRowModel().rows.length} turma(s) encontrada(s)</>
         }
       />
       <AddPedagogueDialog
