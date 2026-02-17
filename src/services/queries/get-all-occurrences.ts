@@ -29,4 +29,5 @@ export const useGetAllOccurrences = (params: IOccurrencesParams) =>
   useQuery<IOccurrencesResponse>({
     queryKey: ['occurrences', params],
     queryFn: () => getAllOccurrences(params),
+    placeholderData: (previousData) => previousData,
   })

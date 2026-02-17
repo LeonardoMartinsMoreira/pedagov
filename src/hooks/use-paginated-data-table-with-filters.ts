@@ -15,7 +15,7 @@ export interface UsePaginatedDataTableWithFiltersOptions<TData, TResponse> {
   useQueryWithPage: (
     page: number,
     filters: { globalFilter: string; type?: string }
-  ) => { data?: TResponse; isLoading: boolean }
+  ) => { data?: TResponse; isLoading: boolean; isFetching?: boolean }
   getData: (data: TResponse | undefined) => TData[]
   getTotalPages: (data: TResponse | undefined) => number
   columns: ColumnDef<TData, unknown>[]
@@ -48,6 +48,9 @@ export function usePaginatedDataTableWithFilters<TData, TResponse>({
     type: typeFilter,
   })
 
+  /** Só loading “cheio” quando não temos dados (carga inicial). Ao digitar, mantemos a tabela e o foco no input. */
+  const isInitialLoading = isLoading && !data
+
   const table = useReactTable<TData>({
     data: getData(data),
     columns,
@@ -69,12 +72,10 @@ export function usePaginatedDataTableWithFilters<TData, TResponse>({
     pageCount: getTotalPages(data) ?? -1,
   })
 
-  // Sincronizar página da tabela com estado (troca de página pelos botões)
   useEffect(() => {
     if (pagination.pageIndex !== pageIndex) setPageIndex(pagination.pageIndex)
   }, [pagination.pageIndex, pageIndex])
 
-  // Ao mudar filtros, voltar para a primeira página
   useEffect(() => {
     setPageIndex(0)
     setPagination((prev) =>
@@ -84,7 +85,7 @@ export function usePaginatedDataTableWithFilters<TData, TResponse>({
 
   return {
     table,
-    isLoading,
+    isLoading: isInitialLoading,
     columnFilters,
     setColumnFilters,
   }
