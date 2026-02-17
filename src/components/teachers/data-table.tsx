@@ -1,12 +1,11 @@
 'use client'
 
 import { type ColumnDef } from '@tanstack/react-table'
-import { useEffect } from 'react'
 
 import { DataTable } from '@/components/data-table'
 import { LIMIT } from '@/constants/pagination'
 import { useDialogState } from '@/hooks/use-dialog-state'
-import { usePaginatedTable } from '@/hooks/use-paginated-table'
+import { usePaginatedDataTable } from '@/hooks/use-paginated-data-table'
 import { ITeacher } from '@/interfaces/teachers/teacher'
 import { useGetAllTeachers } from '@/services/queries/get-all-teachers'
 import { Loading } from '../loading'
@@ -20,24 +19,13 @@ interface DataTableProps {
 export function TeachersDataTable({ columns }: DataTableProps) {
   const addTeacher = useDialogState()
 
-  const { pagination, table } = usePaginatedTable<ITeacher>({
-      data: [],
-      columns,
-      totalPages: 1,
-    })
-
-  const { data, isLoading } = useGetAllTeachers({
-    limit: LIMIT,
-    page: pagination.pageIndex + 1,
+  const { table, isLoading } = usePaginatedDataTable<ITeacher, ITeacher[] | undefined>({
+    useQueryWithPage: (page) =>
+      useGetAllTeachers({ limit: LIMIT, page }),
+    getData: (data) => data ?? [],
+    getTotalPages: () => 1,
+    columns,
   })
-
-  useEffect(() => {
-    table.setOptions((prev) => ({
-      ...prev,
-      data: data ?? [],
-      pageCount: 10,
-    }))
-  }, [table, data])
 
   if (isLoading) return <Loading />
 

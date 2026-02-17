@@ -1,18 +1,7 @@
 'use client'
 
-import {
-  type ColumnDef,
-  type ColumnFiltersState,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  PaginationState,
-  SortingState,
-  useReactTable,
-} from '@tanstack/react-table'
+import { type ColumnDef } from '@tanstack/react-table'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
 
 import { DataTable } from '@/components/data-table'
 import {
@@ -23,6 +12,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { occurrencesTypesEnum } from '@/constants/occurrences-types-enum'
+import { usePaginatedDataTableWithFilters } from '@/hooks/use-paginated-data-table-with-filters'
 import { IOccurrence } from '@/interfaces/occurrences/occurrences'
 import { useGetAllOccurrences } from '@/services/queries/get-all-occurrences'
 import { Loading } from '../loading'
@@ -33,47 +23,38 @@ interface OccurrencesDataTableProps {
   columns: ColumnDef<IOccurrence>[]
 }
 
+const LIMIT = 10
+
 export function OccurrencesDataTable({ columns }: OccurrencesDataTableProps) {
-  const [globalFilter, setGlobalFilter] = useState<string>('')
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-  const [sorting, setSorting] = useState<SortingState>([
-    { id: 'createdAt', desc: true },
-  ])
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  })
-
-  const { data, isLoading } = useGetAllOccurrences({
-    page: pagination.pageIndex + 1,
-    limit: pagination.pageSize,
-    globalFilter,
-    type: columnFilters.find((f) => f.id === 'type')?.value as string,
-  })
-
   const router = useRouter()
-  const occurrences = data?.result ?? []
 
-  const table = useReactTable<IOccurrence>({
-    data: occurrences,
+  const {
+    table,
+    isLoading,
+    columnFilters,
+    setColumnFilters,
+  } = usePaginatedDataTableWithFilters<
+    IOccurrence,
+    { result: IOccurrence[]; totalPages: number }
+  >({
+    useQueryWithPage: (page, filters) =>
+      useGetAllOccurrences({
+        page,
+        limit: LIMIT,
+        globalFilter: filters.globalFilter,
+        type: filters.type,
+      }),
+    getData: (data) => data?.result ?? [],
+    getTotalPages: (data) => data?.totalPages ?? 1,
     columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    state: {
-      globalFilter,
-      columnFilters,
-      sorting,
-      pagination,
-    },
-    onGlobalFilterChange: setGlobalFilter,
-    onColumnFiltersChange: setColumnFilters,
-    onSortingChange: setSorting,
-    onPaginationChange: setPagination,
-    manualPagination: true,
-    pageCount: data?.totalPages ?? -1,
+    initialSorting: [{ id: 'createdAt', desc: true }],
+    pageSize: LIMIT,
   })
+
+  const typeFilter = columnFilters.find((f) => f.id === 'type')?.value as
+    | string
+    | undefined
+  const selectValue = typeFilter ?? 'all'
 
   if (isLoading) return <Loading />
 
@@ -83,10 +64,13 @@ export function OccurrencesDataTable({ columns }: OccurrencesDataTableProps) {
       columns={columns}
       toolbarExtra={
         <Select
+          value={selectValue}
           onValueChange={(value) => {
-            table
-              .getColumn('type')
-              ?.setFilterValue(value === 'all' ? undefined : value)
+            setColumnFilters(
+              value === 'all'
+                ? columnFilters.filter((f) => f.id !== 'type')
+                : [{ id: 'type', value }]
+            )
           }}
         >
           <SelectTrigger className="w-[180px]">

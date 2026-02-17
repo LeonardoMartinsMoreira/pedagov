@@ -8,4 +8,5 @@ export interface IPedagogue {
 
 export interface IPedagogues {
   result: Array<IPedagogue>
+  totalPages?: number
 }

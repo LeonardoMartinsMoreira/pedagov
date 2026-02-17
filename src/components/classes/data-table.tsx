@@ -1,46 +1,37 @@
 'use client'
 
 import { type ColumnDef } from '@tanstack/react-table'
-import { useEffect, useState } from 'react'
 
 import { DataTable } from '@/components/data-table'
 import { LIMIT } from '@/constants/pagination'
 import { useDialogState } from '@/hooks/use-dialog-state'
-import { usePaginatedTable } from '@/hooks/use-paginated-table'
+import { usePaginatedDataTable } from '@/hooks/use-paginated-data-table'
+import { IGroup } from '@/interfaces/groups/groups'
 import { useGetAllGroups } from '@/services/queries/get-all-groups'
 import { Loading } from '../loading'
 import { Button } from '../ui/button'
 import { AddPedagogueDialog } from './AddClassDialog'
 
-interface DataTableProps<TData> {
-  columns: ColumnDef<TData, unknown>[]
+interface DataTableProps {
+  columns: ColumnDef<IGroup, unknown>[]
 }
 
-export function ClassesDataTable<TData>({ columns }: DataTableProps<TData>) {
+export function ClassesDataTable({ columns }: DataTableProps) {
   const addClass = useDialogState()
-  const [pageIndex, setPageIndex] = useState(0)
 
-  const { data, isLoading } = useGetAllGroups({
-    limit: LIMIT,
-    page: pageIndex + 1,
-    globalFilter: '',
-  })
-
-  const { pagination, table } = usePaginatedTable<TData>({
-    data: (data?.result ?? []) as TData[],
+  const { table, isLoading } = usePaginatedDataTable<IGroup, { result: IGroup[]; totalPages: number }>({
+    useQueryWithPage: (page) =>
+      useGetAllGroups({ limit: LIMIT, page, globalFilter: '' }),
+    getData: (data) => data?.result ?? [],
+    getTotalPages: (data) => data?.totalPages ?? 0,
     columns,
-    totalPages: data?.totalPages ?? 0,
   })
-
-  useEffect(() => {
-    if (pagination.pageIndex !== pageIndex) setPageIndex(pagination.pageIndex)
-  }, [pagination.pageIndex, pageIndex])
 
   if (isLoading) return <Loading />
 
   return (
     <>
-      <DataTable<TData>
+      <DataTable<IGroup>
         table={table}
         columns={columns}
         toolbarAction={
