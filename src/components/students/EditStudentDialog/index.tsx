@@ -85,8 +85,8 @@ export function EditStudentDialog({
       cpf: data.cpf,
       groupId: data.class,
       name: data.name,
-      responsiblePhone: data.responsiblePhone ?? '',
-      responsibleEmail: data.responsibleEmail ?? '',
+      responsiblePhone: data.responsiblePhone,
+      responsibleEmail: data.responsibleEmail,
     })
   }
 

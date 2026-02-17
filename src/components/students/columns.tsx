@@ -15,10 +15,10 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useDialogState } from '@/hooks/use-dialog-state'
-import { StudentProfileDialog } from './StudentProfileDialog'
 import { DeleteStudentDialog } from './DeleteStudentDialog'
 import { useRouter } from 'next/navigation'
 import { IStudent } from '@/interfaces/students/students'
+import { EditStudentDialog } from './EditStudentDialog'
 
 export const columns: ColumnDef<IStudent>[] = [
   {
@@ -49,7 +49,7 @@ export const columns: ColumnDef<IStudent>[] = [
     cell: ({ row }) => {
       const student = row.original
 
-      const studentProfileDialog = useDialogState()
+      const editStudentDialog = useDialogState()
       const deleteStudentDialog = useDialogState()
       const router = useRouter()
 
@@ -64,6 +64,9 @@ export const columns: ColumnDef<IStudent>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
             <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={editStudentDialog.openDialog}>
+              Editar Aluno
+            </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => router.push(`students/${student.studentId}`)}
             >
@@ -81,10 +84,10 @@ export const columns: ColumnDef<IStudent>[] = [
             </DropdownMenuItem>
           </DropdownMenuContent>
 
-          <StudentProfileDialog
+          <EditStudentDialog
             student={student}
-            closeDialog={studentProfileDialog.closeDialog}
-            isVisible={studentProfileDialog.isVisible}
+            closeDialog={editStudentDialog.closeDialog}
+            isVisible={editStudentDialog.isVisible}
           />
 
           <DeleteStudentDialog

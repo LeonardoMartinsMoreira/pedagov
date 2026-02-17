@@ -26,8 +26,6 @@ export function PedagoguesDataTable({ columns }: DataTableProps) {
     columns,
   })
 
-  console.log(table)
-
   if (isLoading) return <Loading />
 
   return (
