@@ -23,14 +23,12 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { Tooltip, TooltipTrigger } from '@/components/ui/tooltip'
 import { LIMIT } from '@/constants/pagination'
 import { useCreateOccurrence } from '@/services/mutations/create-occurrence'
 import { useGetAllAttendees } from '@/services/queries/get-all-attendees'
 import { useGetAllStudents } from '@/services/queries/get-all-students'
 import { useGetAllTeachers } from '@/services/queries/get-all-teachers'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { TooltipContent } from '@radix-ui/react-tooltip'
 import { Save } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -276,29 +274,19 @@ export function NewOccurrenceForm() {
                   </FormItem>
                 )}
               />
-              <Tooltip>
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="sendEmail"
-                    checked={shouldSendEmail}
-                    onCheckedChange={(checked) =>
-                      setShouldSendEmail(checked as boolean)
-                    }
-                  />
-                  <TooltipTrigger asChild>
-                    <label htmlFor="sendEmail" className="text-sm">
-                      Enviar email para responsáveis
-                    </label>
-                  </TooltipTrigger>
-                </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="sendEmail"
+                  checked={shouldSendEmail}
+                  onCheckedChange={(checked) =>
+                    setShouldSendEmail(checked as boolean)
+                  }
+                />
+                <label htmlFor="sendEmail" className="text-sm">
+                  Enviar email para responsáveis
+                </label>
+              </div>
 
-                <TooltipContent>
-                  <p className="text-xs">
-                    Ao marcar está opção, será enviado automaticamente um email
-                    para o responsável do aluno.
-                  </p>
-                </TooltipContent>
-              </Tooltip>
               <div className="flex justify-end">
                 <Button type="submit" disabled={isPending}>
                   <Save className="mr-2 h-4 w-4" />

@@ -71,7 +71,7 @@ export default function OccurrenceDetails({
   const formattedTime = format(createdAt, 'HH:mm', { locale: ptBR })
 
   return (
-    <div className="container mx-auto py-6 max-w-5xl">
+    <div className="">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
         <div className="flex flex-col items-start gap-y-2">
           <BackButton />
@@ -96,7 +96,6 @@ export default function OccurrenceDetails({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* CARD DO ALUNO */}
         <Card className="md:col-span-1">
           <CardHeader>
             <CardTitle className="text-lg flex items-center gap-2">
@@ -147,7 +146,7 @@ export default function OccurrenceDetails({
               {occurrence.attendees.length > 0 && (
                 <div>
                   <h3 className="font-medium mb-2">
-                    Participantes presente na ocorrência
+                    Participantes presentes na ocorrência
                   </h3>
                   <div className="space-y-1 text-sm">
                     {occurrence.attendees.map((a) => (
@@ -162,7 +161,6 @@ export default function OccurrenceDetails({
           </CardContent>
         </Card>
 
-        {/* CARD DA OCORRÊNCIA */}
         <Card className="md:col-span-2">
           <CardHeader>
             <CardTitle className="text-lg">Informações da Ocorrência</CardTitle>

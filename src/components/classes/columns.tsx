@@ -66,7 +66,7 @@ export const columns: ColumnDef<IGroup>[] = [
               <DropdownMenuLabel>Ações</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={insertStudents.openDialog}>
-                Inserir alunos
+                Importar alunos por CSV
               </DropdownMenuItem>
               <DropdownMenuItem onClick={deleteGroup.openDialog}>
                 Deletar Turma

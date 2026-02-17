@@ -22,9 +22,11 @@ export function PedagoguesDataTable({ columns }: DataTableProps) {
   const { table, isLoading } = usePaginatedDataTable<IPedagogue, IPedagogues>({
     useQueryWithPage: (page) => useGetAllPedagogues({ limit: LIMIT, page }),
     getData: (data) => data?.result ?? [],
-    getTotalPages: (data) => data?.totalPages ?? 1,
+    getTotalPages: () => Infinity,
     columns,
   })
+
+  console.log(table)
 
   if (isLoading) return <Loading />
 

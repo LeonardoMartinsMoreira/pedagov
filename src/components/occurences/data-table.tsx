@@ -28,28 +28,24 @@ const LIMIT = 10
 export function OccurrencesDataTable({ columns }: OccurrencesDataTableProps) {
   const router = useRouter()
 
-  const {
-    table,
-    isLoading,
-    columnFilters,
-    setColumnFilters,
-  } = usePaginatedDataTableWithFilters<
-    IOccurrence,
-    { result: IOccurrence[]; totalPages: number }
-  >({
-    useQueryWithPage: (page, filters) =>
-      useGetAllOccurrences({
-        page,
-        limit: LIMIT,
-        globalFilter: filters.globalFilter,
-        type: filters.type,
-      }),
-    getData: (data) => data?.result ?? [],
-    getTotalPages: (data) => data?.totalPages ?? 1,
-    columns,
-    initialSorting: [{ id: 'createdAt', desc: true }],
-    pageSize: LIMIT,
-  })
+  const { table, isLoading, columnFilters, setColumnFilters } =
+    usePaginatedDataTableWithFilters<
+      IOccurrence,
+      { result: IOccurrence[]; totalPages: number }
+    >({
+      useQueryWithPage: (page, filters) =>
+        useGetAllOccurrences({
+          page,
+          limit: LIMIT,
+          globalFilter: filters.globalFilter,
+          type: filters.type,
+        }),
+      getData: (data) => data?.result ?? [],
+      getTotalPages: () => Infinity,
+      columns,
+      initialSorting: [{ id: 'createdAt', desc: true }],
+      pageSize: LIMIT,
+    })
 
   const typeFilter = columnFilters.find((f) => f.id === 'type')?.value as
     | string
