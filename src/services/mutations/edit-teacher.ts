@@ -6,9 +6,12 @@ interface IEditTeacherPayload {
   name: string
 }
 
-const editTeacher = async (data: IEditTeacherPayload) => {
-  return await api.put('/accounts/teacher', {
-    name: data.name,
+const editTeacher = async ({
+  name,
+  teacherId,
+}: IEditTeacherPayload & { teacherId: string }) => {
+  return await api.put(`/teachers/${teacherId}`, {
+    name: name,
   })
 }
 
@@ -16,21 +19,20 @@ export const useEditTeacher = (closeDialog: () => void) => {
   const query = useQueryClient()
 
   return useMutation({
-    mutationKey: ['edit-student'],
+    mutationKey: ['edit-teacher'],
     mutationFn: editTeacher,
-    onSuccess: ({ data }) => {
+    onSuccess: () => {
       toast({
-        title: 'Aluno editado com sucesso.',
+        title: 'Professor editado com sucesso.',
         variant: 'success',
       })
 
-      query.invalidateQueries({ queryKey: ['student', data.id] })
-
+      query.invalidateQueries({ queryKey: ['teachers'] })
       closeDialog()
     },
     onError: () => {
       toast({
-        title: 'Falha ao tentar editado aluno(a).',
+        title: 'Falha ao tentar editado professor.',
         description: 'Caso o erro persistir, contate nosso suporte.',
         variant: 'destructive',
       })

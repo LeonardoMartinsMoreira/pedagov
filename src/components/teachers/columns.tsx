@@ -17,6 +17,7 @@ import {
 import { useDialogState } from '@/hooks/use-dialog-state'
 import { DeleteTeacherDialog } from './DeleteTeacherDialog'
 import { ITeacher } from '@/interfaces/teachers/teacher'
+import { EditTeacherDialog } from './EditTeacherDialog'
 
 export const columns: ColumnDef<ITeacher>[] = [
   {
@@ -69,6 +70,11 @@ export const columns: ColumnDef<ITeacher>[] = [
             teacher={row.original}
             closeDialog={deleteTeacher.closeDialog}
             isVisible={deleteTeacher.isVisible}
+          />
+          <EditTeacherDialog
+            teacher={row.original}
+            closeDialog={editTeacher.closeDialog}
+            isVisible={editTeacher.isVisible}
           />
         </div>
       )

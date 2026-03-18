@@ -14,8 +14,10 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { ITeacher } from '@/interfaces/teachers/teacher'
 import { useEditTeacher } from '@/services/mutations/edit-teacher'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -28,13 +30,15 @@ export type IEditTeacher = z.infer<typeof EditTeacherSchema>
 export function EditTeacherDialog({
   isVisible,
   closeDialog,
+  teacher,
 }: {
   isVisible: boolean
   closeDialog: () => void
+  teacher: ITeacher
 }) {
   const onCloseDialog = () => {
-    closeDialog()
     form.reset()
+    closeDialog()
   }
 
   const { mutate, isPending } = useEditTeacher(onCloseDialog)
@@ -42,7 +46,7 @@ export function EditTeacherDialog({
   const form = useForm({
     resolver: zodResolver(EditTeacherSchema),
     defaultValues: {
-      name: '',
+      name: teacher.name,
     },
   })
 
@@ -51,8 +55,16 @@ export function EditTeacherDialog({
   } = form.formState
 
   const onSubmit = (data: IEditTeacher) => {
-    mutate(data)
+    mutate({ ...data, teacherId: teacher.id })
   }
+
+  useEffect(() => {
+    if (isVisible) {
+      form.reset({
+        name: teacher.name,
+      })
+    }
+  }, [teacher, isVisible, form])
 
   return (
     <Dialog open={isVisible} onOpenChange={onCloseDialog}>

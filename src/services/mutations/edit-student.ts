@@ -36,6 +36,7 @@ export const useEditStudent = (closeDialog: () => void) => {
       })
 
       query.invalidateQueries({ queryKey: ['student', data.id] })
+      query.invalidateQueries({ queryKey: ['students'] })
 
       closeDialog()
     },
