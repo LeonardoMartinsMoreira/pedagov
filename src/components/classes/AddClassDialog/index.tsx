@@ -152,7 +152,7 @@ export function AddPedagogueDialog({
               name="teacherId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Turma</FormLabel>
+                  <FormLabel>Responsável pela turma</FormLabel>
                   <FormControl>
                     <Select
                       value={field.value}

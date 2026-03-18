@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useDialogState } from '@/hooks/use-dialog-state'
-import { DeleteTeacherDialog } from './DeleteTeachersDialog'
+import { DeleteTeacherDialog } from './DeleteTeacherDialog'
 import { ITeacher } from '@/interfaces/teachers/teacher'
 
 export const columns: ColumnDef<ITeacher>[] = [
@@ -42,6 +42,7 @@ export const columns: ColumnDef<ITeacher>[] = [
     id: 'actions',
     cell: ({ row }) => {
       const deleteTeacher = useDialogState()
+      const editTeacher = useDialogState()
 
       return (
         <div className="flex justify-end">
@@ -57,6 +58,9 @@ export const columns: ColumnDef<ITeacher>[] = [
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={deleteTeacher.openDialog}>
                 Deletar Professor(a)
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={editTeacher.openDialog}>
+                Editar Professor(a)
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

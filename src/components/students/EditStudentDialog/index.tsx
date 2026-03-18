@@ -87,6 +87,7 @@ export function EditStudentDialog({
       name: data.name,
       responsiblePhone: data.responsiblePhone,
       responsibleEmail: data.responsibleEmail,
+      studentId: student!.studentId,
     })
   }
 

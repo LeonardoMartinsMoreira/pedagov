@@ -15,6 +15,7 @@ import { DataTable } from '@/components/data-table'
 import { useDialogState } from '@/hooks/use-dialog-state'
 import { IStudent } from '@/interfaces/students/students'
 import { useGetAllStudents } from '@/services/queries/get-all-students'
+import { LIMIT, PAGE } from '@/constants/pagination'
 import { Loading } from '../loading'
 import { Button } from '../ui/button'
 import { AddStudentDialog } from './AddStudentDialog'
@@ -27,7 +28,10 @@ export function StudentsDataTable({ columns }: DataTableProps) {
   const [globalFilter, setGlobalFilter] = useState<string>('')
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 
-  const { data, isLoading } = useGetAllStudents()
+  const { data, isLoading } = useGetAllStudents({
+    page: PAGE,
+    limit: LIMIT,
+  })
   const addStudent = useDialogState()
 
   const table = useReactTable({

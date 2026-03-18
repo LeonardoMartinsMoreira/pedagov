@@ -23,7 +23,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { LIMIT } from '@/constants/pagination'
+import { LIMIT, PAGE } from '@/constants/pagination'
 import { useCreateOccurrence } from '@/services/mutations/create-occurrence'
 import { useGetAllAttendees } from '@/services/queries/get-all-attendees'
 import { useGetAllStudents } from '@/services/queries/get-all-students'
@@ -65,13 +65,13 @@ export function NewOccurrenceForm() {
   const { data: attendees, isLoading: isLoadingAttendees } = useGetAllAttendees(
     {
       limit: LIMIT,
-      page: 1,
+      page: PAGE,
     }
   )
 
   const { data: teachers, isLoading: isLoadingTeachers } = useGetAllTeachers({
     limit: LIMIT,
-    page: 1,
+    page: PAGE,
   })
 
   const form = useForm<OccurrenceFormValues>({
@@ -101,7 +101,10 @@ export function NewOccurrenceForm() {
     } catch {}
   }
 
-  const { data, isLoading: isLoadingStudents } = useGetAllStudents()
+  const { data, isLoading: isLoadingStudents } = useGetAllStudents({
+    page: PAGE,
+    limit: LIMIT,
+  })
 
   const isLoading = isLoadingAttendees || isLoadingStudents || isLoadingTeachers
 

@@ -10,7 +10,7 @@ import { ITeacher } from '@/interfaces/teachers/teacher'
 import { useGetAllTeachers } from '@/services/queries/get-all-teachers'
 import { Loading } from '../loading'
 import { Button } from '../ui/button'
-import { AddTeacherDialog } from './AddTeachersDialog'
+import { AddTeacherDialog } from './AddTeacherDialog'
 
 interface DataTableProps {
   columns: ColumnDef<ITeacher, unknown>[]
@@ -19,9 +19,11 @@ interface DataTableProps {
 export function TeachersDataTable({ columns }: DataTableProps) {
   const addTeacher = useDialogState()
 
-  const { table, isLoading } = usePaginatedDataTable<ITeacher, ITeacher[] | undefined>({
-    useQueryWithPage: (page) =>
-      useGetAllTeachers({ limit: LIMIT, page }),
+  const { table, isLoading } = usePaginatedDataTable<
+    ITeacher,
+    ITeacher[] | undefined
+  >({
+    useQueryWithPage: (page) => useGetAllTeachers({ limit: LIMIT, page }),
     getData: (data) => data ?? [],
     getTotalPages: () => 1,
     columns,
