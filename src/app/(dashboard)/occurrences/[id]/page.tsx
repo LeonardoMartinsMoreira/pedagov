@@ -1,13 +1,16 @@
-import OccurrenceDetails from '@/views/occurrences/occurrence-details'
+import { OccurrenceDetails } from '@/views/occurrences/occurrence-details'
 
 export const metadata = {
   title: 'Mais Ocorrências - Detalhes da ocorrência',
 }
 
-export default function OccurrenceDetailsPage({
+export default async function OccurrenceDetailsPage({
   params,
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }) {
-  return <OccurrenceDetails params={params} />
+    const { id } = await params
+
+
+  return <OccurrenceDetails occurrenceId={id} />
 }

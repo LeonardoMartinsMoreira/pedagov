@@ -26,15 +26,15 @@ import { useGetOccurrence } from '@/services/queries/get-occurrence'
 import { useSearchParams } from 'next/navigation'
 import { Loading } from '@/components/loading'
 
-export default function OccurrenceDetails({
-  params,
+export  function OccurrenceDetails({
+  occurrenceId,
 }: {
-  params: { id: string }
+  occurrenceId: string
 }) {
   const search = useSearchParams()
   const studentId = search.get('studentId')
 
-  const { data: occurrence, isLoading, error } = useGetOccurrence(params.id)
+  const { data: occurrence, isLoading, error } = useGetOccurrence(occurrenceId)
 
   if (isLoading) {
     return <Loading />
