@@ -20,6 +20,7 @@ import { shiftsEnum } from '@/constants/shifts-enum'
 import { Badge } from '../ui/badge'
 import { DeleteGroupDialog } from './DeleteGroupDialog'
 import { ImportStudentsDialog } from './InsertStudentsDialog'
+import { EditClassDialog } from './EditClassDialog'
 
 export const columns: ColumnDef<IGroup>[] = [
   {
@@ -50,8 +51,9 @@ export const columns: ColumnDef<IGroup>[] = [
   {
     id: 'actions',
     cell: ({ row }) => {
-      const deleteGroup = useDialogState()
-      const insertStudents = useDialogState()
+      const deleteGroupModal = useDialogState()
+      const importStudentsModal = useDialogState()
+      const editClassModal = useDialogState()
 
       return (
         <div className="flex justify-end">
@@ -65,25 +67,34 @@ export const columns: ColumnDef<IGroup>[] = [
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Ações</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={insertStudents.openDialog}>
+              <DropdownMenuItem onClick={importStudentsModal.openDialog}>
                 Importar alunos por CSV
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={deleteGroup.openDialog}>
+              <DropdownMenuItem onClick={deleteGroupModal.openDialog}>
                 Deletar Turma
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={editClassModal.openDialog}>
+                Editar Turma
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 
           <DeleteGroupDialog
-            closeDialog={deleteGroup.closeDialog}
+            closeDialog={deleteGroupModal.closeDialog}
             group={row.original}
-            isVisible={deleteGroup.isVisible}
+            isVisible={deleteGroupModal.isVisible}
           />
 
           <ImportStudentsDialog
-            closeDialog={insertStudents.closeDialog}
-            isVisible={insertStudents.isVisible}
+            closeDialog={importStudentsModal.closeDialog}
+            isVisible={importStudentsModal.isVisible}
             groupId={row.original.id}
+          />
+
+          <EditClassDialog
+            closeDialog={importStudentsModal.closeDialog}
+            isVisible={importStudentsModal.isVisible}
+            classValues={row.original}
           />
         </div>
       )

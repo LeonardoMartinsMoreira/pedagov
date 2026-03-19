@@ -31,7 +31,7 @@ import { z } from 'zod'
 
 const shifts = Object.keys(shiftsEnum)
 
-const AddClassSchema = z.object({
+const EditClassSchema = z.object({
   serie: z
     .string()
     .regex(/^[1-9]{1}$/, { message: 'Digite apenas um número (ex: 1)' }),
@@ -48,27 +48,29 @@ const AddClassSchema = z.object({
     }),
 })
 
-type IAddClass = z.infer<typeof AddClassSchema>
+type IEditClass = z.infer<typeof EditClassSchema>
 
-export function AddClassDialog({
+export function EditClassDialog({
   isVisible,
   closeDialog,
+  classValues,
 }: {
   isVisible: boolean
   closeDialog: () => void
+  classValues: IGroup
 }) {
   const { data, isLoading } = useGetAllTeachers({
     page: 1,
     limit: 100,
   })
 
-  const form = useForm<IAddClass>({
-    resolver: zodResolver(AddClassSchema),
+  const form = useForm<IEditClass>({
+    resolver: zodResolver(EditClassSchema),
     defaultValues: {
-      serie: '',
-      name: '',
-      shift: undefined,
-      teacherId: undefined,
+      serie: classValues.serie,
+      name: classValues.name,
+      shift: classValues.shift,
+      teacherId: classValues.teacherId,
     },
   })
 
@@ -83,7 +85,7 @@ export function AddClassDialog({
 
   const { mutate, isPending } = useCreateGroup(onCloseDialog)
 
-  const onSubmit = (data: IAddClass) => {
+  const onSubmit = (data: IEditClass) => {
     const formattedName = `${data.serie}º ${data.name.trim().toUpperCase()}`
 
     const groupData = {

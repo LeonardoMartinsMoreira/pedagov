@@ -10,7 +10,7 @@ import { IGroup } from '@/interfaces/groups/groups'
 import { useGetAllGroups } from '@/services/queries/get-all-groups'
 import { Loading } from '../loading'
 import { Button } from '../ui/button'
-import { AddPedagogueDialog } from './AddClassDialog'
+import { AddClassDialog } from './AddClassDialog'
 
 interface DataTableProps {
   columns: ColumnDef<IGroup, unknown>[]
@@ -19,7 +19,10 @@ interface DataTableProps {
 export function ClassesDataTable({ columns }: DataTableProps) {
   const addClass = useDialogState()
 
-  const { table, isLoading } = usePaginatedDataTable<IGroup, { result: IGroup[]; totalPages: number }>({
+  const { table, isLoading } = usePaginatedDataTable<
+    IGroup,
+    { result: IGroup[]; totalPages: number }
+  >({
     useQueryWithPage: (page) =>
       useGetAllGroups({ limit: LIMIT, page, globalFilter: '' }),
     getData: (data) => data?.result ?? [],
@@ -41,7 +44,7 @@ export function ClassesDataTable({ columns }: DataTableProps) {
           <>{table.getFilteredRowModel().rows.length} turma(s) encontrada(s)</>
         }
       />
-      <AddPedagogueDialog
+      <AddClassDialog
         isVisible={addClass.isVisible}
         closeDialog={addClass.closeDialog}
       />
