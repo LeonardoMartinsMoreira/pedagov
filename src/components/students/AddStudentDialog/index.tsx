@@ -14,12 +14,6 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
-import { cpf as cpfValidator } from 'cpf-cnpj-validator'
-import InputMask from 'react-input-mask'
-import { InputProps } from 'react-day-picker'
 import {
   Select,
   SelectContent,
@@ -27,8 +21,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { useGetAllGroups } from '@/services/queries/get-all-groups'
 import { useCreateStudent } from '@/services/mutations/create-student'
+import { useGetAllGroups } from '@/services/queries/get-all-groups'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { cpf as cpfValidator } from 'cpf-cnpj-validator'
+import { useForm } from 'react-hook-form'
+import { IMaskInput } from 'react-imask'
+import { z } from 'zod'
 
 const AddStudentSchema = z.object({
   name: z.string({ message: 'Nome do aluno é obrigatório' }),
@@ -157,15 +156,13 @@ export function AddStudentDialog({
                 <FormItem>
                   <FormLabel>CPF</FormLabel>
                   <FormControl>
-                    <InputMask
-                      mask="999.999.999-99"
-                      value={field.value}
-                      onChange={field.onChange}
-                    >
-                      {(inputProps: InputProps) => (
-                        <Input {...inputProps} placeholder="CPF" />
-                      )}
-                    </InputMask>
+                    <IMaskInput
+                      mask="000.000.000-00"
+                      value={field.value ?? ''}
+                      onAccept={(value) => field.onChange(value)}
+                      placeholder="CPF"
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none focus:outline-none focus:ring-0 focus:border-input"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
