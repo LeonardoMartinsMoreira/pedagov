@@ -152,7 +152,7 @@ export function NewOccurrenceForm() {
                           <FormLabel>Aluno(s)</FormLabel>
                           <MultiSelect
                             className="min-h-9"
-                            options={data.map(({ student, studentId }) => ({
+                            options={data.students.map(({ student, studentId }) => ({
                               label: student,
                               value: String(studentId),
                             }))}
