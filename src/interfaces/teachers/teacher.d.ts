@@ -1,9 +1,12 @@
+import type { IPageMeta } from '../pagination'
+
 export interface ITeacher {
   id: string
   name: string
   status: 'active' | 'inactive'
 }
 
-export interface ITeachers {
-  result: Array<ITeacher>
+export interface ITeachersResponse {
+  teachers: ITeacher[]
+  page: IPageMeta
 }

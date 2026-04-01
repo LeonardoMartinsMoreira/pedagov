@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { api } from '../api'
-import { IPedagogues } from '@/interfaces/pedagogues/pedagogues'
+import { IPedagoguesResponse } from '@/interfaces/pedagogues/pedagogues'
 
 interface IPedagoguesParams {
   page: number
@@ -17,11 +17,12 @@ const getAllPedagogues = async (params: IPedagoguesParams) => {
         type: params.type,
       },
     })
-  ).data
+  ).data.result
 }
 
 export const useGetAllPedagogues = (data: IPedagoguesParams) =>
-  useQuery<IPedagogues>({
+  useQuery<IPedagoguesResponse>({
     queryKey: ['pedagogues', data],
     queryFn: () => getAllPedagogues(data),
+    placeholderData: (previousData) => previousData,
   })

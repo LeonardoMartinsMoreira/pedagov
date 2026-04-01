@@ -5,8 +5,8 @@ import { type ColumnDef } from '@tanstack/react-table'
 import { DataTable } from '@/components/data-table'
 import { LIMIT } from '@/constants/pagination'
 import { useDialogState } from '@/hooks/use-dialog-state'
-import { usePaginatedDataTable } from '@/hooks/use-paginated-data-table'
-import { IPedagogue, IPedagogues } from '@/interfaces/pedagogues/pedagogues'
+import { useServerPaginatedDataTable } from '@/hooks/use-server-paginated-data-table'
+import { IPedagogue, IPedagoguesResponse } from '@/interfaces/pedagogues/pedagogues'
 import { useGetAllPedagogues } from '@/services/queries/get-all-pedagogues'
 import { Loading } from '../loading'
 import { Button } from '../ui/button'
@@ -19,11 +19,15 @@ interface DataTableProps {
 export function PedagoguesDataTable({ columns }: DataTableProps) {
   const addPedagogue = useDialogState()
 
-  const { table, isLoading } = usePaginatedDataTable<IPedagogue, IPedagogues>({
-    useQueryWithPage: (page) => useGetAllPedagogues({ limit: LIMIT, page }),
-    getData: (data) => data?.result ?? [],
-    getTotalPages: () => Infinity,
+  const { table, isLoading, pageMeta } = useServerPaginatedDataTable<
+    IPedagogue,
+    IPedagoguesResponse
+  >({
     columns,
+    pageSize: LIMIT,
+    useQueryWithPage: (page) => useGetAllPedagogues({ limit: LIMIT, page }),
+    getData: (response) => response?.pedagogues ?? [],
+    getPageMeta: (response) => response?.page,
   })
 
   if (isLoading) return <Loading />
@@ -37,6 +41,13 @@ export function PedagoguesDataTable({ columns }: DataTableProps) {
           <Button onClick={addPedagogue.openDialog}>
             Adicionar Pedagogo(a)
           </Button>
+        }
+        footerLeft={
+          pageMeta ? (
+            <>
+              Página {pageMeta.currentPage} - {pageMeta.total} pedagogo(s)
+            </>
+          ) : null
         }
       />
       <AddPedagogueDialog

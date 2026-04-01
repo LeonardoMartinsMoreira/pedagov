@@ -133,7 +133,7 @@ export function AddStudentDialog({
                             {isLoading ? (
                               <div>Carregando turmas...</div>
                             ) : (
-                              data?.result.map((group) => (
+                              data?.groups.map((group) => (
                                 <SelectItem key={group.id} value={group.id}>
                                   {group.name}
                                 </SelectItem>

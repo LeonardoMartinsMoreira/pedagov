@@ -8,13 +8,7 @@ import {
 } from '@tanstack/react-table'
 import { useEffect, useMemo, useState } from 'react'
 
-interface ServerPaginationMeta {
-  currentPage: number
-  lastPage: number
-  next: number | null
-  prev: number | null
-  total: number
-}
+import type { IPageMeta } from '@/interfaces/pagination'
 
 interface UseServerPaginatedDataTableOptions<TData, TResponse> {
   columns: ColumnDef<TData, unknown>[]
@@ -25,9 +19,7 @@ interface UseServerPaginatedDataTableOptions<TData, TResponse> {
     isFetching?: boolean
   }
   getData: (response: TResponse | undefined) => TData[]
-  getPageMeta: (
-    response: TResponse | undefined
-  ) => ServerPaginationMeta | undefined
+  getPageMeta: (response: TResponse | undefined) => IPageMeta | undefined
 }
 
 export function useServerPaginatedDataTable<TData, TResponse>({

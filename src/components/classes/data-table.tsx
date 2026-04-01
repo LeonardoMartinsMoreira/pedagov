@@ -6,7 +6,7 @@ import { DataTable } from '@/components/data-table'
 import { LIMIT } from '@/constants/pagination'
 import { useDialogState } from '@/hooks/use-dialog-state'
 import { usePaginatedDataTable } from '@/hooks/use-paginated-data-table'
-import { IGroup } from '@/interfaces/groups/groups'
+import { IGroup, IGroupsResponse } from '@/interfaces/groups/groups'
 import { useGetAllGroups } from '@/services/queries/get-all-groups'
 import { Loading } from '../loading'
 import { Button } from '../ui/button'
@@ -19,14 +19,14 @@ interface DataTableProps {
 export function ClassesDataTable({ columns }: DataTableProps) {
   const addClass = useDialogState()
 
-  const { table, isLoading } = usePaginatedDataTable<
+  const { table, isLoading, pageMeta } = usePaginatedDataTable<
     IGroup,
-    { result: IGroup[]; totalPages: number }
+    IGroupsResponse
   >({
     useQueryWithPage: (page) =>
       useGetAllGroups({ limit: LIMIT, page, globalFilter: '' }),
-    getData: (data) => data?.result ?? [],
-    getTotalPages: (data) => data?.totalPages ?? 0,
+    getData: (data) => data?.groups ?? [],
+    getPageMeta: (data) => data?.page,
     columns,
   })
 
@@ -41,7 +41,11 @@ export function ClassesDataTable({ columns }: DataTableProps) {
           <Button onClick={addClass.openDialog}>Adicionar Turma</Button>
         }
         footerLeft={
-          <>{table.getFilteredRowModel().rows.length} turma(s) encontrada(s)</>
+          pageMeta ? (
+            <>
+              Página {pageMeta.currentPage} - {pageMeta.total} turma(s)
+            </>
+          ) : null
         }
       />
       <AddClassDialog

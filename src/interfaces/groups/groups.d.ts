@@ -1,3 +1,5 @@
+import type { IPageMeta } from '../pagination'
+
 export interface IGroup {
   name: string
   teacherId: string
@@ -5,4 +7,9 @@ export interface IGroup {
   id: string
   numberOfStudents: number
   serie: string
+}
+
+export interface IGroupsResponse {
+  groups: IGroup[]
+  page: IPageMeta
 }

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { api } from '../api'
-import { IOccurrence } from '@/interfaces/occurrences/occurrences'
+import { IOccurrencesResponse } from '@/interfaces/occurrences/occurrences'
 
 interface IOccurrencesParams {
   page: number
@@ -10,19 +10,13 @@ interface IOccurrencesParams {
   globalFilter: string
 }
 
-interface IOccurrencesResponse {
-  result: IOccurrence[]
-  totalPages: number
-  totalItems: number
-}
-
 const getAllOccurrences = async (params: IOccurrencesParams) => {
   const { globalFilter: searchTerm, page, limit, studentId, type } = params
-  const response = await api.get<IOccurrencesResponse>('/occurrences-student', {
+  const response = await api.get('/occurrences-student', {
     params: { searchTerm, page, limit, studentId, type },
   })
 
-  return response.data
+  return response.data.result
 }
 
 export const useGetAllOccurrences = (params: IOccurrencesParams) =>

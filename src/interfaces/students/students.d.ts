@@ -1,4 +1,5 @@
 import { IOccurrence } from '../occurrences/occurrences'
+import type { IPageMeta } from '../pagination'
 
 export interface IStudent {
   studentId: string
@@ -11,15 +12,6 @@ export interface IStudent {
   occurrences: IOccurrence[]
   responsibleEmail?: string
   responsiblePhone?: string
-}
-
-export interface IPageMeta {
-  total: number
-  lastPage: number
-  currentPage: number
-  limit: number
-  prev: number | null
-  next: number | null
 }
 
 export interface IStudentsResponse {

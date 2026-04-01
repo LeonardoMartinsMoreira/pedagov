@@ -5,8 +5,8 @@ import { type ColumnDef } from '@tanstack/react-table'
 import { DataTable } from '@/components/data-table'
 import { LIMIT } from '@/constants/pagination'
 import { useDialogState } from '@/hooks/use-dialog-state'
-import { usePaginatedDataTable } from '@/hooks/use-paginated-data-table'
-import { ITeacher } from '@/interfaces/teachers/teacher'
+import { useServerPaginatedDataTable } from '@/hooks/use-server-paginated-data-table'
+import { ITeacher, ITeachersResponse } from '@/interfaces/teachers/teacher'
 import { useGetAllTeachers } from '@/services/queries/get-all-teachers'
 import { Loading } from '../loading'
 import { Button } from '../ui/button'
@@ -19,14 +19,15 @@ interface DataTableProps {
 export function TeachersDataTable({ columns }: DataTableProps) {
   const addTeacher = useDialogState()
 
-  const { table, isLoading } = usePaginatedDataTable<
+  const { table, isLoading, pageMeta } = useServerPaginatedDataTable<
     ITeacher,
-    ITeacher[] | undefined
+    ITeachersResponse
   >({
-    useQueryWithPage: (page) => useGetAllTeachers({ limit: LIMIT, page }),
-    getData: (data) => data ?? [],
-    getTotalPages: () => 1,
     columns,
+    pageSize: LIMIT,
+    useQueryWithPage: (page) => useGetAllTeachers({ limit: LIMIT, page }),
+    getData: (response) => response?.teachers ?? [],
+    getPageMeta: (response) => response?.page,
   })
 
   if (isLoading) return <Loading />
@@ -40,6 +41,13 @@ export function TeachersDataTable({ columns }: DataTableProps) {
           <Button onClick={addTeacher.openDialog}>
             Adicionar Professor(a)
           </Button>
+        }
+        footerLeft={
+          pageMeta ? (
+            <>
+              Página {pageMeta.currentPage} - {pageMeta.total} professor(es)
+            </>
+          ) : null
         }
       />
       <AddTeacherDialog

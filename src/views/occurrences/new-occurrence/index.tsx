@@ -111,7 +111,7 @@ export function NewOccurrenceForm() {
   const { description, studentsIds, type, title, attendeesIds, teacherId } =
     form.formState.errors
 
-  if (isLoading || !data) return <Loading />
+  if (isLoading || !data || !attendees || !teachers) return <Loading />
 
   return (
     <div className="container max-w-4xl py-8">
@@ -212,7 +212,7 @@ export function NewOccurrenceForm() {
                           </FormLabel>
                           <MultiSelect
                             className="min-h-9"
-                            options={(attendees ?? []).map(({ id, name }) => ({
+                            options={attendees.attendees.map(({ id, name }) => ({
                               label: name,
                               value: id,
                             }))}
@@ -244,7 +244,7 @@ export function NewOccurrenceForm() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {teachers?.map((teacher) => {
+                          {teachers.teachers.map((teacher) => {
                             return (
                               <SelectItem key={teacher.id} value={teacher.id}>
                                 {teacher.name}

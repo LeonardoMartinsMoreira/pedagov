@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { api } from '../api'
-import { IAttendee } from '@/interfaces/attendees/attendees'
+import { IAttendeesResponse } from '@/interfaces/attendees/attendees'
 
 interface IAttendeesParams {
   page: number
@@ -21,7 +21,8 @@ const getAllAttendees = async (params: IAttendeesParams) => {
 }
 
 export const useGetAllAttendees = (data: IAttendeesParams) =>
-  useQuery<IAttendee[]>({
+  useQuery<IAttendeesResponse>({
     queryKey: ['attendees', data],
     queryFn: () => getAllAttendees(data),
+    placeholderData: (previousData) => previousData,
   })

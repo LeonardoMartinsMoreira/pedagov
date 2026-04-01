@@ -168,7 +168,7 @@ export function EditClassDialog({
                         {isLoading ? (
                           <div>Carregando responsáveis...</div>
                         ) : (
-                          data?.map((teacher) => (
+                          data?.teachers.map((teacher) => (
                             <SelectItem key={teacher.id} value={teacher.id}>
                               {teacher.name}
                             </SelectItem>

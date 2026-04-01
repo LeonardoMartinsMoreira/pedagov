@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { api } from '../api'
-import { IGroup } from '@/interfaces/groups/groups'
+import { IGroupsResponse } from '@/interfaces/groups/groups'
 
 interface IGroupsParams {
   page: number
@@ -8,23 +8,18 @@ interface IGroupsParams {
   globalFilter: string
 }
 
-interface IGroupsResponse {
-  result: IGroup[]
-  totalPages: number
-  totalItems: number
-}
-
 const getAllGroups = async (params: IGroupsParams) => {
   const { globalFilter: searchTerm, page, limit } = params
-  const response = await api.get<IGroupsResponse>('/groups', {
+  const response = await api.get('/groups', {
     params: { searchTerm, page, limit },
   })
 
-  return response.data
+  return response.data.result
 }
 
 export const useGetAllGroups = (params: IGroupsParams) =>
   useQuery<IGroupsResponse>({
     queryKey: ['groups', params],
     queryFn: () => getAllGroups(params),
+    placeholderData: (previousData) => previousData,
   })

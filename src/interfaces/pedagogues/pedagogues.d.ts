@@ -1,3 +1,5 @@
+import type { IPageMeta } from '../pagination'
+
 export interface IPedagogue {
   id: string
   name: string
@@ -6,7 +8,7 @@ export interface IPedagogue {
   role: string
 }
 
-export interface IPedagogues {
-  result: Array<IPedagogue>
-  totalPages?: number
+export interface IPedagoguesResponse {
+  pedagogues: IPedagogue[]
+  page: IPageMeta
 }

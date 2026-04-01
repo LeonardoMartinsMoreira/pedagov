@@ -9,7 +9,9 @@ import {
   type SortingState,
   useReactTable,
 } from '@tanstack/react-table'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+
+import type { IPageMeta } from '@/interfaces/pagination'
 
 export interface UsePaginatedDataTableWithFiltersOptions<TData, TResponse> {
   useQueryWithPage: (
@@ -17,7 +19,7 @@ export interface UsePaginatedDataTableWithFiltersOptions<TData, TResponse> {
     filters: { globalFilter: string; type?: string }
   ) => { data?: TResponse; isLoading: boolean; isFetching?: boolean }
   getData: (data: TResponse | undefined) => TData[]
-  getTotalPages: (data: TResponse | undefined) => number
+  getPageMeta: (data: TResponse | undefined) => IPageMeta | undefined
   columns: ColumnDef<TData, unknown>[]
   initialSorting?: SortingState
   pageSize?: number
@@ -25,7 +27,7 @@ export interface UsePaginatedDataTableWithFiltersOptions<TData, TResponse> {
 export function usePaginatedDataTableWithFilters<TData, TResponse>({
   useQueryWithPage,
   getData,
-  getTotalPages,
+  getPageMeta,
   columns,
   initialSorting = [],
   pageSize = 10,
@@ -48,6 +50,13 @@ export function usePaginatedDataTableWithFilters<TData, TResponse>({
     type: typeFilter,
   })
 
+  const pageMeta = getPageMeta(data)
+
+  const pageCount = useMemo(() => {
+    if (!pageMeta) return -1
+    return Math.max(1, pageMeta.lastPage)
+  }, [pageMeta])
+
   /** Só loading “cheio” quando não temos dados (carga inicial). Ao digitar, mantemos a tabela e o foco no input. */
   const isInitialLoading = isLoading && !data
 
@@ -69,8 +78,21 @@ export function usePaginatedDataTableWithFilters<TData, TResponse>({
     onSortingChange: setSorting,
     onPaginationChange: setPagination,
     manualPagination: true,
-    pageCount: getTotalPages(data) ?? -1,
+    pageCount,
   })
+
+  useEffect(() => {
+    if (!pageMeta) return
+    const pageIndexFromApi = Math.max(0, pageMeta.currentPage - 1)
+    setPageIndex((prev) =>
+      prev === pageIndexFromApi ? prev : pageIndexFromApi
+    )
+    setPagination((prev) =>
+      prev.pageIndex === pageIndexFromApi
+        ? prev
+        : { ...prev, pageIndex: pageIndexFromApi }
+    )
+  }, [pageMeta])
 
   useEffect(() => {
     if (pagination.pageIndex !== pageIndex) setPageIndex(pagination.pageIndex)
@@ -88,5 +110,6 @@ export function usePaginatedDataTableWithFilters<TData, TResponse>({
     isLoading: isInitialLoading,
     columnFilters,
     setColumnFilters,
+    pageMeta,
   }
 }

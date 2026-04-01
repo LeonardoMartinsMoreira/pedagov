@@ -13,7 +13,10 @@ import {
 } from '@/components/ui/select'
 import { occurrencesTypesEnum } from '@/constants/occurrences-types-enum'
 import { usePaginatedDataTableWithFilters } from '@/hooks/use-paginated-data-table-with-filters'
-import { IOccurrence } from '@/interfaces/occurrences/occurrences'
+import {
+  IOccurrence,
+  IOccurrencesResponse,
+} from '@/interfaces/occurrences/occurrences'
 import { useGetAllOccurrences } from '@/services/queries/get-all-occurrences'
 import { Loading } from '../loading'
 import { Button } from '../ui/button'
@@ -28,11 +31,8 @@ const LIMIT = 10
 export function OccurrencesDataTable({ columns }: OccurrencesDataTableProps) {
   const router = useRouter()
 
-  const { table, isLoading, columnFilters, setColumnFilters } =
-    usePaginatedDataTableWithFilters<
-      IOccurrence,
-      { result: IOccurrence[]; totalPages: number }
-    >({
+  const { table, isLoading, columnFilters, setColumnFilters, pageMeta } =
+    usePaginatedDataTableWithFilters<IOccurrence, IOccurrencesResponse>({
       useQueryWithPage: (page, filters) =>
         useGetAllOccurrences({
           page,
@@ -40,8 +40,8 @@ export function OccurrencesDataTable({ columns }: OccurrencesDataTableProps) {
           globalFilter: filters.globalFilter,
           type: filters.type,
         }),
-      getData: (data) => data?.result ?? [],
-      getTotalPages: () => Infinity,
+      getData: (data) => data?.occurrences ?? [],
+      getPageMeta: (data) => data?.page,
       columns,
       initialSorting: [{ id: 'createdAt', desc: true }],
       pageSize: LIMIT,
@@ -91,6 +91,13 @@ export function OccurrencesDataTable({ columns }: OccurrencesDataTableProps) {
         </Button>
       }
       emptyComponent={<EmptyState />}
+      footerLeft={
+        pageMeta ? (
+          <>
+            Página {pageMeta.currentPage} - {pageMeta.total} ocorrência(s)
+          </>
+        ) : null
+      }
     />
   )
 }

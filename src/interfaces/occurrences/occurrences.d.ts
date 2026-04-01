@@ -1,4 +1,5 @@
 import { occurrencesTypesEnum } from '@/constants/occurrences-types-enum'
+import type { IPageMeta } from '../pagination'
 
 export type IOccurrencesTypes = typeof occurrencesTypesEnum
 
@@ -35,4 +36,9 @@ export interface IOccurrence {
 
 export interface IOccurrences {
   result: Array<IOccurrence>
+}
+
+export interface IOccurrencesResponse {
+  occurrences: IOccurrence[]
+  page: IPageMeta
 }
