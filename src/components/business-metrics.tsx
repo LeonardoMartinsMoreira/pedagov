@@ -6,8 +6,11 @@ import {
   UsersThree,
   Warning,
 } from '@phosphor-icons/react'
+import { useGetLast30DaysOccurrences } from '@/services/queries/get-last-30-days-occurrences'
 
 export function BusinessMetrics() {
+  const { data: last30DaysOccurrences } = useGetLast30DaysOccurrences()
+
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-semibold">Resumo</h2>
@@ -41,7 +44,7 @@ export function BusinessMetrics() {
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between text-xs">
-              <span className="font-bold text-3xl">103</span>
+              <span className="font-bold text-3xl">{last30DaysOccurrences?.count}</span>
               <span
                 className={`px-1.5 py-1.5 rounded-lg bg-purple-100 text-purple-800 dark:bg-purple-200`}
               >
