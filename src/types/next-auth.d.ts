@@ -9,7 +9,8 @@ declare module 'next-auth' {
       email: string
       name: string
       id: string
-      isFirstLogin: boolean
+      /** true quando a API devolveu `session` no login/troca de senha — obriga /change-password */
+      mustChangePassword: boolean
       avatar: string
     }
   }
@@ -19,7 +20,9 @@ declare module 'next-auth' {
     email: string
     name: string
     id: string
-    is_first_login: boolean
+    session?: unknown
+    /** Definido no authorize — não depende do JWT session chegar no callback */
+    mustChangePassword?: boolean
   }
 }
 
@@ -29,6 +32,6 @@ declare module 'next-auth/jwt' {
     email: string
     name: string
     id: string
-    isFirstLogin: boolean
+    mustChangePassword: boolean
   }
 }

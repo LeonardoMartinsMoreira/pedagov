@@ -10,8 +10,6 @@ import '../styles/globals.css'
 import { RouteGuard } from '@/components/route-guard'
 import { Toaster } from '@/components/ui/toaster'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { FirstLoginProvider } from '@/contexts/login-context'
-
 const inter = Inter({ subsets: ['latin'] })
 
 const queryClient = new QueryClient()
@@ -29,11 +27,10 @@ export default function LocaleLayout({
             <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
               <SettingsProvider>
                 <TooltipProvider delayDuration={0}>
-                  <FirstLoginProvider>
-                    <Toaster />
-                    <RouteGuard />
+                  <Toaster />
+                  <RouteGuard>
                     <main className="w-full">{children}</main>
-                  </FirstLoginProvider>
+                  </RouteGuard>
                 </TooltipProvider>
               </SettingsProvider>
             </ThemeProvider>

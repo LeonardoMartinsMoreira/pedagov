@@ -10,8 +10,9 @@ import Image from 'next/image'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import SideLoginImage from '../../../public/full-shot-kid-cheating-school.jpg'
-import { signIn } from 'next-auth/react'
+import { getSession, signIn } from 'next-auth/react'
 import { toast } from '@/hooks/use-toast'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 const loginSchema = z.object({
@@ -34,6 +35,7 @@ export function LoginForm({
   })
 
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const router = useRouter()
 
   const onSubmit = async (data: loginType) => {
     setIsSubmitting(true)
@@ -50,8 +52,17 @@ export function LoginForm({
         description: res?.error,
         variant: 'destructive',
       })
+      setIsSubmitting(false)
+      return
     }
 
+    router.refresh()
+    const session = await getSession()
+    if (session?.user?.mustChangePassword) {
+      router.replace('/change-password')
+    } else {
+      router.replace('/')
+    }
     setIsSubmitting(false)
   }
 

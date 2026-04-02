@@ -43,6 +43,7 @@ export function ChangePassword() {
   const form = useForm({
     resolver: zodResolver(ChangePasswordSchema),
     defaultValues: {
+      currentPassword: '',
       newPassword: '',
       confirmPassword: '',
     },
@@ -61,7 +62,7 @@ export function ChangePassword() {
   } = form.formState
 
   return (
-    <div className="relative bg-background rounded-lg shadow-md dark:bg-[#0D111F] max-w-md w-full mx-4 p-6 dark:bg-muted">
+    <div className="relative bg-background rounded-lg shadow-md dark:bg-[#0D111F] max-w-md w-full mx-4 p-6">
       <div className="flex flex-col gap-y-4">
         <div className="flex flex-col items-center">
           <Warning
