@@ -17,23 +17,20 @@ export function DeleteGroupDialog({
     mutate(group.id)
   }
 
-  const description = (
-    <>
-      Essa ação não pode ser revertida. Você tem certeza que deseja deletar
-      a turma{' '}
-      <span className="font-bold text-black dark:text-white ">
-        {group.name}?
-      </span>
-    </>
-  )
-
   return (
     <DeleteDialog
       isVisible={isVisible}
       closeDialog={closeDialog}
       isPending={isPending}
       handleDelete={handleDeleteGroup}
-      description={description}
-    />
+    >
+      <p className="text-center text-muted-foreground">
+        Essa ação não pode ser revertida. Você tem certeza que deseja deletar
+        a turma{' '}
+        <span className="font-bold text-black dark:text-white ">
+          {group.name}?
+        </span>
+      </p>
+    </DeleteDialog>
   )
 }

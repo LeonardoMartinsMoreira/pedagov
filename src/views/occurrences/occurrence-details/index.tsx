@@ -3,9 +3,8 @@
 import { BackButton } from '@/components/back-button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Separator } from '@/components/ui/separator'
-import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
 import {
   Calendar,
   Clock,
@@ -14,6 +13,9 @@ import {
   User,
   Users,
   Paperclip,
+  ChevronRight,
+  Edit,
+  Trash2,
 } from 'lucide-react'
 
 import { format } from 'date-fns'
@@ -23,14 +25,23 @@ import {
   occurrencesTypesEnum,
 } from '@/constants/occurrences-types-enum'
 import { useGetOccurrence } from '@/services/queries/get-occurrence'
-import { useSearchParams } from 'next/navigation'
 import { Loading } from '@/components/loading'
+import Link from 'next/link'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useDeleteOccurrence } from '@/services/mutations/delete-occurrence'
+import { DeleteDialog } from '@/components/common/DeleteDialog'
 
 export function OccurrenceDetails({ occurrenceId }: { occurrenceId: string }) {
-  const search = useSearchParams()
-  const studentId = search.get('studentId')
+  const router = useRouter()
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
 
   const { data: occurrence, isLoading, error } = useGetOccurrence(occurrenceId)
+
+  const { mutate: deleteOccurrence, isPending: isDeleting } = useDeleteOccurrence(() => {
+    setIsDeleteDialogOpen(false)
+    router.push('/occurrences')
+  })
 
   if (isLoading) {
     return <Loading />
@@ -48,16 +59,6 @@ export function OccurrenceDetails({ occurrenceId }: { occurrenceId: string }) {
     return (
       <div className="container mx-auto py-6 text-muted-foreground">
         Ocorrência não encontrada.
-      </div>
-    )
-  }
-
-  const student = occurrence.students.find((s) => s.id === studentId)
-
-  if (!student) {
-    return (
-      <div className="container mx-auto py-6 text-muted-foreground">
-        Aluno não encontrado nesta ocorrência.
       </div>
     )
   }
@@ -89,75 +90,25 @@ export function OccurrenceDetails({ occurrenceId }: { occurrenceId: string }) {
             {occurrence.author}
           </p>
         </div>
+
+        <div className="flex items-center gap-3 w-full md:w-auto mt-4 md:mt-0">
+          <Button variant="outline" asChild>
+            <Link href={`/occurrences/${occurrenceId}/edit`}>
+              <Edit className="w-4 h-4 mr-2" />
+              Editar
+            </Link>
+          </Button>
+
+          <Button variant="destructive" onClick={() => setIsDeleteDialogOpen(true)}>
+            <Trash2 className="w-4 h-4 mr-2" />
+            Excluir
+          </Button>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="md:col-span-1">
-          <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
-              <User size={18} />
-              Dados do Aluno
-            </CardTitle>
-          </CardHeader>
-
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center justify-center mb-6">
-                <Avatar className="w-24 h-24">
-                  <AvatarImage src={`/placeholder.svg`} alt={student.name} />
-                  <AvatarFallback className="text-2xl">
-                    {student.name
-                      .split(' ')
-                      .map((n) => n[0])
-                      .join('')}
-                  </AvatarFallback>
-                </Avatar>
-              </div>
-
-              <Table>
-                <TableBody>
-                  <TableRow>
-                    <TableCell className="font-medium">Nome</TableCell>
-                    <TableCell>{student.name}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="font-medium">CPF</TableCell>
-                    <TableCell>{student.cpf.value}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="font-medium">E-mail Resp.</TableCell>
-                    <TableCell>{student.responsibleEmail}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="font-medium">
-                      Telefone Resp.
-                    </TableCell>
-                    <TableCell>{student.responsiblePhone}</TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-
-              <Separator />
-
-              {occurrence.attendees.length > 0 && (
-                <div>
-                  <h3 className="font-medium mb-2">
-                    Participantes presentes na ocorrência
-                  </h3>
-                  <div className="space-y-1 text-sm">
-                    {occurrence.attendees.map((a) => (
-                      <div key={a.id} className="p-2 bg-muted rounded-md">
-                        {a.name}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="md:col-span-2">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Lado Esquerdo: Informações Principais da Ocorrência */}
+        <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle className="text-lg">Informações da Ocorrência</CardTitle>
           </CardHeader>
@@ -215,13 +166,13 @@ export function OccurrenceDetails({ occurrenceId }: { occurrenceId: string }) {
                     <h3 className="font-medium">Anexos</h3>
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="flex gap-2 flex-wrap">
                     {occurrence.attachments.map((file) => (
                       <a
                         key={file.id}
                         href={file.url}
                         target="_blank"
-                        className="text-sm underline text-primary"
+                        className="text-sm underline text-primary flex items-center gap-1"
                       >
                         <FileText className="h-4 w-4" /> {file.title}
                       </a>
@@ -232,7 +183,97 @@ export function OccurrenceDetails({ occurrenceId }: { occurrenceId: string }) {
             </div>
           </CardContent>
         </Card>
+
+        {/* Lado Direito: Integrantes e Envolvidos */}
+        <div className="lg:col-span-1 space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <User size={18} />
+                Alunos Envolvidos
+              </CardTitle>
+            </CardHeader>
+
+            <CardContent>
+              <div className="space-y-3">
+                {occurrence.students.map((student) => (
+                  <Link
+                    href={`/students/${student.id}`}
+                    key={student.id}
+                    className="flex items-center gap-3 p-3 border rounded-lg hover:bg-muted/50 transition-colors group cursor-pointer"
+                  >
+                    <Avatar className="h-10 w-10">
+                      <AvatarImage src={`/placeholder.svg`} alt={student.name} />
+                      <AvatarFallback>
+                        {student.name
+                          .split(' ')
+                          .map((n) => n[0])
+                          .join('')
+                          .substring(0, 2)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col min-w-0 flex-1">
+                      <p className="font-medium text-sm truncate" title={student.name}>
+                        {student.name}
+                      </p>
+                      <p className="text-xs text-muted-foreground truncate">
+                        CPF: {student.cpf.value}
+                      </p>
+                      {(student.responsibleEmail || student.responsiblePhone) && (
+                        <p className="text-xs text-muted-foreground truncate mt-1">
+                          Resp: {student.responsibleEmail || student.responsiblePhone}
+                        </p>
+                      )}
+                    </div>
+                    <ChevronRight className="h-4 w-4 text-muted-foreground opacity-50 group-hover:opacity-100 transition-opacity" />
+                  </Link>
+                ))}
+
+                {occurrence.students.length === 0 && (
+                  <p className="text-sm text-muted-foreground">
+                    Nenhum aluno associado.
+                  </p>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+
+          {occurrence.attendees.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Users size={18} />
+                  Outros Participantes
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  {occurrence.attendees.map((a) => (
+                    <div
+                      key={a.id}
+                      className="p-2 bg-muted/80 text-sm rounded-md font-medium"
+                    >
+                      {a.name}
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </div>
       </div>
+
+      <DeleteDialog
+        isVisible={isDeleteDialogOpen}
+        closeDialog={() => setIsDeleteDialogOpen(false)}
+        isPending={isDeleting}
+        handleDelete={() => deleteOccurrence(occurrenceId)}
+      >
+        <p className="text-sm text-muted-foreground text-center">
+          Deseja mesmo excluir esta ocorrência permanentemente? Esta ação não poderá ser desfeita.
+        </p>
+      </DeleteDialog>
     </div>
   )
 }
+

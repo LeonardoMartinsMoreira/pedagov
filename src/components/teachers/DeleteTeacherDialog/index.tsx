@@ -17,23 +17,20 @@ export function DeleteTeacherDialog({
 
   const handleDeleteTeacher = () => mutate(teacher.id)
 
-  const description = (
-    <>
-      Essa ação não pode ser revertida. Você tem certeza que deseja deletar
-      o professor(a){' '}
-      <span className="font-bold text-black dark:text-white ">
-        {teacher?.name}?
-      </span>
-    </>
-  )
-
   return (
     <DeleteDialog
       isVisible={isVisible}
       closeDialog={closeDialog}
       isPending={isPending}
       handleDelete={handleDeleteTeacher}
-      description={description}
-    />
+    >
+      <p className="text-center text-muted-foreground">
+        Essa ação não pode ser revertida. Você tem certeza que deseja deletar
+        o professor(a){' '}
+        <span className="font-bold text-black dark:text-white ">
+          {teacher?.name}?
+        </span>
+      </p>
+    </DeleteDialog>
   )
 }

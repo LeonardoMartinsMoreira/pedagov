@@ -12,7 +12,7 @@ interface DeleteDialogProps {
   closeDialog: () => void
   isPending?: boolean
   handleDelete: () => void
-  description?: ReactNode
+  children?: ReactNode
 }
 
 export function DeleteDialog({
@@ -20,7 +20,7 @@ export function DeleteDialog({
   closeDialog,
   isPending,
   handleDelete,
-  description,
+  children,
 }: DeleteDialogProps) {
   return (
     <Dialog open={isVisible} onOpenChange={isPending ? undefined : closeDialog}>
@@ -31,11 +31,7 @@ export function DeleteDialog({
           </DialogTitle>
         </DialogHeader>
 
-        {description && (
-          <div className="text-center text-muted-foreground">
-            {description}
-          </div>
-        )}
+        {children}
 
         <div className="flex items-center w-full justify-center gap-x-2">
           <Button disabled={isPending} onClick={closeDialog} className="w-full" variant="secondary">

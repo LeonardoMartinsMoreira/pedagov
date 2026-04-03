@@ -12,7 +12,7 @@ interface IOccurrencesParams {
 
 const getAllOccurrences = async (params: IOccurrencesParams) => {
   const { globalFilter: searchTerm, page, limit, studentId, type } = params
-  const response = await api.get('/occurrences-student', {
+  const response = await api.get('/occurrences', {
     params: { searchTerm, page, limit, studentId, type },
   })
 

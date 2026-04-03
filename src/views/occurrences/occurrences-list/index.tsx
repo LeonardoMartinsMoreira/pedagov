@@ -9,14 +9,66 @@ import {
 } from '@/constants/occurrences-types-enum'
 import { IOccurrence } from '@/interfaces/occurrences/occurrences'
 import { useDeleteOccurrence } from '@/services/mutations/delete-occurrence'
-import { Trash } from '@phosphor-icons/react'
 import type { ColumnDef } from '@tanstack/react-table'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { ArrowUpDown } from 'lucide-react'
-import Link from 'next/link'
+import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { DeleteDialog } from '@/components/common/DeleteDialog'
+import { useRouter } from 'next/navigation'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+
+const ActionCell = ({
+  occurrence,
+  onDeleteRequest,
+}: {
+  occurrence: IOccurrence
+  onDeleteRequest: (o: IOccurrence) => void
+}) => {
+  const router = useRouter()
+  const occurrenceId = occurrence.occurrenceId || (occurrence as any).id
+
+  return (
+    <div className="flex justify-end">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="h-8 w-8 p-0">
+            <span className="sr-only">Abrir menu</span>
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Ações</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={() =>
+              router.push(`/occurrences/${occurrenceId}`)
+            }
+          >
+            Ver Detalhes
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() =>
+              router.push(`/occurrences/${occurrenceId}/edit`)
+            }
+          >
+            Editar Ocorrência
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => onDeleteRequest(occurrence)}>
+            Deletar Ocorrência
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  )
+}
 
 function createColumns(
   onDeleteRequest: (occurrence: IOccurrence) => void
@@ -25,18 +77,6 @@ function createColumns(
     {
       accessorKey: 'title',
       header: 'Título da ocorrência',
-    },
-    {
-      accessorKey: 'student',
-      header: ({ column }) => (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Aluno
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      ),
     },
     {
       accessorKey: 'type',
@@ -73,26 +113,7 @@ function createColumns(
     {
       id: 'actions',
       cell: ({ row }) => (
-        <div className="flex items-center justify-end gap-3">
-          <Link
-            href={`/occurrences/${row.original.occurrenceId}?studentId=${row.original.studentId}`}
-          >
-            <Button
-              variant="outline"
-              size="sm"
-              className="flex items-center gap-1"
-            >
-              Detalhes
-            </Button>
-          </Link>
-
-          <button
-            onClick={() => onDeleteRequest(row.original)}
-            className="p-2 rounded-md hover:bg-destructive/10 transition-colors"
-          >
-            <Trash className="h-4 w-4 text-destructive" />
-          </button>
-        </div>
+        <ActionCell occurrence={row.original} onDeleteRequest={onDeleteRequest} />
       ),
     },
   ]
@@ -104,7 +125,7 @@ export function OccurrencesList() {
   const handleCloseDialog = () => setDeletingOccurrence(null)
 
   const { mutate, isPending } = useDeleteOccurrence(handleCloseDialog)
-  
+
   const columns = useMemo(
     () => createColumns(setDeletingOccurrence),
     []
@@ -112,19 +133,9 @@ export function OccurrencesList() {
 
   const handleDelete = () => {
     if (deletingOccurrence) {
-      mutate(deletingOccurrence.occurrenceId)
+      mutate(deletingOccurrence.occurrenceId || (deletingOccurrence as any).id)
     }
   }
-
-  const description = deletingOccurrence ? (
-    <>
-      Essa ação não pode ser revertida. Você tem certeza que deseja deletar
-      a ocorrência{' '}
-      <span className="font-bold text-black dark:text-white ">
-        {deletingOccurrence.title}?
-      </span>
-    </>
-  ) : null
 
   return (
     <div className="container mx-auto py-6 space-y-6">
@@ -139,8 +150,17 @@ export function OccurrencesList() {
         closeDialog={handleCloseDialog}
         isPending={isPending}
         handleDelete={handleDelete}
-        description={description}
-      />
+      >
+        {deletingOccurrence && (
+          <p className="text-center text-muted-foreground">
+            Essa ação não pode ser revertida. Você tem certeza que deseja deletar
+            a ocorrência{' '}
+            <span className="font-bold text-black dark:text-white ">
+              {deletingOccurrence.title}?
+            </span>
+          </p>
+        )}
+      </DeleteDialog>
     </div>
   )
 }
