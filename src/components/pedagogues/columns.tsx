@@ -21,11 +21,6 @@ import { DeletePedagogueDialog } from './DeletePedagogueDialog'
 
 export const columns: ColumnDef<IPedagogue>[] = [
   {
-    accessorKey: 'id',
-    header: 'ID',
-  },
-
-  {
     accessorKey: 'name',
     header: ({ column }) => {
       return (

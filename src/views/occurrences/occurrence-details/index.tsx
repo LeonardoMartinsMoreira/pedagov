@@ -26,11 +26,7 @@ import { useGetOccurrence } from '@/services/queries/get-occurrence'
 import { useSearchParams } from 'next/navigation'
 import { Loading } from '@/components/loading'
 
-export  function OccurrenceDetails({
-  occurrenceId,
-}: {
-  occurrenceId: string
-}) {
+export function OccurrenceDetails({ occurrenceId }: { occurrenceId: string }) {
   const search = useSearchParams()
   const studentId = search.get('studentId')
 
@@ -78,7 +74,7 @@ export  function OccurrenceDetails({
 
           <div className="flex items-center gap-2 mb-2">
             <h1 className="text-2xl md:text-3xl font-bold">
-              Ocorrência #{occurrence.occurrenceId}
+              {occurrence.title}
             </h1>
 
             <Badge

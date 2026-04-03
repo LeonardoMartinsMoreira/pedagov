@@ -3,7 +3,6 @@
 import { OccurrencesDataTable } from '@/components/occurences/data-table'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Tooltip } from '@/components/ui/tooltip'
 import {
   occurrencesColorsEnum,
   occurrencesTypesEnum,
@@ -11,19 +10,22 @@ import {
 import { IOccurrence } from '@/interfaces/occurrences/occurrences'
 import { useDeleteOccurrence } from '@/services/mutations/delete-occurrence'
 import { Trash } from '@phosphor-icons/react'
-import { TooltipContent, TooltipTrigger } from '@radix-ui/react-tooltip'
 import type { ColumnDef } from '@tanstack/react-table'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { ArrowUpDown, Loader } from 'lucide-react'
+import { ArrowUpDown } from 'lucide-react'
 import Link from 'next/link'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
+import { DeleteDialog } from '@/components/common/DeleteDialog'
 
 function createColumns(
-  mutate: (occurrenceId: string) => void,
-  isPending: boolean
+  onDeleteRequest: (occurrence: IOccurrence) => void
 ): ColumnDef<IOccurrence>[] {
   return [
+    {
+      accessorKey: 'title',
+      header: 'Título da ocorrência',
+    },
     {
       accessorKey: 'student',
       header: ({ column }) => (
@@ -49,22 +51,6 @@ function createColumns(
         )
       },
       filterFn: 'equals',
-    },
-    {
-      accessorKey: 'occurrenceId',
-      header: '№ Ocorrência',
-      cell: ({ row }) => {
-        return (
-          <Tooltip>
-            <TooltipTrigger className="max-w-32 text-ellipsis text-nowrap overflow-hidden whitespace-nowrap">
-              {row.original.occurrenceId}
-            </TooltipTrigger>
-            <TooltipContent className="p-1 rounded bg-muted border border-muted-foreground">
-              {row.original.occurrenceId}
-            </TooltipContent>
-          </Tooltip>
-        )
-      },
     },
     {
       accessorKey: 'createdAt',
@@ -101,15 +87,10 @@ function createColumns(
           </Link>
 
           <button
-            onClick={() => mutate(row.original.occurrenceId)}
-            disabled={isPending}
-            className="p-2 rounded-md hover:bg-destructive/10 transition-colors disabled:opacity-50"
+            onClick={() => onDeleteRequest(row.original)}
+            className="p-2 rounded-md hover:bg-destructive/10 transition-colors"
           >
-            {isPending ? (
-              <Loader className="h-4 w-4 animate-spin text-destructive" />
-            ) : (
-              <Trash className="h-4 w-4 text-destructive" />
-            )}
+            <Trash className="h-4 w-4 text-destructive" />
           </button>
         </div>
       ),
@@ -118,11 +99,32 @@ function createColumns(
 }
 
 export function OccurrencesList() {
-  const { mutate, isPending } = useDeleteOccurrence()
+  const [deletingOccurrence, setDeletingOccurrence] = useState<IOccurrence | null>(null)
+
+  const handleCloseDialog = () => setDeletingOccurrence(null)
+
+  const { mutate, isPending } = useDeleteOccurrence(handleCloseDialog)
+  
   const columns = useMemo(
-    () => createColumns(mutate, isPending),
-    [mutate, isPending]
+    () => createColumns(setDeletingOccurrence),
+    []
   )
+
+  const handleDelete = () => {
+    if (deletingOccurrence) {
+      mutate(deletingOccurrence.occurrenceId)
+    }
+  }
+
+  const description = deletingOccurrence ? (
+    <>
+      Essa ação não pode ser revertida. Você tem certeza que deseja deletar
+      a ocorrência{' '}
+      <span className="font-bold text-black dark:text-white ">
+        {deletingOccurrence.title}?
+      </span>
+    </>
+  ) : null
 
   return (
     <div className="container mx-auto py-6 space-y-6">
@@ -131,6 +133,14 @@ export function OccurrencesList() {
       </div>
 
       <OccurrencesDataTable columns={columns} />
+
+      <DeleteDialog
+        isVisible={!!deletingOccurrence}
+        closeDialog={handleCloseDialog}
+        isPending={isPending}
+        handleDelete={handleDelete}
+        description={description}
+      />
     </div>
   )
 }
