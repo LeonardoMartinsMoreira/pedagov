@@ -33,7 +33,7 @@ const ActionCell = ({
   onDeleteRequest: (o: IOccurrence) => void
 }) => {
   const router = useRouter()
-  const occurrenceId = occurrence.occurrenceId || (occurrence as any).id
+  const occurrenceId = occurrence.occurrenceId || (occurrence as IOccurrence).id
 
   return (
     <div className="flex justify-end">
@@ -48,16 +48,12 @@ const ActionCell = ({
           <DropdownMenuLabel>Ações</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem
-            onClick={() =>
-              router.push(`/occurrences/${occurrenceId}`)
-            }
+            onClick={() => router.push(`/occurrences/${occurrenceId}`)}
           >
             Ver Detalhes
           </DropdownMenuItem>
           <DropdownMenuItem
-            onClick={() =>
-              router.push(`/occurrences/${occurrenceId}/edit`)
-            }
+            onClick={() => router.push(`/occurrences/${occurrenceId}/edit`)}
           >
             Editar Ocorrência
           </DropdownMenuItem>
@@ -113,27 +109,31 @@ function createColumns(
     {
       id: 'actions',
       cell: ({ row }) => (
-        <ActionCell occurrence={row.original} onDeleteRequest={onDeleteRequest} />
+        <ActionCell
+          occurrence={row.original}
+          onDeleteRequest={onDeleteRequest}
+        />
       ),
     },
   ]
 }
 
 export function OccurrencesList() {
-  const [deletingOccurrence, setDeletingOccurrence] = useState<IOccurrence | null>(null)
+  const [deletingOccurrence, setDeletingOccurrence] =
+    useState<IOccurrence | null>(null)
 
   const handleCloseDialog = () => setDeletingOccurrence(null)
 
   const { mutate, isPending } = useDeleteOccurrence(handleCloseDialog)
 
-  const columns = useMemo(
-    () => createColumns(setDeletingOccurrence),
-    []
-  )
+  const columns = useMemo(() => createColumns(setDeletingOccurrence), [])
 
   const handleDelete = () => {
     if (deletingOccurrence) {
-      mutate(deletingOccurrence.occurrenceId || (deletingOccurrence as any).id)
+      mutate(
+        deletingOccurrence.occurrenceId ||
+          ((deletingOccurrence as IOccurrence).id as string)
+      )
     }
   }
 
@@ -153,8 +153,8 @@ export function OccurrencesList() {
       >
         {deletingOccurrence && (
           <p className="text-center text-muted-foreground">
-            Essa ação não pode ser revertida. Você tem certeza que deseja deletar
-            a ocorrência{' '}
+            Essa ação não pode ser revertida. Você tem certeza que deseja
+            deletar a ocorrência{' '}
             <span className="font-bold text-black dark:text-white ">
               {deletingOccurrence.title}?
             </span>

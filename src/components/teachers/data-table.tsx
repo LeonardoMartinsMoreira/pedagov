@@ -12,22 +12,38 @@ import { Loading } from '../loading'
 import { Button } from '../ui/button'
 import { AddTeacherDialog } from './AddTeacherDialog'
 
+import { statusEnum } from '@/constants/status-enum'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select'
+import { useState } from 'react'
+
 interface DataTableProps {
   columns: ColumnDef<ITeacher, unknown>[]
 }
 
 export function TeachersDataTable({ columns }: DataTableProps) {
   const addTeacher = useDialogState()
+  const [status, setStatus] = useState<string>('ACTIVE')
 
   const { table, isLoading, pageMeta } = useServerPaginatedDataTable<
     ITeacher,
-    ITeachersResponse
+    ITeachersResponse,
+    { status: string[] }
   >({
     columns,
     pageSize: LIMIT,
-    useQueryWithPage: (page) => useGetAllTeachers({ limit: LIMIT, page }),
+    useQueryWithPage: (page, filters) =>
+      useGetAllTeachers({ limit: LIMIT, page, status: filters?.status }),
     getData: (response) => response?.teachers ?? [],
     getPageMeta: (response) => response?.page,
+    filters: {
+      status: status === 'all' ? Object.keys(statusEnum) : [status],
+    },
   })
 
   if (isLoading) return <Loading />
@@ -37,6 +53,24 @@ export function TeachersDataTable({ columns }: DataTableProps) {
       <DataTable
         table={table}
         columns={columns}
+        toolbarExtra={
+          <Select
+            value={status}
+            onValueChange={setStatus}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos</SelectItem>
+              {Object.entries(statusEnum).map(([key, label]) => (
+                <SelectItem key={key} value={key}>
+                  {label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        }
         toolbarAction={
           <Button onClick={addTeacher.openDialog}>
             Adicionar Professor(a)

@@ -21,6 +21,15 @@ import { Button } from '../ui/button'
 import { AddStudentDialog } from './AddStudentDialog'
 import { useServerPaginatedDataTable } from '@/hooks/use-server-paginated-data-table'
 
+import { statusEnum } from '@/constants/status-enum'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select'
+
 interface DataTableProps {
   columns: ColumnDef<IStudent, unknown>[]
 }
@@ -28,16 +37,22 @@ interface DataTableProps {
 export function StudentsDataTable({ columns }: DataTableProps) {
   const [globalFilter, setGlobalFilter] = useState<string>('')
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [status, setStatus] = useState<string>('ACTIVE')
 
   const { table, isLoading, pageMeta } = useServerPaginatedDataTable<
     IStudent,
-    IStudentsResponse
+    IStudentsResponse,
+    { status: string[] }
   >({
     columns,
     pageSize: LIMIT,
-    useQueryWithPage: (page) => useGetAllStudents({ page, limit: LIMIT }),
+    useQueryWithPage: (page, filters) =>
+      useGetAllStudents({ page, limit: LIMIT, status: filters?.status }),
     getData: (response) => response?.students ?? [],
     getPageMeta: (response) => response?.page,
+    filters: {
+      status: status === 'all' ? Object.keys(statusEnum) : [status],
+    },
   })
 
   const addStudent = useDialogState()
@@ -68,6 +83,24 @@ export function StudentsDataTable({ columns }: DataTableProps) {
       <DataTable
         table={wrappedTable}
         columns={columns}
+        toolbarExtra={
+          <Select
+            value={status}
+            onValueChange={setStatus}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos</SelectItem>
+              {Object.entries(statusEnum).map(([key, label]) => (
+                <SelectItem key={key} value={key}>
+                  {label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        }
         toolbarAction={
           <Button onClick={addStudent.openDialog}>Adicionar Aluno</Button>
         }

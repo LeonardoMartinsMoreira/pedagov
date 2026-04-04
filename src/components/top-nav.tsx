@@ -17,13 +17,23 @@ import React from 'react'
 import Link from 'next/link'
 import { signOut } from 'next-auth/react'
 
+import { ChevronRight } from 'lucide-react'
+
 const RoutesLabelEnum: Record<string, string> = {
   students: 'Alunos',
   'new-occurrence': 'Nova ocorrência',
   pedagogues: 'Pedagogos',
   occurrences: 'Ocorrências',
   classes: 'Turmas',
+  teachers: 'Professores',
+  settings: 'Configurações',
+  edit: 'Editar',
 }
+
+const isUUID = (str: string) =>
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+    str
+  )
 
 export function TopNav() {
   const pathname = usePathname()
@@ -38,24 +48,40 @@ export function TopNav() {
   }
 
   return (
-    <header className="sticky top-0 z-40 border-b bg-background">
+    <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between px-4 md:px-6">
         <div className="hidden md:block">
-          <nav className="flex items-center space-x-2">
-            <Link href="/" className="text-sm font-medium">
-              Início
+          <nav className="flex items-center space-x-1.5 text-sm">
+            <Link
+              href="/"
+              className="text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Inicio
             </Link>
-            {pathSegments.map((segment, index) => (
-              <React.Fragment key={segment}>
-                <span className="text-muted-foreground">/</span>
-                <Link
-                  href={`/${pathSegments.slice(0, index + 1).join('/')}`}
-                  className="text-sm font-medium"
-                >
-                  {RoutesLabelEnum[segment]}
-                </Link>
-              </React.Fragment>
-            ))}
+            {pathSegments
+              .map((segment, index) => ({ segment, index }))
+              .filter(({ segment }) => segment !== 'null')
+              .map(({ segment, index }, visibleIndex, array) => {
+                const label = isUUID(segment)
+                  ? 'Detalhes'
+                  : RoutesLabelEnum[segment] || segment
+                const isLast = visibleIndex === array.length - 1
+
+                return (
+                  <React.Fragment key={segment}>
+                    <ChevronRight className="h-4 w-4 text-muted-foreground/50" />
+                    <Link
+                      href={`/${pathSegments.slice(0, index + 1).join('/')}`}
+                      className={`font-medium transition-colors hover:text-foreground ${isLast
+                        ? 'text-foreground font-semibold'
+                        : 'text-muted-foreground'
+                        }`}
+                    >
+                      {label}
+                    </Link>
+                  </React.Fragment>
+                )
+              })}
           </nav>
         </div>
         <div className="flex items-center gap-4">

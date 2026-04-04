@@ -5,15 +5,13 @@ import { IStudentsResponse } from '@/interfaces/students/students'
 interface IStudentsParams {
   page: number
   limit: number
+  status?: string[]
 }
 
 const getAllStudents = async (params: IStudentsParams) => {
   return (
     await api.get('/students', {
-      params: {
-        page: params.page,
-        limit: params.limit,
-      },
+      params,
     })
   ).data.result
 }

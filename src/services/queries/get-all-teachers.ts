@@ -6,16 +6,13 @@ interface ITeachersParams {
   page: number
   limit: number
   type?: string
+  status?: string[]
 }
 
 const getAllTeachers = async (params: ITeachersParams) => {
   return (
     await api.get('/teachers', {
-      params: {
-        page: params.page,
-        limit: params.limit,
-        type: params.type,
-      },
+      params,
     })
   ).data.result
 }

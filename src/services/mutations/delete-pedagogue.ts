@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '../api'
 
 async function deletePedagogueApi(id: string) {
-  await api.delete(`/pedagogues/${id}`)
+  await api.patch(`/pedagogues/${id}/inactivate`)
 }
 
 export function useDeletePedagogue(closeDialog: () => void) {

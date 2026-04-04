@@ -4,6 +4,9 @@ import { getSession } from 'next-auth/react'
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
   timeout: 30000,
+  paramsSerializer: {
+    indexes: null, // by default: false
+  },
 })
 
 api.interceptors.request.use(async (config) => {

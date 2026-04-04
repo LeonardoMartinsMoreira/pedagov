@@ -10,33 +10,42 @@ import { useEffect, useMemo, useState } from 'react'
 
 import type { IPageMeta } from '@/interfaces/pagination'
 
-interface UseServerPaginatedDataTableOptions<TData, TResponse> {
+interface UseServerPaginatedDataTableOptions<TData, TResponse, TFilter = any> {
   columns: ColumnDef<TData, unknown>[]
   pageSize: number
-  useQueryWithPage: (page: number) => {
+  useQueryWithPage: (
+    page: number,
+    filters?: TFilter
+  ) => {
     data?: TResponse
     isLoading: boolean
     isFetching?: boolean
   }
   getData: (response: TResponse | undefined) => TData[]
   getPageMeta: (response: TResponse | undefined) => IPageMeta | undefined
+  filters?: TFilter
 }
 
-export function useServerPaginatedDataTable<TData, TResponse>({
+export function useServerPaginatedDataTable<TData, TResponse, TFilter = any>({
   columns,
   pageSize,
   useQueryWithPage,
   getData,
   getPageMeta,
-}: UseServerPaginatedDataTableOptions<TData, TResponse>) {
+  filters,
+}: UseServerPaginatedDataTableOptions<TData, TResponse, TFilter>) {
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize,
   })
 
   const requestedPage = pagination.pageIndex + 1
-  const { data, isLoading, isFetching } = useQueryWithPage(requestedPage)
+  const { data, isLoading, isFetching } = useQueryWithPage(requestedPage, filters)
   const pageMeta = getPageMeta(data)
+
+  useEffect(() => {
+    setPagination((prev) => (prev.pageIndex === 0 ? prev : { ...prev, pageIndex: 0 }))
+  }, [filters])
 
   useEffect(() => {
     if (!pageMeta) return
