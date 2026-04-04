@@ -14,6 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { useSession } from 'next-auth/react'
 import { useDialogState } from '@/hooks/use-dialog-state'
 import { IPedagogue } from '@/interfaces/pedagogues/pedagogues'
 import { PedagogueProfileDialog } from './PedagogueProfileDialog'
@@ -46,6 +47,9 @@ export const columns: ColumnDef<IPedagogue>[] = [
   {
     id: 'actions',
     cell: ({ row }) => {
+      const { data: session } = useSession()
+      const isAdmin = session?.user.roles?.includes('ADMIN')
+
       const deletePedagogue = useDialogState()
       const pedagogueProfileDialog = useDialogState()
 
@@ -64,9 +68,11 @@ export const columns: ColumnDef<IPedagogue>[] = [
               <DropdownMenuItem onClick={pedagogueProfileDialog.openDialog}>
                 Ver Perfil do Pedagogo(a)
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={deletePedagogue.openDialog}>
-                Deletar Pedagogo(a)
-              </DropdownMenuItem>
+              {isAdmin && (
+                <DropdownMenuItem onClick={deletePedagogue.openDialog}>
+                  Deletar Pedagogo(a)
+                </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
 
@@ -76,11 +82,13 @@ export const columns: ColumnDef<IPedagogue>[] = [
             closeDialog={pedagogueProfileDialog.closeDialog}
           />
 
-          <DeletePedagogueDialog
-            closeDialog={deletePedagogue.closeDialog}
-            isVisible={deletePedagogue.isVisible}
-            pedagogue={row.original}
-          />
+          {isAdmin && (
+            <DeletePedagogueDialog
+              closeDialog={deletePedagogue.closeDialog}
+              isVisible={deletePedagogue.isVisible}
+              pedagogue={row.original}
+            />
+          )}
         </div>
       )
     },

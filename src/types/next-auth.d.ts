@@ -12,6 +12,7 @@ declare module 'next-auth' {
       /** true quando a API devolveu `session` no login/troca de senha — obriga /change-password */
       mustChangePassword: boolean
       avatar: string
+      roles: string[]
     }
   }
 
@@ -23,6 +24,7 @@ declare module 'next-auth' {
     session?: unknown
     /** Definido no authorize — não depende do JWT session chegar no callback */
     mustChangePassword?: boolean
+    roles?: string[]
   }
 }
 
@@ -33,5 +35,6 @@ declare module 'next-auth/jwt' {
     name: string
     id: string
     mustChangePassword: boolean
+    roles?: string[]
   }
 }

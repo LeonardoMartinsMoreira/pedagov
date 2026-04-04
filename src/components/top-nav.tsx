@@ -72,10 +72,11 @@ export function TopNav() {
                     <ChevronRight className="h-4 w-4 text-muted-foreground/50" />
                     <Link
                       href={`/${pathSegments.slice(0, index + 1).join('/')}`}
-                      className={`font-medium transition-colors hover:text-foreground ${isLast
-                        ? 'text-foreground font-semibold'
-                        : 'text-muted-foreground'
-                        }`}
+                      className={`font-medium transition-colors hover:text-foreground ${
+                        isLast
+                          ? 'text-foreground font-semibold'
+                          : 'text-muted-foreground'
+                      }`}
                     >
                       {label}
                     </Link>
@@ -120,7 +121,7 @@ export function TopNav() {
                 <Link href="/settings">Settings</Link>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={handleOnLogoutPress}>
-                Log out
+                Sair
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

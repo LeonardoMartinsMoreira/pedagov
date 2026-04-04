@@ -29,7 +29,7 @@ interface DataTableProps {
 
 export function PedagoguesDataTable({ columns }: DataTableProps) {
   const { data: session } = useSession()
-  const isAdmin = session?.user.role === 'ADMIN'
+  const isAdmin = session?.user.roles?.includes('ADMIN')
 
   const addPedagogue = useDialogState()
   const [status, setStatus] = useState<string>('ACTIVE')
