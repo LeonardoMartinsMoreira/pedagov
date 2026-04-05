@@ -14,7 +14,12 @@ export async function middleware(request: NextRequest) {
     pathname === '/favicon.ico' ||
     isStaticAsset(pathname)
   ) {
-    return NextResponse.next()
+    const response = NextResponse.next()
+
+    response.headers.set('X-Frame-Options', 'DENY')
+    response.headers.set('X-Content-Type-Options', 'nosniff')
+
+    return response
   }
 
   const token = await getToken({
