@@ -59,9 +59,9 @@ export function LoginForm({
     router.refresh()
     const session = await getSession()
     if (session?.user?.mustChangePassword) {
-      router.replace('/change-password')
+      window.location.href = '/change-password'
     } else {
-      router.replace('/')
+      window.location.href = '/'
     }
     setIsSubmitting(false)
   }

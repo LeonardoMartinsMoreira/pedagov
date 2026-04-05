@@ -23,7 +23,7 @@ export default function LocaleLayout({
     <html lang="pt-BR" suppressHydrationWarning>
       <body className={inter.className}>
         <QueryClientProvider client={queryClient}>
-          <SessionProvider>
+          <SessionProvider refetchInterval={300} refetchOnWindowFocus={true}>
             <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
               <SettingsProvider>
                 <TooltipProvider delayDuration={0}>

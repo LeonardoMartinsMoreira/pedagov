@@ -11,17 +11,6 @@ export interface UserSettings {
   theme: 'light' | 'dark' | 'system'
   layout: 'default' | 'compact' | 'expanded'
   fontSize: number
-  notifications: {
-    email: boolean
-    push: boolean
-    sms: boolean
-    accountActivity: boolean
-    newFeatures: boolean
-    marketing: boolean
-    frequency: 'real-time' | 'daily' | 'weekly'
-    quietHoursStart: string
-    quietHoursEnd: string
-  }
   privacy: {
     analyticsSharing: boolean
     personalizedAds: boolean
@@ -34,17 +23,6 @@ const defaultSettings = {
   fontSize: 16,
   theme: 'light',
   layout: 'default',
-  notifications: {
-    email: true,
-    push: true,
-    sms: false,
-    accountActivity: true,
-    newFeatures: true,
-    marketing: false,
-    frequency: 'real-time',
-    quietHoursStart: '22:00',
-    quietHoursEnd: '07:00',
-  },
   privacy: {
     analyticsSharing: true,
     personalizedAds: false,
@@ -56,9 +34,6 @@ const defaultSettings = {
 interface SettingsContextType {
   settings: UserSettings
   updateSettings: (newSettings: Partial<UserSettings>) => void
-  updateNotificationSettings: (
-    settings: Partial<UserSettings['notifications']>
-  ) => void
   updatePrivacySettings: (settings: Partial<UserSettings['privacy']>) => void
 }
 
@@ -95,15 +70,6 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     setSettings((prev) => ({ ...prev, ...newSettings }))
   }
 
-  const updateNotificationSettings = (
-    notificationSettings: Partial<UserSettings['notifications']>
-  ) => {
-    setSettings((prev) => ({
-      ...prev,
-      notifications: { ...prev.notifications, ...notificationSettings },
-    }))
-  }
-
   const updatePrivacySettings = (
     privacySettings: Partial<UserSettings['privacy']>
   ) => {
@@ -118,7 +84,6 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       value={{
         settings,
         updateSettings,
-        updateNotificationSettings,
         updatePrivacySettings,
       }}
     >

@@ -1,8 +1,6 @@
 'use client'
-import { ThemeToggle } from './theme-toggle'
-import { Notifications } from './notifications'
-import { usePathname } from 'next/navigation'
-import { useSettings } from '@/contexts/settings-context'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,11 +9,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
-import React from 'react'
-import Link from 'next/link'
+import { useSettings } from '@/contexts/settings-context'
 import { signOut } from 'next-auth/react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import React from 'react'
+import { ThemeToggle } from './theme-toggle'
 
 import { ChevronRight } from 'lucide-react'
 
@@ -72,11 +71,10 @@ export function TopNav() {
                     <ChevronRight className="h-4 w-4 text-muted-foreground/50" />
                     <Link
                       href={`/${pathSegments.slice(0, index + 1).join('/')}`}
-                      className={`font-medium transition-colors hover:text-foreground ${
-                        isLast
-                          ? 'text-foreground font-semibold'
-                          : 'text-muted-foreground'
-                      }`}
+                      className={`font-medium transition-colors hover:text-foreground ${isLast
+                        ? 'text-foreground font-semibold'
+                        : 'text-muted-foreground'
+                        }`}
                     >
                       {label}
                     </Link>
@@ -86,7 +84,6 @@ export function TopNav() {
           </nav>
         </div>
         <div className="flex items-center gap-4">
-          <Notifications />
           <ThemeToggle />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
