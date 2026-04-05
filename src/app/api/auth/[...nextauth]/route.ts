@@ -1,14 +1,14 @@
-import { api } from '@/services/api'
 import {
   mustChangePassword,
   nonEmptyString,
   pickSessionFromResponse,
 } from '@/utils/auth-session'
 import { errorMessages } from '@/utils/next-auth-errors-message'
-import { AxiosError } from 'axios'
+import axios, { AxiosError } from 'axios'
 import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { jwtDecode } from 'jwt-decode'
+import { api } from '@/services/api'
 
 function decodeSub(jwt: string): string {
   try {
@@ -37,14 +37,12 @@ const handler = NextAuth({
       },
       authorize: async (credentials) => {
         try {
-          console.log('[Auth] Attempting login for:', credentials?.email)
-          const res = await api.post('/sessions', {
+          const res = await api.post(`${process.env.API_BASE_URL}/sessions`, {
             email: credentials?.email,
             password: credentials?.password,
           })
 
           const body = res.data as Record<string, unknown>
-          console.log('[Auth] API response body keys:', Object.keys(body))
 
           const user = (body?.result ?? body) as {
             access_token?: string
@@ -52,8 +50,6 @@ const handler = NextAuth({
             email?: string
             roles?: string[]
           }
-
-          console.log('[Auth] Access Token present in result:', !!user.access_token)
 
           const sessionJwt = pickSessionFromResponse(res.data)
           const mergedSession =
@@ -63,7 +59,6 @@ const handler = NextAuth({
           const needPassword = mustChangePassword(mergedSession)
 
           if (!hasToken && !needPassword) {
-            console.error('[Auth] Login failed: No token and no password change required')
             return null
           }
 
@@ -75,11 +70,9 @@ const handler = NextAuth({
             mustChangePassword: needPassword,
             roles: user.roles ?? [],
           }
-          console.log('[Auth] Login successful. Roles:', authUser.roles)
 
           return authUser as import('next-auth').User
         } catch (err) {
-          console.error('[Auth] login error:', err)
           const error = err as AxiosError<{ statusCode: number }>
           const statusCode = error.response?.data?.statusCode
           const message =
@@ -101,14 +94,12 @@ const handler = NextAuth({
         }
         const raw = typeof u.access_token === 'string' ? u.access_token : ''
 
-        console.log('[Auth] Initial JWT callback. AccessToken present:', !!raw)
         token.accessToken = raw
         token.email = u.email ?? token.email
 
         if (nonEmptyString(raw)) {
           token.id = decodeSub(raw)
           token.roles = decodeRoles(raw)
-          console.log('[Auth] Decoded roles:', token.roles)
         } else if (nonEmptyString(u.session)) {
           const s = u.session as string
           token.id = decodeSub(s)
@@ -153,7 +144,6 @@ const handler = NextAuth({
         session.user.id = token.id
         session.user.mustChangePassword = Boolean(token.mustChangePassword)
         session.user.roles = token.roles ?? []
-        console.log('[Auth] Session populated. User roles:', session.user.roles)
       }
       return session
     },

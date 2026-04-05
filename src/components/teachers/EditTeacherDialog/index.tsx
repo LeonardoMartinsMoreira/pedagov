@@ -45,6 +45,7 @@ export function EditTeacherDialog({
 
   const form = useForm({
     resolver: zodResolver(EditTeacherSchema),
+    mode: 'onChange',
     defaultValues: {
       name: teacher.name,
     },
@@ -52,6 +53,8 @@ export function EditTeacherDialog({
 
   const {
     errors: { name },
+    isValid,
+    isDirty,
   } = form.formState
 
   const onSubmit = (data: IEditTeacher) => {
@@ -70,7 +73,7 @@ export function EditTeacherDialog({
     <Dialog open={isVisible} onOpenChange={onCloseDialog}>
       <DialogContent className="flex flex-col gap-y-4">
         <DialogHeader>
-          <DialogTitle>Adicionar novo professor(a)</DialogTitle>
+          <DialogTitle>Editar professor(a)</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -95,8 +98,12 @@ export function EditTeacherDialog({
                 </FormItem>
               )}
             />
-            <Button isLoading={isPending} type="submit">
-              Adicionar
+            <Button
+              isLoading={isPending}
+              disabled={!isValid || !isDirty || isPending}
+              type="submit"
+            >
+              Editar
             </Button>
           </form>
         </Form>

@@ -64,16 +64,18 @@ export function AddClassDialog({
 
   const form = useForm<IAddClass>({
     resolver: zodResolver(AddClassSchema),
+    mode: 'onChange',
     defaultValues: {
       serie: '',
       name: '',
-      shift: undefined,
-      teacherId: undefined,
+      shift: '',
+      teacherId: '',
     },
   })
 
   const {
     errors: { shift, name },
+    isValid,
   } = form.formState
 
   const onCloseDialog = () => {
@@ -217,7 +219,11 @@ export function AddClassDialog({
               )}
             />
 
-            <Button isLoading={isPending} type="submit">
+            <Button
+              isLoading={isPending}
+              disabled={!isValid || isPending}
+              type="submit"
+            >
               Adicionar
             </Button>
           </form>

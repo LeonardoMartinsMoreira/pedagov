@@ -71,8 +71,9 @@ export function PedagogueProfileDialog({
 }) {
   const [isEditing, setIsEditing] = useState(false)
 
-  const form = useForm<IEditPedagogue>({
+    const form = useForm<IEditPedagogue>({
     resolver: zodResolver(EditPedagogueSchema),
+    mode: 'onChange',
     defaultValues: {
       ...pedagogue,
       isAdmin: pedagogue.role === 'ADMIN',
@@ -81,6 +82,8 @@ export function PedagogueProfileDialog({
 
   const {
     errors: { name },
+    isValid,
+    isDirty,
   } = form.formState
 
   useEffect(() => {
@@ -171,7 +174,7 @@ export function PedagogueProfileDialog({
             </DialogHeader>
 
             <Form {...form}>
-              <div className="space-y-4">
+              <form onSubmit={form.handleSubmit(handleSave)} className="space-y-4">
                 <div className="space-y-2">
                   <div className="flex items-center space-x-2 text-sm font-medium">
                     <Hash className="w-4 h-4" />
@@ -288,18 +291,19 @@ export function PedagogueProfileDialog({
                     Cancelar
                   </Button>
                   <Button
-                    type="button"
-                    onClick={form.handleSubmit(handleSave)}
+                    type="submit"
                     isLoading={isPending}
+                    disabled={!isValid || !isDirty || isPending}
                   >
                     Salvar Alterações
                   </Button>
                 </div>
-              </div>
+              </form>
             </Form>
           </>
         )}
       </DialogContent>
     </Dialog>
+
   )
 }

@@ -81,6 +81,7 @@ export function EditOccurrenceForm() {
 
   const form = useForm<EditOccurrenceFormValues>({
     resolver: zodResolver(editOccurrenceFormSchema),
+    mode: 'onChange',
     values: occurrence
       ? {
           studentsIds: occurrence.students.map((s) => s.id),
@@ -99,6 +100,10 @@ export function EditOccurrenceForm() {
           teacherId: '',
         },
   })
+
+  const {
+    formState: { isValid, isDirty },
+  } = form
 
   const { mutate, isPending } = useEditOccurrence(router)
 
@@ -291,7 +296,7 @@ export function EditOccurrenceForm() {
                 <Button type="button" variant="outline" className="mr-4" onClick={() => router.back()}>
                   Cancelar
                 </Button>
-                <Button type="submit" disabled={isPending}>
+                <Button type="submit" isLoading={isPending} disabled={!isValid || !isDirty || isPending}>
                   <Save className="mr-2 h-4 w-4" />
                   {isPending ? 'Salvando...' : 'Salvar Alterações'}
                 </Button>

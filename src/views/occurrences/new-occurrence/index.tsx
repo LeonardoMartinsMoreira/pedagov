@@ -76,18 +76,23 @@ export function NewOccurrenceForm() {
 
   const form = useForm<OccurrenceFormValues>({
     resolver: zodResolver(occurrenceFormSchema),
+    mode: 'onChange',
     defaultValues: {
       studentsIds:
         idSelectedStudent && idSelectedStudent !== 'null'
           ? [idSelectedStudent]
           : [],
-      attendeesIds: undefined,
+      attendeesIds: [],
       type: '',
       description: '',
       title: '',
-      teacherId: undefined,
+      teacherId: '',
     },
   })
+
+  const {
+    formState: { isValid },
+  } = form
 
   const { mutate, isPending } = useCreateOccurrence(router)
 
@@ -291,7 +296,7 @@ export function NewOccurrenceForm() {
               </div>
 
               <div className="flex justify-end">
-                <Button type="submit" disabled={isPending}>
+                <Button type="submit" isLoading={isPending} disabled={!isValid || isPending}>
                   <Save className="mr-2 h-4 w-4" />
                   {isPending ? 'Salvando...' : 'Salvar'}
                 </Button>

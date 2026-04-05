@@ -66,6 +66,7 @@ export function EditClassDialog({
 
   const form = useForm<IEditClass>({
     resolver: zodResolver(EditClassSchema),
+    mode: 'onChange',
     defaultValues: {
       serie: classValues.serie,
       name: classValues.name,
@@ -76,6 +77,8 @@ export function EditClassDialog({
 
   const {
     errors: { shift, name },
+    isValid,
+    isDirty,
   } = form.formState
 
   const onCloseDialog = () => {
@@ -100,7 +103,7 @@ export function EditClassDialog({
     <Dialog open={isVisible} onOpenChange={onCloseDialog}>
       <DialogContent className="flex flex-col gap-y-4">
         <DialogHeader>
-          <DialogTitle>Adicionar nova turma</DialogTitle>
+          <DialogTitle>Editar turma</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
@@ -219,8 +222,12 @@ export function EditClassDialog({
               )}
             />
 
-            <Button isLoading={isPending} type="submit">
-              Adicionar
+            <Button
+              isLoading={isPending}
+              disabled={!isValid || !isDirty || isPending}
+              type="submit"
+            >
+              Editar
             </Button>
           </form>
         </Form>

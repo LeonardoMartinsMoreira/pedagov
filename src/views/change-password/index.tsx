@@ -42,6 +42,7 @@ export function ChangePassword() {
 
   const form = useForm({
     resolver: zodResolver(ChangePasswordSchema),
+    mode: 'onChange',
     defaultValues: {
       currentPassword: '',
       newPassword: '',
@@ -151,7 +152,7 @@ export function ChangePassword() {
               type="submit"
               isLoading={isPending}
               className="w-full mt-2"
-              disabled={isPending}
+              disabled={isPending || !form.formState.isValid}
             >
               Alterar Senha
             </Button>
