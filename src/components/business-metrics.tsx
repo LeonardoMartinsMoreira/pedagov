@@ -1,15 +1,16 @@
-'use client'
+"use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { occurrencesTypesEnum } from "@/constants/occurrences-types-enum";
+import { useGetOccurrencesSummary } from "@/services/queries/get-occurrences-summary";
 import {
   ClockCounterClockwise,
   UsersThree,
   Warning,
-} from '@phosphor-icons/react'
-import { useGetLast30DaysOccurrences } from '@/services/queries/get-last-30-days-occurrences'
+} from "@phosphor-icons/react";
 
 export function BusinessMetrics() {
-  const { data: last30DaysOccurrences } = useGetLast30DaysOccurrences()
+  const { data: occurrencesSummaryData } = useGetOccurrencesSummary();
 
   return (
     <div className="space-y-4">
@@ -23,7 +24,9 @@ export function BusinessMetrics() {
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between text-xs">
-              <span className="font-bold text-3xl">1.234</span>
+              <span className="font-bold text-3xl">
+                {occurrencesSummaryData?.incidentStudentsCount}
+              </span>
               <span
                 className={`px-2 py-1 rounded-sm bg-blue-100 text-blue-800 dark:bg-blue-200`}
               >
@@ -44,7 +47,9 @@ export function BusinessMetrics() {
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between text-xs">
-              <span className="font-bold text-3xl">{last30DaysOccurrences?.count}</span>
+              <span className="font-bold text-3xl">
+                {occurrencesSummaryData?.last30DaysOccurrencesCount}
+              </span>
               <span
                 className={`px-1.5 py-1.5 rounded-lg bg-purple-100 text-purple-800 dark:bg-purple-200`}
               >
@@ -66,25 +71,33 @@ export function BusinessMetrics() {
               Principais Problemas
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between text-xs">
-              <span className="font-bold text-3xl">Bullying</span>
-              <span
-                className={`px-2 py-1 rounded-sm bg-red-100 text-red-800 dark:bg-red-200`}
-              >
-                <Warning
-                  weight="fill"
-                  size={32}
-                  className="text-red-700 dark:text-red-700"
-                />
+          {occurrencesSummaryData?.last30DaysMainOccurrenceType && (
+            <CardContent>
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-bold text-3xl">
+                  {
+                    occurrencesTypesEnum[
+                      occurrencesSummaryData?.last30DaysMainOccurrenceType
+                    ]
+                  }
+                </span>
+                <span
+                  className={`px-2 py-1 rounded-sm bg-red-100 text-red-800 dark:bg-red-200`}
+                >
+                  <Warning
+                    weight="fill"
+                    size={32}
+                    className="text-red-700 dark:text-red-700"
+                  />
+                </span>
+              </div>
+              <span className="text-xs text-muted-foreground">
+                Ultimos 30 dias
               </span>
-            </div>
-            <span className="text-xs text-muted-foreground">
-              Ultimos 30 dias
-            </span>
-          </CardContent>
+            </CardContent>
+          )}
         </Card>
       </div>
     </div>
-  )
+  );
 }
