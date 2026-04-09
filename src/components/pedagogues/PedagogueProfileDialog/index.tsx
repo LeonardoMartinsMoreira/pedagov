@@ -52,11 +52,12 @@ const pedagogueStatus: Record<
 > = {
   ACTIVE: {
     title: 'Ativo',
-    color: 'bg-green-100 text-green-800 border-green-200',
+    color:
+      'bg-success-muted text-success-muted-foreground border-success-muted-foreground/25',
   },
   INACTIVE: {
     title: 'Inativo',
-    color: 'bg-gray-100 text-gray-800 border-gray-200',
+    color: 'bg-muted text-muted-foreground border-border',
   },
 }
 
@@ -126,8 +127,8 @@ export function PedagogueProfileDialog({
           <>
             <DialogHeader className="flex w-full flex-col items-center space-y-4">
               <div className="flex gap-2 items-center w-full">
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                  <User className="w-8 h-8 text-blue-600" />
+                <div className="w-12 h-12 bg-brand-muted rounded-full flex items-center justify-center">
+                  <User className="w-8 h-8 text-brand-icon" />
                 </div>
                 <div>
                   <DialogTitle className="text-center">
@@ -141,11 +142,11 @@ export function PedagogueProfileDialog({
 
               <div className="w-full space-y-2 text-sm">
                 <div className="flex items-center gap-2">
-                  <Hash className="w-4 h-4 text-gray-500" />
+                  <Hash className="w-4 h-4 text-muted-foreground" />
                   <span>{pedagogue.id}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Mail className="w-4 h-4 text-gray-500" />
+                  <Mail className="w-4 h-4 text-muted-foreground" />
                   <span>{pedagogue.email}</span>
                 </div>
               </div>

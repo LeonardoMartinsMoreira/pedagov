@@ -119,13 +119,13 @@ export function NewOccurrenceForm() {
   if (isLoading || !data || !attendees || !teachers) return <Loading />
 
   return (
-    <div className="container max-w-4xl py-8">
-      <Card className="border-none">
-        <CardHeader className="rounded-t-lg">
+    <div className="w-full">
+      <Card>
+        <CardHeader>
           <BackButton />
           <CardTitle className="text-3xl font-bold">Nova Ocorrência</CardTitle>
         </CardHeader>
-        <CardContent className="p-6">
+        <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">

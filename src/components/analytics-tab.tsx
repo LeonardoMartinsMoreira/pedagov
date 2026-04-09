@@ -2,7 +2,6 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Bar, BarChart, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
-import { useTheme } from "next-themes"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useState } from "react"
 
@@ -32,7 +31,6 @@ const channelPerformanceData = [
 ]
 
 export function AnalyticsTab() {
-  const { theme } = useTheme()
   const [timeFrame, setTimeFrame] = useState("last_30_days")
 
   return (
@@ -62,7 +60,7 @@ export function AnalyticsTab() {
                 <XAxis dataKey="segment" />
                 <YAxis />
                 <Tooltip />
-                <Bar dataKey="count" fill={theme === "dark" ? "#adfa1d" : "#0ea5e9"} />
+                <Bar dataKey="count" fill="hsl(var(--chart-1))" />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -77,7 +75,7 @@ export function AnalyticsTab() {
                 <XAxis dataKey="month" />
                 <YAxis />
                 <Tooltip />
-                <Line type="monotone" dataKey="rate" stroke={theme === "dark" ? "#adfa1d" : "#0ea5e9"} />
+                <Line type="monotone" dataKey="rate" stroke="hsl(var(--chart-1))" />
               </LineChart>
             </ResponsiveContainer>
           </CardContent>
@@ -95,8 +93,8 @@ export function AnalyticsTab() {
                 <YAxis yAxisId="left" />
                 <YAxis yAxisId="right" orientation="right" />
                 <Tooltip />
-                <Bar yAxisId="left" dataKey="acquisitions" fill={theme === "dark" ? "#adfa1d" : "#0ea5e9"} />
-                <Bar yAxisId="right" dataKey="revenue" fill={theme === "dark" ? "#1e40af" : "#3b82f6"} />
+                <Bar yAxisId="left" dataKey="acquisitions" fill="hsl(var(--chart-1))" />
+                <Bar yAxisId="right" dataKey="revenue" fill="hsl(var(--chart-2))" />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>

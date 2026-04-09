@@ -18,7 +18,7 @@ export function TopProducts() {
             <p className="text-sm font-medium leading-none">{product.name}</p>
             <p className="text-sm text-muted-foreground">{product.revenue}</p>
           </div>
-          <div className="ml-auto font-medium text-green-500">{product.growth}</div>
+          <div className="ml-auto font-medium text-success">{product.growth}</div>
         </div>
       ))}
     </div>

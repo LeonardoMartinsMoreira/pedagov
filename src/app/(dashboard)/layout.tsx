@@ -14,8 +14,8 @@ export default function RootLayout({
       <Sidebar />
       <div className="flex-1">
         <TopNav />
-        <div className="container mx-auto p-6 max-w-7xl">
-          <main className="w-full">{children}</main>
+        <div className="w-full min-w-0 px-4 py-6 sm:px-5 sm:py-8 md:px-6">
+          <main className="w-full min-w-0">{children}</main>
         </div>
       </div>
     </div>

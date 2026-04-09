@@ -67,7 +67,7 @@ export function RecentTransactions() {
             </div>
             <div className="ml-auto text-right">
               <p
-                className={`text-sm font-medium ${transaction.amount.startsWith("+") ? "text-green-500" : "text-red-500"}`}
+                className={`text-sm font-medium ${transaction.amount.startsWith('+') ? 'text-success' : 'text-danger'}`}
               >
                 {transaction.amount}
               </p>

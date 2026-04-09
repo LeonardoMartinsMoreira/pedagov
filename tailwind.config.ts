@@ -6,6 +6,7 @@ const config: Config = {
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
   	extend: {
@@ -49,6 +50,31 @@ const config: Config = {
   				'3': 'hsl(var(--chart-3))',
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
+  			},
+  			brand: {
+  				DEFAULT: 'hsl(var(--brand))',
+  				foreground: 'hsl(var(--brand-foreground))',
+  				hover: 'hsl(var(--brand-hover))',
+  				muted: 'hsl(var(--brand-muted))',
+  				'muted-foreground': 'hsl(var(--brand-muted-foreground))',
+  				icon: 'hsl(var(--brand-icon))'
+  			},
+  			success: {
+  				DEFAULT: 'hsl(var(--success))',
+  				foreground: 'hsl(var(--success-foreground))',
+  				muted: 'hsl(var(--success-muted))',
+  				'muted-foreground': 'hsl(var(--success-muted-foreground))'
+  			},
+  			danger: {
+  				DEFAULT: 'hsl(var(--danger))',
+  				muted: 'hsl(var(--danger-muted))',
+  				'muted-foreground': 'hsl(var(--danger-muted-foreground))',
+  				'foreground-on-muted': 'hsl(var(--danger-foreground-on-muted))'
+  			},
+  			highlight: {
+  				muted: 'hsl(var(--highlight-muted))',
+  				'muted-foreground': 'hsl(var(--highlight-muted-foreground))',
+  				icon: 'hsl(var(--highlight-icon))'
   			}
   		},
   		borderRadius: {

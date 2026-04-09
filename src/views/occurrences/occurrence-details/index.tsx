@@ -49,7 +49,7 @@ export function OccurrenceDetails({ occurrenceId }: { occurrenceId: string }) {
 
   if (error) {
     return (
-      <div className="container mx-auto py-6 text-red-500">
+      <div className="w-full text-danger">
         Erro ao carregar ocorrência.
       </div>
     )
@@ -57,7 +57,7 @@ export function OccurrenceDetails({ occurrenceId }: { occurrenceId: string }) {
 
   if (!occurrence) {
     return (
-      <div className="container mx-auto py-6 text-muted-foreground">
+      <div className="w-full text-muted-foreground">
         Ocorrência não encontrada.
       </div>
     )
@@ -68,7 +68,7 @@ export function OccurrenceDetails({ occurrenceId }: { occurrenceId: string }) {
   const formattedTime = format(createdAt, 'HH:mm', { locale: ptBR })
 
   return (
-    <div className="">
+    <div className="w-full">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
         <div className="flex flex-col items-start gap-y-2">
           <BackButton />
