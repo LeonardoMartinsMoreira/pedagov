@@ -31,7 +31,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="container mx-auto py-10">
+    <div className="w-full">
       <h1 className="text-3xl font-bold mb-6">Configurações</h1>
       <Tabs defaultValue="account" className="space-y-4">
         <TabsList className="grid w-full grid-cols-5">

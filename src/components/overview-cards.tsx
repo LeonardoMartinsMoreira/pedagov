@@ -46,7 +46,7 @@ export function OverviewCards() {
             <p className="text-xs text-muted-foreground">{card.description}</p>
             <div
               className={`mt-2 flex items-center text-xs ${
-                card.trend === 'up' ? 'text-green-500' : 'text-red-500'
+                card.trend === 'up' ? 'text-success' : 'text-danger'
               }`}
             >
               {card.trend === 'up' ? (

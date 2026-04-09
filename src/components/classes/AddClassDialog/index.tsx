@@ -123,7 +123,7 @@ export function AddClassDialog({
                           {...field}
                         />
                       </FormControl>
-                      <span className="ml-1 text-xl text-gray-700">º</span>
+                      <span className="ml-1 text-xl text-muted-foreground">º</span>
                     </div>
                     <FormMessage />
                   </FormItem>

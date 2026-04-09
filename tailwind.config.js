@@ -10,7 +10,7 @@ module.exports = {
   theme: {
     container: {
       center: true,
-      padding: '2rem',
+      padding: '0.75rem',
       screens: {
         '2xl': '1400px',
       },
@@ -49,6 +49,38 @@ module.exports = {
         card: {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
+        },
+        brand: {
+          DEFAULT: 'hsl(var(--brand))',
+          foreground: 'hsl(var(--brand-foreground))',
+          hover: 'hsl(var(--brand-hover))',
+          muted: 'hsl(var(--brand-muted))',
+          'muted-foreground': 'hsl(var(--brand-muted-foreground))',
+          icon: 'hsl(var(--brand-icon))',
+        },
+        success: {
+          DEFAULT: 'hsl(var(--success))',
+          foreground: 'hsl(var(--success-foreground))',
+          muted: 'hsl(var(--success-muted))',
+          'muted-foreground': 'hsl(var(--success-muted-foreground))',
+        },
+        danger: {
+          DEFAULT: 'hsl(var(--danger))',
+          muted: 'hsl(var(--danger-muted))',
+          'muted-foreground': 'hsl(var(--danger-muted-foreground))',
+          'foreground-on-muted': 'hsl(var(--danger-foreground-on-muted))',
+        },
+        highlight: {
+          muted: 'hsl(var(--highlight-muted))',
+          'muted-foreground': 'hsl(var(--highlight-muted-foreground))',
+          icon: 'hsl(var(--highlight-icon))',
+        },
+        chart: {
+          1: 'hsl(var(--chart-1))',
+          2: 'hsl(var(--chart-2))',
+          3: 'hsl(var(--chart-3))',
+          4: 'hsl(var(--chart-4))',
+          5: 'hsl(var(--chart-5))',
         },
       },
       borderRadius: {

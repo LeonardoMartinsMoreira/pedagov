@@ -138,11 +138,7 @@ export function OccurrencesList() {
   }
 
   return (
-    <div className="container mx-auto py-6 space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Ocorrências</h1>
-      </div>
-
+    <div className="w-full">
       <OccurrencesDataTable columns={columns} />
 
       <DeleteDialog

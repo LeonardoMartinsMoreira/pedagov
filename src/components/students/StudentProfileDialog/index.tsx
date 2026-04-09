@@ -25,7 +25,7 @@ export function StudentProfileDialog({
           <DialogTitle className="text-center">{student.student}</DialogTitle>
 
           <Image
-            className="w-32 h-32 bg-black dark:bg-white rounded-full"
+            className="w-32 h-32 bg-muted rounded-full"
             alt=""
             src=""
           />
@@ -36,7 +36,7 @@ export function StudentProfileDialog({
               <span className="text-xs">Turma</span>
             </div>
 
-            <div className="h-8 w-[1px] rounded bg-slate-600 dark:bg-white" />
+            <div className="h-8 w-px rounded bg-border" />
 
             <div className="flex flex-col w-24 justify-center items-center">
               <span className="font-bold">3</span>
@@ -47,8 +47,8 @@ export function StudentProfileDialog({
 
         <div className="flex items-center w-full justify-center gap-x-2">
           <Button className="w-full">Editar Perfil</Button>
-          <Button className="bg-green-500">
-            <WhatsappLogo className="text-white" />
+          <Button className="bg-success text-success-foreground hover:bg-success/90">
+            <WhatsappLogo className="text-success-foreground" />
           </Button>
         </div>
       </DialogContent>

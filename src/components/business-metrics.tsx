@@ -24,14 +24,8 @@ export function BusinessMetrics() {
           <CardContent>
             <div className="flex items-center justify-between text-xs">
               <span className="font-bold text-3xl">1.234</span>
-              <span
-                className={`px-2 py-1 rounded-sm bg-blue-100 text-blue-800 dark:bg-blue-200`}
-              >
-                <UsersThree
-                  weight="fill"
-                  size={32}
-                  className="text-blue-700 dark:text-blue-900"
-                />
+              <span className="px-2 py-1 rounded-sm bg-brand-muted text-brand-muted-foreground">
+                <UsersThree weight="fill" size={32} className="text-brand-icon" />
               </span>
             </div>
           </CardContent>
@@ -45,13 +39,11 @@ export function BusinessMetrics() {
           <CardContent>
             <div className="flex items-center justify-between text-xs">
               <span className="font-bold text-3xl">{last30DaysOccurrences?.count}</span>
-              <span
-                className={`px-1.5 py-1.5 rounded-lg bg-purple-100 text-purple-800 dark:bg-purple-200`}
-              >
+              <span className="px-1.5 py-1.5 rounded-lg bg-highlight-muted text-highlight-muted-foreground">
                 <ClockCounterClockwise
                   weight="fill"
                   size={32}
-                  className="text-purple-700 dark:text-purple-700"
+                  className="text-highlight-icon"
                 />
               </span>
             </div>
@@ -69,14 +61,8 @@ export function BusinessMetrics() {
           <CardContent>
             <div className="flex items-center justify-between text-xs">
               <span className="font-bold text-3xl">Bullying</span>
-              <span
-                className={`px-2 py-1 rounded-sm bg-red-100 text-red-800 dark:bg-red-200`}
-              >
-                <Warning
-                  weight="fill"
-                  size={32}
-                  className="text-red-700 dark:text-red-700"
-                />
+              <span className="px-2 py-1 rounded-sm bg-danger-muted text-danger-muted-foreground">
+                <Warning weight="fill" size={32} className="text-danger-foreground-on-muted" />
               </span>
             </div>
             <span className="text-xs text-muted-foreground">

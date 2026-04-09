@@ -209,7 +209,7 @@ export const MultiSelect = React.forwardRef<
             onClick={handleTogglePopover}
             className={cn(
               `${
-                error && 'border-red-900'
+                error && 'border-destructive'
               } flex w-full p-1 rounded-md border h-auto items-center justify-between bg-inherit hover:bg-inherit [&_svg]:pointer-events-auto`,
               className
             )}
