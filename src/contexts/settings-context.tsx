@@ -1,6 +1,7 @@
 'use client'
 
 import { defaultAvatars } from '@/constants/avatars'
+import { usePedagogue } from '@/services/queries/get-pedagogue'
 import { useSession } from 'next-auth/react'
 import { createContext, useContext, useEffect, useState } from 'react'
 
@@ -11,17 +12,6 @@ export interface UserSettings {
   theme: 'light' | 'dark' | 'system'
   layout: 'default' | 'compact' | 'expanded'
   fontSize: number
-  notifications: {
-    email: boolean
-    push: boolean
-    sms: boolean
-    accountActivity: boolean
-    newFeatures: boolean
-    marketing: boolean
-    frequency: 'real-time' | 'daily' | 'weekly'
-    quietHoursStart: string
-    quietHoursEnd: string
-  }
   privacy: {
     analyticsSharing: boolean
     personalizedAds: boolean
@@ -34,17 +24,6 @@ const defaultSettings = {
   fontSize: 16,
   theme: 'light',
   layout: 'default',
-  notifications: {
-    email: true,
-    push: true,
-    sms: false,
-    accountActivity: true,
-    newFeatures: true,
-    marketing: false,
-    frequency: 'real-time',
-    quietHoursStart: '22:00',
-    quietHoursEnd: '07:00',
-  },
   privacy: {
     analyticsSharing: true,
     personalizedAds: false,
@@ -56,9 +35,6 @@ const defaultSettings = {
 interface SettingsContextType {
   settings: UserSettings
   updateSettings: (newSettings: Partial<UserSettings>) => void
-  updateNotificationSettings: (
-    settings: Partial<UserSettings['notifications']>
-  ) => void
   updatePrivacySettings: (settings: Partial<UserSettings['privacy']>) => void
 }
 
@@ -67,7 +43,9 @@ const SettingsContext = createContext<SettingsContextType | undefined>(
 )
 
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
-  const { data } = useSession()
+  const { data: session } = useSession()
+  const userId = session?.user?.id
+  const { data: pedagogue } = usePedagogue(userId)
 
   const [settings, setSettings] = useState<UserSettings>({
     ...defaultSettings,
@@ -77,31 +55,27 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   })
 
   useEffect(() => {
-    if (data?.user) {
-      const email = data.user.email ?? 'no-email'
-      const name = data.user.name ?? 'no-name'
-      const avatar = data.user.avatar ?? defaultAvatars[0]
-      setSettings((prev) => ({
-        ...prev,
+    if (!session?.user) {
+      setSettings({
         ...defaultSettings,
-        email,
-        name,
-        avatar,
-      }))
+        avatar: defaultAvatars[0],
+        name: '',
+        email: '',
+      })
+      return
     }
-  }, [data?.user])
+
+    const u = session.user
+    setSettings((prev) => ({
+      ...prev,
+      email: pedagogue?.email ?? u.email ?? 'no-email',
+      name: pedagogue?.name ?? u.name ?? 'no-name',
+      avatar: u.avatar ?? prev.avatar ?? defaultAvatars[0],
+    }))
+  }, [session?.user, pedagogue])
 
   const updateSettings = (newSettings: Partial<UserSettings>) => {
     setSettings((prev) => ({ ...prev, ...newSettings }))
-  }
-
-  const updateNotificationSettings = (
-    notificationSettings: Partial<UserSettings['notifications']>
-  ) => {
-    setSettings((prev) => ({
-      ...prev,
-      notifications: { ...prev.notifications, ...notificationSettings },
-    }))
   }
 
   const updatePrivacySettings = (
@@ -118,7 +92,6 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       value={{
         settings,
         updateSettings,
-        updateNotificationSettings,
         updatePrivacySettings,
       }}
     >

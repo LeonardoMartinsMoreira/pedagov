@@ -59,16 +59,24 @@ export function AddStudentDialog({
     globalFilter: '',
   })
 
-  const { mutate } = useCreateStudent(closeDialog)
+  const onCloseDialog = () => {
+    form.reset()
+    closeDialog()
+  }
+
+  const { mutate, isPending } = useCreateStudent(onCloseDialog)
 
   const form = useForm({
     resolver: zodResolver(AddStudentSchema),
+    mode: 'onChange',
+    defaultValues: {
+      name: '',
+      class: '',
+      responsiblePhone: '',
+      responsibleEmail: '',
+      cpf: '',
+    },
   })
-
-  const onCloseDialog = () => {
-    closeDialog()
-    form.reset()
-  }
 
   const onSubmit = (data: IAddStudent) => {
     mutate({
@@ -160,8 +168,8 @@ export function AddStudentDialog({
                       mask="000.000.000-00"
                       value={field.value ?? ''}
                       onAccept={(value) => field.onChange(value)}
-                      placeholder="CPF"
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none focus:outline-none focus:ring-0 focus:border-input"
+                      placeholder="000.000.000-00"
+                      className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                     />
                   </FormControl>
                   <FormMessage />
@@ -200,7 +208,13 @@ export function AddStudentDialog({
                 </FormItem>
               )}
             />
-            <Button type="submit">Adicionar aluno(a)</Button>
+            <Button
+              isLoading={isPending}
+              disabled={!form.formState.isValid || isPending}
+              type="submit"
+            >
+              Adicionar aluno(a)
+            </Button>
           </form>
         </Form>
       </DialogContent>

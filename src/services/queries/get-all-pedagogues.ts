@@ -6,16 +6,13 @@ interface IPedagoguesParams {
   page: number
   limit: number
   type?: string
+  status?: string[]
 }
 
 const getAllPedagogues = async (params: IPedagoguesParams) => {
   return (
     await api.get('/pedagogues', {
-      params: {
-        page: params.page,
-        limit: params.limit,
-        type: params.type,
-      },
+      params,
     })
   ).data.result
 }

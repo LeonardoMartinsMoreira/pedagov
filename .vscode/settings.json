@@ -1,0 +1,9 @@
+{
+  "codium.codeCompletion.enable": true,
+  "editor.quickSuggestions": {
+    "other": true,
+    "comments": true,
+    "strings": true
+  },
+  "editor.suggestOnTriggerCharacters": true
+}

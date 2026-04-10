@@ -6,7 +6,7 @@ async function deleteOccurrenceApi(id: string) {
   await api.delete(`/occurrences/${id}`)
 }
 
-export function useDeleteOccurrence() {
+export function useDeleteOccurrence(closeDialog?: () => void) {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -17,6 +17,9 @@ export function useDeleteOccurrence() {
         variant: 'success',
       })
       await queryClient.invalidateQueries({ queryKey: ['occurrences'] })
+      if (closeDialog) {
+        closeDialog()
+      }
     },
     onError: () => {
       toast({

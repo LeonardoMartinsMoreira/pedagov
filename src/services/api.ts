@@ -1,9 +1,16 @@
 import axios from 'axios'
-import { getSession } from 'next-auth/react'
+import { getSession, signOut } from 'next-auth/react'
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
   timeout: 30000,
+  headers: {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+  },
+  paramsSerializer: {
+    indexes: null,
+  },
 })
 
 api.interceptors.request.use(async (config) => {
@@ -16,5 +23,21 @@ api.interceptors.request.use(async (config) => {
 
   return config
 })
+
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response?.status === 401) {
+      console.error('[API] Unauthorized access detected, signing out...')
+      if (typeof window !== 'undefined') {
+        const isLoginPage = window.location.pathname === '/login'
+        if (!isLoginPage) {
+          await signOut({ redirect: true, callbackUrl: '/login' })
+        }
+      }
+    }
+    return Promise.reject(error)
+  }
+)
 
 export { api }

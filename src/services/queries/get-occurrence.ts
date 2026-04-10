@@ -10,4 +10,5 @@ export const useGetOccurrence = (id: string) =>
   useQuery<IOccurrence>({
     queryKey: ['occurrence', id],
     queryFn: () => getOccurrence(id),
+    enabled: !!id && id !== 'undefined',
   })

@@ -22,10 +22,6 @@ import { EditStudentDialog } from './EditStudentDialog'
 
 export const columns: ColumnDef<IStudent>[] = [
   {
-    accessorKey: 'studentId',
-    header: 'ID',
-  },
-  {
     accessorKey: 'student',
     header: ({ column }) => {
       return (

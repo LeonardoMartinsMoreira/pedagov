@@ -6,16 +6,13 @@ interface IAttendeesParams {
   page: number
   limit: number
   type?: string
+  status?: string[]
 }
 
 const getAllAttendees = async (params: IAttendeesParams) => {
   return (
     await api.get('/attendees', {
-      params: {
-        page: params.page,
-        limit: params.limit,
-        type: params.type,
-      },
+      params,
     })
   ).data.result
 }

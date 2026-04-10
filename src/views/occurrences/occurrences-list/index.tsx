@@ -3,38 +3,76 @@
 import { OccurrencesDataTable } from '@/components/occurences/data-table'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Tooltip } from '@/components/ui/tooltip'
 import {
   occurrencesColorsEnum,
   occurrencesTypesEnum,
 } from '@/constants/occurrences-types-enum'
 import { IOccurrence } from '@/interfaces/occurrences/occurrences'
 import { useDeleteOccurrence } from '@/services/mutations/delete-occurrence'
-import { Trash } from '@phosphor-icons/react'
-import { TooltipContent, TooltipTrigger } from '@radix-ui/react-tooltip'
 import type { ColumnDef } from '@tanstack/react-table'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { ArrowUpDown, Loader } from 'lucide-react'
-import Link from 'next/link'
-import { useMemo } from 'react'
+import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
+import { useMemo, useState } from 'react'
+import { DeleteDialog } from '@/components/common/DeleteDialog'
+import { useRouter } from 'next/navigation'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+
+const ActionCell = ({
+  occurrence,
+  onDeleteRequest,
+}: {
+  occurrence: IOccurrence
+  onDeleteRequest: (o: IOccurrence) => void
+}) => {
+  const router = useRouter()
+  const occurrenceId = occurrence.occurrenceId || (occurrence as IOccurrence).id
+
+  return (
+    <div className="flex justify-end">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="h-8 w-8 p-0">
+            <span className="sr-only">Abrir menu</span>
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Ações</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={() => router.push(`/occurrences/${occurrenceId}`)}
+          >
+            Ver Detalhes
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => router.push(`/occurrences/${occurrenceId}/edit`)}
+          >
+            Editar Ocorrência
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => onDeleteRequest(occurrence)}>
+            Deletar Ocorrência
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  )
+}
 
 function createColumns(
-  mutate: (occurrenceId: string) => void,
-  isPending: boolean
+  onDeleteRequest: (occurrence: IOccurrence) => void
 ): ColumnDef<IOccurrence>[] {
   return [
     {
-      accessorKey: 'student',
-      header: ({ column }) => (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Aluno
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      ),
+      accessorKey: 'title',
+      header: 'Título da ocorrência',
     },
     {
       accessorKey: 'type',
@@ -49,22 +87,6 @@ function createColumns(
         )
       },
       filterFn: 'equals',
-    },
-    {
-      accessorKey: 'occurrenceId',
-      header: '№ Ocorrência',
-      cell: ({ row }) => {
-        return (
-          <Tooltip>
-            <TooltipTrigger className="max-w-32 text-ellipsis text-nowrap overflow-hidden whitespace-nowrap">
-              {row.original.occurrenceId}
-            </TooltipTrigger>
-            <TooltipContent className="p-1 rounded bg-muted border border-muted-foreground">
-              {row.original.occurrenceId}
-            </TooltipContent>
-          </Tooltip>
-        )
-      },
     },
     {
       accessorKey: 'createdAt',
@@ -87,50 +109,54 @@ function createColumns(
     {
       id: 'actions',
       cell: ({ row }) => (
-        <div className="flex items-center justify-end gap-3">
-          <Link
-            href={`/occurrences/${row.original.occurrenceId}?studentId=${row.original.studentId}`}
-          >
-            <Button
-              variant="outline"
-              size="sm"
-              className="flex items-center gap-1"
-            >
-              Detalhes
-            </Button>
-          </Link>
-
-          <button
-            onClick={() => mutate(row.original.occurrenceId)}
-            disabled={isPending}
-            className="p-2 rounded-md hover:bg-destructive/10 transition-colors disabled:opacity-50"
-          >
-            {isPending ? (
-              <Loader className="h-4 w-4 animate-spin text-destructive" />
-            ) : (
-              <Trash className="h-4 w-4 text-destructive" />
-            )}
-          </button>
-        </div>
+        <ActionCell
+          occurrence={row.original}
+          onDeleteRequest={onDeleteRequest}
+        />
       ),
     },
   ]
 }
 
 export function OccurrencesList() {
-  const { mutate, isPending } = useDeleteOccurrence()
-  const columns = useMemo(
-    () => createColumns(mutate, isPending),
-    [mutate, isPending]
-  )
+  const [deletingOccurrence, setDeletingOccurrence] =
+    useState<IOccurrence | null>(null)
+
+  const handleCloseDialog = () => setDeletingOccurrence(null)
+
+  const { mutate, isPending } = useDeleteOccurrence(handleCloseDialog)
+
+  const columns = useMemo(() => createColumns(setDeletingOccurrence), [])
+
+  const handleDelete = () => {
+    if (deletingOccurrence) {
+      mutate(
+        deletingOccurrence.occurrenceId ||
+          ((deletingOccurrence as IOccurrence).id as string)
+      )
+    }
+  }
 
   return (
-    <div className="container mx-auto py-6 space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Ocorrências</h1>
-      </div>
-
+    <div className="w-full">
       <OccurrencesDataTable columns={columns} />
+
+      <DeleteDialog
+        isVisible={!!deletingOccurrence}
+        closeDialog={handleCloseDialog}
+        isPending={isPending}
+        handleDelete={handleDelete}
+      >
+        {deletingOccurrence && (
+          <p className="text-center text-muted-foreground">
+            Essa ação não pode ser revertida. Você tem certeza que deseja
+            deletar a ocorrência{' '}
+            <span className="font-bold text-black dark:text-white ">
+              {deletingOccurrence.title}?
+            </span>
+          </p>
+        )}
+      </DeleteDialog>
     </div>
   )
 }

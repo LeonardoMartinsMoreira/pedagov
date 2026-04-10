@@ -1,9 +1,7 @@
-import { privateRoutes } from '@/components/sidebar'
-
-export function checkPrivateRoute(pathname: string) {
-  return privateRoutes.map(({ href }) => {
-    if (pathname === '/') return true
-
-    Boolean(pathname.startsWith(href))
-  })
+/** Apenas `/login` é acessível sem sessão (alinhado ao middleware). */
+export function checkPrivateRoute(pathname: string): boolean {
+  if (pathname === '/login' || pathname.startsWith('/login/')) {
+    return false
+  }
+  return true
 }

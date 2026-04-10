@@ -12,22 +12,42 @@ import { Loading } from '../loading'
 import { Button } from '../ui/button'
 import { AddPedagogueDialog } from './AddPedagogueDialog'
 
+import { statusEnum } from '@/constants/status-enum'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select'
+import { useState } from 'react'
+import { useSession } from 'next-auth/react'
+
 interface DataTableProps {
   columns: ColumnDef<IPedagogue, unknown>[]
 }
 
 export function PedagoguesDataTable({ columns }: DataTableProps) {
+  const { data: session } = useSession()
+  const isAdmin = session?.user.roles?.includes('ADMIN')
+
   const addPedagogue = useDialogState()
+  const [status, setStatus] = useState<string>('ACTIVE')
 
   const { table, isLoading, pageMeta } = useServerPaginatedDataTable<
     IPedagogue,
-    IPedagoguesResponse
+    IPedagoguesResponse,
+    { status: string[] }
   >({
     columns,
     pageSize: LIMIT,
-    useQueryWithPage: (page) => useGetAllPedagogues({ limit: LIMIT, page }),
+    useQueryWithPage: (page, filters) =>
+      useGetAllPedagogues({ limit: LIMIT, page, status: filters?.status }),
     getData: (response) => response?.pedagogues ?? [],
     getPageMeta: (response) => response?.page,
+    filters: {
+      status: status === 'all' ? Object.keys(statusEnum) : [status],
+    },
   })
 
   if (isLoading) return <Loading />
@@ -37,10 +57,30 @@ export function PedagoguesDataTable({ columns }: DataTableProps) {
       <DataTable
         table={table}
         columns={columns}
+        toolbarExtra={
+          <Select
+            value={status}
+            onValueChange={setStatus}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos</SelectItem>
+              {Object.entries(statusEnum).map(([key, label]) => (
+                <SelectItem key={key} value={key}>
+                  {label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        }
         toolbarAction={
-          <Button onClick={addPedagogue.openDialog}>
-            Adicionar Pedagogo(a)
-          </Button>
+          isAdmin ? (
+            <Button onClick={addPedagogue.openDialog}>
+              Adicionar Pedagogo(a)
+            </Button>
+          ) : null
         }
         footerLeft={
           pageMeta ? (

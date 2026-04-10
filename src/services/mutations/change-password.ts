@@ -1,8 +1,10 @@
 import { useMutation } from '@tanstack/react-query'
-import { api } from '../api'
-import { toast } from '@/hooks/use-toast'
+import { signIn, signOut } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { useFirstLogin } from '@/contexts/login-context'
+
+import { toast } from '@/hooks/use-toast'
+
+import { api } from '../api'
 
 interface IChangePassword {
   password: string
@@ -15,22 +17,37 @@ const changePassword = async (data: IChangePassword) => {
 }
 
 export const useChangePassword = () => {
-  const { push } = useRouter()
-  const { isFirstLogin, setIsFirstLogin } = useFirstLogin()
+  const router = useRouter()
 
   return useMutation({
     mutationKey: ['change-password'],
     mutationFn: changePassword,
-    onSuccess: () => {
-      push('/')
+    onSuccess: async (_response, variables) => {
+      const res = await signIn('credentials', {
+        redirect: false,
+        email: variables.email,
+        password: variables.newPassword,
+      })
 
-      if (isFirstLogin) {
-        setIsFirstLogin(false)
+      if (res?.ok) {
+        router.refresh()
+        router.replace('/')
+        toast({
+          title: 'Senha alterada com sucesso.',
+          variant: 'success',
+        })
+        return
       }
 
       toast({
-        title: 'Senha alterada com sucesso.',
-        variant: 'default',
+        title: 'Senha alterada. Entre novamente com a nova senha.',
+        description: res?.error,
+        variant: 'success',
+      })
+
+      signOut({
+        redirect: true,
+        callbackUrl: '/login',
       })
     },
     onError: () => {

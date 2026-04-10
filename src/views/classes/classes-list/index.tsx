@@ -3,7 +3,7 @@ import { ClassesDataTable } from '@/components/classes/data-table'
 
 export function ClassesList() {
   return (
-    <div className="container mx-auto py-10">
+    <div className="w-full">
       <ClassesDataTable columns={columns} />
     </div>
   )

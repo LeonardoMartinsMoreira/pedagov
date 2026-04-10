@@ -3,7 +3,7 @@ import { StudentsDataTable } from '@/components/students/data-table'
 
 export function StudentsList() {
   return (
-    <div className="container mx-auto py-10">
+    <div className="w-full">
       <StudentsDataTable columns={columns} />
     </div>
   )

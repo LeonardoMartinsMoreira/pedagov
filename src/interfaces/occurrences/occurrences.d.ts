@@ -5,6 +5,7 @@ export type IOccurrencesTypes = typeof occurrencesTypesEnum
 
 export interface IOccurrence {
   occurrenceId: string
+  id?: string
   authorId: string
   author: string
   teacherId: string

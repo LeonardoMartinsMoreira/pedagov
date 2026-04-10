@@ -41,6 +41,7 @@ export function AddTeacherDialog({
 
   const form = useForm({
     resolver: zodResolver(AddTeacherSchema),
+    mode: 'onChange',
     defaultValues: {
       name: '',
     },
@@ -48,6 +49,7 @@ export function AddTeacherDialog({
 
   const {
     errors: { name },
+    isValid,
   } = form.formState
 
   const onSubmit = (data: IAddTeacher) => {
@@ -83,7 +85,11 @@ export function AddTeacherDialog({
                 </FormItem>
               )}
             />
-            <Button isLoading={isPending} type="submit">
+            <Button
+              isLoading={isPending}
+              disabled={!isValid || isPending}
+              type="submit"
+            >
               Adicionar
             </Button>
           </form>

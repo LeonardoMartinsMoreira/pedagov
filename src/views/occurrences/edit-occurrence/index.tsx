@@ -24,24 +24,24 @@ import {
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { LIMIT, PAGE } from '@/constants/pagination'
-import { useCreateOccurrence } from '@/services/mutations/create-occurrence'
+import { useEditOccurrence } from '@/services/mutations/edit-occurrence'
 import { useGetAllAttendees } from '@/services/queries/get-all-attendees'
 import { useGetAllStudents } from '@/services/queries/get-all-students'
 import { useGetAllTeachers } from '@/services/queries/get-all-teachers'
+import { useGetOccurrence } from '@/services/queries/get-occurrence'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Save } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-const occurrenceFormSchema = z.object({
+const editOccurrenceFormSchema = z.object({
   studentsIds: z
     .array(z.string(), { message: 'Selecione ao menos um aluno' })
     .min(1, { message: 'Selecione ao menos um aluno' }),
   attendeesIds: z
-    .array(z.string(), { message: 'Selecione ao menos uma pessoa presente' })
-    .min(1, { message: 'Selecione ao menos uma pessoa presente' }),
+    .array(z.string(), { message: 'Selecione ao menos uma pessoa presente' }),
   teacherId: z.string({ message: 'Selecione o professor presente na matéria' }),
   type: z
     .string({ required_error: 'Selecione o tipo da ocorrência' })
@@ -54,76 +54,81 @@ const occurrenceFormSchema = z.object({
     .min(1, 'Dê um título para a ocorrência'),
 })
 
-type OccurrenceFormValues = z.infer<typeof occurrenceFormSchema>
+type EditOccurrenceFormValues = z.infer<typeof editOccurrenceFormSchema>
 
-export function NewOccurrenceForm() {
-  const idSelectedStudent = useParams<{ id: string }>().id
-  const [shouldSendEmail, setShouldSendEmail] = useState(true)
+export function EditOccurrenceForm() {
+  const params = useParams<{ id: string }>()
+  const occurrenceId = params.id
 
   const router = useRouter()
 
-  const { data: attendees, isLoading: isLoadingAttendees } = useGetAllAttendees(
-    {
-      limit: LIMIT,
-      page: PAGE,
-    }
-  )
+  const { data: occurrence, isLoading: isLoadingOccurrence } = useGetOccurrence(occurrenceId)
+
+  const { data: attendees, isLoading: isLoadingAttendees } = useGetAllAttendees({
+    limit: LIMIT,
+    page: PAGE,
+  })
 
   const { data: teachers, isLoading: isLoadingTeachers } = useGetAllTeachers({
     limit: LIMIT,
     page: PAGE,
   })
 
-  const form = useForm<OccurrenceFormValues>({
-    resolver: zodResolver(occurrenceFormSchema),
-    mode: 'onChange',
-    defaultValues: {
-      studentsIds:
-        idSelectedStudent && idSelectedStudent !== 'null'
-          ? [idSelectedStudent]
-          : [],
-      attendeesIds: [],
-      type: '',
-      description: '',
-      title: '',
-      teacherId: '',
-    },
-  })
-
-  const {
-    formState: { isValid },
-  } = form
-
-  const { mutate, isPending } = useCreateOccurrence(router)
-
-  const onSubmit = async (data: OccurrenceFormValues) => {
-    try {
-      mutate({
-        ...data,
-        shouldSendEmail,
-        attachmentsIds: [],
-      })
-    } catch {}
-  }
-
-  const { data, isLoading: isLoadingStudents } = useGetAllStudents({
+  const { data: studentsData, isLoading: isLoadingStudents } = useGetAllStudents({
     page: PAGE,
     limit: LIMIT,
   })
 
-  const isLoading = isLoadingAttendees || isLoadingStudents || isLoadingTeachers
+  const form = useForm<EditOccurrenceFormValues>({
+    resolver: zodResolver(editOccurrenceFormSchema),
+    mode: 'onChange',
+    values: occurrence
+      ? {
+          studentsIds: occurrence.students.map((s) => s.id),
+          attendeesIds: occurrence.attendees.map((a) => a.id),
+          type: occurrence.type,
+          description: occurrence.description,
+          title: occurrence.title,
+          teacherId: occurrence.teacherId,
+        }
+      : {
+          studentsIds: [],
+          attendeesIds: [],
+          type: '',
+          description: '',
+          title: '',
+          teacherId: '',
+        },
+  })
 
-  const { description, studentsIds, type, title, attendeesIds, teacherId } =
-    form.formState.errors
+  const {
+    formState: { isValid, isDirty },
+  } = form
 
-  if (isLoading || !data || !attendees || !teachers) return <Loading />
+  const { mutate, isPending } = useEditOccurrence(router)
+
+  const onSubmit = async (data: EditOccurrenceFormValues) => {
+    try {
+      mutate({
+        ...data,
+        occurrenceId,
+        attachmentsIds: occurrence?.attachments?.map(a => a.id) || [],
+      })
+    } catch {}
+  }
+
+  const isLoading = isLoadingOccurrence || isLoadingAttendees || isLoadingStudents || isLoadingTeachers
+
+  const { description, studentsIds, type, title, attendeesIds, teacherId } = form.formState.errors
+
+  if (isLoading || !studentsData || !attendees || !teachers || !occurrence) return <Loading />
 
   return (
     <div className="w-full">
       <Card>
         <CardHeader>
           <BackButton />
-          <CardTitle className="text-3xl font-bold">Nova Ocorrência</CardTitle>
+          <CardTitle className="text-3xl font-bold">Editar Ocorrência</CardTitle>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -157,7 +162,7 @@ export function NewOccurrenceForm() {
                           <FormLabel>Aluno(s)</FormLabel>
                           <MultiSelect
                             className="min-h-9"
-                            options={data.students.map(({ student, studentId }) => ({
+                            options={studentsData.students.map(({ student, studentId }) => ({
                               label: student,
                               value: String(studentId),
                             }))}
@@ -186,6 +191,7 @@ export function NewOccurrenceForm() {
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
+                        value={field.value}
                       >
                         <FormControl>
                           <SelectTrigger error={Boolean(type)}>
@@ -205,6 +211,7 @@ export function NewOccurrenceForm() {
                     </FormItem>
                   )}
                 />
+                
                 <FormField
                   control={form.control}
                   name="attendeesIds"
@@ -222,6 +229,7 @@ export function NewOccurrenceForm() {
                               value: id,
                             }))}
                             value={field.value}
+                            defaultValue={field.value}
                             onValueChange={field.onChange}
                             selectAll={false}
                             error={Boolean(attendeesIds)}
@@ -242,6 +250,7 @@ export function NewOccurrenceForm() {
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
+                        value={field.value}
                       >
                         <FormControl>
                           <SelectTrigger error={Boolean(teacherId)}>
@@ -282,23 +291,14 @@ export function NewOccurrenceForm() {
                   </FormItem>
                 )}
               />
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="sendEmail"
-                  checked={shouldSendEmail}
-                  onCheckedChange={(checked) =>
-                    setShouldSendEmail(checked as boolean)
-                  }
-                />
-                <label htmlFor="sendEmail" className="text-sm">
-                  Enviar email para responsáveis
-                </label>
-              </div>
 
-              <div className="flex justify-end">
-                <Button type="submit" isLoading={isPending} disabled={!isValid || isPending}>
+              <div className="flex justify-end pt-4 border-t">
+                <Button type="button" variant="outline" className="mr-4" onClick={() => router.back()}>
+                  Cancelar
+                </Button>
+                <Button type="submit" isLoading={isPending} disabled={!isValid || !isDirty || isPending}>
                   <Save className="mr-2 h-4 w-4" />
-                  {isPending ? 'Salvando...' : 'Salvar'}
+                  {isPending ? 'Salvando...' : 'Salvar Alterações'}
                 </Button>
               </div>
             </form>

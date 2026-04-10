@@ -42,7 +42,9 @@ export function ChangePassword() {
 
   const form = useForm({
     resolver: zodResolver(ChangePasswordSchema),
+    mode: 'onChange',
     defaultValues: {
+      currentPassword: '',
       newPassword: '',
       confirmPassword: '',
     },
@@ -61,22 +63,22 @@ export function ChangePassword() {
   } = form.formState
 
   return (
-    <div className="relative bg-background rounded-lg shadow-md dark:bg-[#0D111F] max-w-md w-full mx-4 p-6 dark:bg-muted">
+    <div className="relative bg-card text-card-foreground rounded-lg shadow-md border border-border max-w-md w-full mx-4 p-6">
       <div className="flex flex-col gap-y-4">
         <div className="flex flex-col items-center">
           <Warning
             size={64}
-            className="text-red-700 animate-pulse"
+            className="text-danger-muted-foreground animate-pulse"
             style={{
               animationDuration: '5s',
               animationTimingFunction: 'ease-in-out',
             }}
           />
           <div className="text-center mt-4">
-            <h2 className="text-xl font-medium text-gray-900 dark:text-white">
+            <h2 className="text-xl font-medium text-foreground">
               É necessário alterar sua senha para prosseguir
             </h2>
-            <p className="text-sm mt-2 text-gray-600 dark:text-gray-400">
+            <p className="text-sm mt-2 text-muted-foreground">
               Por motivos de segurança, a alteração de senha deve ser feita.
             </p>
           </div>
@@ -150,7 +152,7 @@ export function ChangePassword() {
               type="submit"
               isLoading={isPending}
               className="w-full mt-2"
-              disabled={isPending}
+              disabled={isPending || !form.formState.isValid}
             >
               Alterar Senha
             </Button>

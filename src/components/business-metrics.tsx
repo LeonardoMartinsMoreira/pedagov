@@ -27,13 +27,11 @@ export function BusinessMetrics() {
               <span className="font-bold text-3xl">
                 {occurrencesSummaryData?.incidentStudentsCount}
               </span>
-              <span
-                className={`px-2 py-1 rounded-sm bg-blue-100 text-blue-800 dark:bg-blue-200`}
-              >
+              <span className="px-2 py-1 rounded-sm bg-brand-muted text-brand-muted-foreground">
                 <UsersThree
                   weight="fill"
                   size={32}
-                  className="text-blue-700 dark:text-blue-900"
+                  className="text-brand-icon"
                 />
               </span>
             </div>
@@ -45,49 +43,17 @@ export function BusinessMetrics() {
               Incidentes Registrados
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between text-xs">
-              <span className="font-bold text-3xl">
-                {occurrencesSummaryData?.last30DaysOccurrencesCount}
-              </span>
-              <span
-                className={`px-1.5 py-1.5 rounded-lg bg-purple-100 text-purple-800 dark:bg-purple-200`}
-              >
-                <ClockCounterClockwise
-                  weight="fill"
-                  size={32}
-                  className="text-purple-700 dark:text-purple-700"
-                />
-              </span>
-            </div>
-            <span className="text-xs text-muted-foreground">
-              Ultimos 30 dias
-            </span>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-normal text-primary">
-              Principais Problemas
-            </CardTitle>
-          </CardHeader>
-          {occurrencesSummaryData?.last30DaysMainOccurrenceType && (
+          {occurrencesSummaryData?.last30DaysOccurrencesCount && (
             <CardContent>
               <div className="flex items-center justify-between text-xs">
                 <span className="font-bold text-3xl">
-                  {
-                    occurrencesTypesEnum[
-                      occurrencesSummaryData?.last30DaysMainOccurrenceType
-                    ]
-                  }
+                  {occurrencesSummaryData?.last30DaysOccurrencesCount}
                 </span>
-                <span
-                  className={`px-2 py-1 rounded-sm bg-red-100 text-red-800 dark:bg-red-200`}
-                >
-                  <Warning
+                <span className="px-1.5 py-1.5 rounded-lg bg-highlight-muted text-highlight-muted-foreground">
+                  <ClockCounterClockwise
                     weight="fill"
                     size={32}
-                    className="text-red-700 dark:text-red-700"
+                    className="text-highlight-icon"
                   />
                 </span>
               </div>
@@ -97,6 +63,36 @@ export function BusinessMetrics() {
             </CardContent>
           )}
         </Card>
+        {occurrencesSummaryData?.last30DaysMainOccurrenceType && (
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-normal text-primary">
+                Principais Problemas
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-bold text-3xl">
+                  {
+                    occurrencesTypesEnum[
+                      occurrencesSummaryData?.last30DaysMainOccurrenceType
+                    ]
+                  }
+                </span>
+                <span className="px-2 py-1 rounded-sm bg-danger-muted text-danger-muted-foreground">
+                  <Warning
+                    weight="fill"
+                    size={32}
+                    className="text-danger-foreground-on-muted"
+                  />
+                </span>
+              </div>
+              <span className="text-xs text-muted-foreground">
+                Ultimos 30 dias
+              </span>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   );

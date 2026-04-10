@@ -62,10 +62,16 @@ export function EditStudentDialog({
     globalFilter: '',
   })
 
-  const { mutate } = useEditStudent(closeDialog)
+  const onCloseDialog = () => {
+    form.reset()
+    closeDialog()
+  }
+
+  const { mutate, isPending } = useEditStudent(onCloseDialog)
 
   const form = useForm({
     resolver: zodResolver(EditStudentSchema),
+    mode: 'onChange',
     defaultValues: {
       ...student,
       class: student?.groupId,
@@ -73,11 +79,6 @@ export function EditStudentDialog({
       cpf: cpfMask(student?.cpf as string),
     },
   })
-
-  const onCloseDialog = () => {
-    closeDialog()
-    form.reset()
-  }
 
   const onSubmit = (data: IEditStudent) => {
     mutate({
@@ -186,7 +187,6 @@ export function EditStudentDialog({
                   <FormLabel>Telefone do responsável</FormLabel>
                   <FormControl>
                     <Input
-                      defaultValue=""
                       placeholder="Whatsapp/Telefone"
                       {...field}
                     />
@@ -203,17 +203,24 @@ export function EditStudentDialog({
                 <FormItem>
                   <FormLabel>Email do responsável</FormLabel>
                   <FormControl>
-                    <Input defaultValue="" placeholder="Email" {...field} />
+                    <Input placeholder="Email" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button disabled={!form.formState.isDirty} type="submit">
+            <Button
+              isLoading={isPending}
+              disabled={
+                !form.formState.isDirty || !form.formState.isValid || isPending
+              }
+              type="submit"
+            >
               Editar aluno(a)
             </Button>
           </form>
         </Form>
+
       </DialogContent>
     </Dialog>
   )

@@ -28,10 +28,42 @@
     --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
 
-    --destructive: 0 100% 50%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
 
     --ring: 215 20.2% 65.1%;
+
+    /* Marca / ações (azul — CTAs, foco, ícones informativos) */
+    --brand: 221 83% 53%;
+    --brand-foreground: 0 0% 100%;
+    --brand-hover: 224 76% 48%;
+    --brand-muted: 214 95% 93%;
+    --brand-muted-foreground: 224 64% 33%;
+    --brand-icon: 221 83% 45%;
+
+    /* Tendência positiva / sucesso */
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+    --success-muted: 142 76% 94%;
+    --success-muted-foreground: 144 61% 24%;
+
+    /* Alerta / tendência negativa (texto e badges suaves) */
+    --danger: 0 84% 60%;
+    --danger-muted: 0 93% 94%;
+    --danger-muted-foreground: 0 63% 31%;
+    --danger-foreground-on-muted: 0 63% 42%;
+
+    /* Métricas secundárias (roxo) */
+    --highlight-muted: 250 100% 97%;
+    --highlight-muted-foreground: 263 70% 50%;
+    --highlight-icon: 271 81% 56%;
+
+    /* Gráficos (Recharts / dados) */
+    --chart-1: 199 89% 48%;
+    --chart-2: 221 83% 53%;
+    --chart-3: 142 71% 45%;
+    --chart-4: 263 70% 50%;
+    --chart-5: 0 84% 60%;
 
     --radius: 0.5rem;
   }
@@ -46,7 +78,7 @@
     --popover: 224 71% 4%;
     --popover-foreground: 215 20.2% 65.1%;
 
-    --card: 224 71% 4%;
+    --card: 224 47% 8%;
     --card-foreground: 213 31% 91%;
 
     --border: 216 34% 17%;
@@ -61,10 +93,37 @@
     --accent: 216 34% 17%;
     --accent-foreground: 210 40% 98%;
 
-    --destructive: 0 63% 31%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 210 40% 98%;
 
     --ring: 216 34% 17%;
+
+    --brand: 213 94% 68%;
+    --brand-foreground: 224 71% 4%;
+    --brand-hover: 204 94% 74%;
+    --brand-muted: 217 33% 17%;
+    --brand-muted-foreground: 213 97% 87%;
+    --brand-icon: 213 94% 75%;
+
+    --success: 142 71% 45%;
+    --success-foreground: 210 40% 98%;
+    --success-muted: 142 25% 16%;
+    --success-muted-foreground: 142 76% 73%;
+
+    --danger: 0 91% 71%;
+    --danger-muted: 0 63% 31%;
+    --danger-muted-foreground: 0 86% 88%;
+    --danger-foreground-on-muted: 0 93% 94%;
+
+    --highlight-muted: 263 47% 20%;
+    --highlight-muted-foreground: 270 95% 85%;
+    --highlight-icon: 270 95% 85%;
+
+    --chart-1: 83 81% 55%;
+    --chart-2: 224 76% 48%;
+    --chart-3: 142 71% 45%;
+    --chart-4: 270 95% 75%;
+    --chart-5: 0 91% 71%;
 
     --radius: 0.5rem;
   }
