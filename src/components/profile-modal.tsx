@@ -8,7 +8,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -35,6 +35,15 @@ interface UserProfile {
   cards: CardInfo[]
 }
 
+function initials(name: string) {
+  return name
+    .split(/\s+/)
+    .map((n) => n[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2)
+}
+
 export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
   const [isEditing, setIsEditing] = useState(false)
   const [userProfile, setUserProfile] = useState<UserProfile>({
@@ -57,7 +66,6 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
 
   const handleSave = () => {
     setIsEditing(false)
-    // Here you would typically send the updated profile to your backend
   }
 
   const handleRemoveCard = (index: number) => {
@@ -71,32 +79,25 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Profile</DialogTitle>
+          <DialogTitle>Perfil</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="flex items-center gap-4">
             <Avatar className="h-20 w-20">
-              <AvatarImage
-                src="https://github.com/shadcn.png"
-                alt={userProfile.name}
-              />
-              <AvatarFallback>
-                {userProfile.name
-                  .split(' ')
-                  .map((n) => n[0])
-                  .join('')}
-              </AvatarFallback>
+              <AvatarFallback className="text-lg">{initials(userProfile.name)}</AvatarFallback>
             </Avatar>
             <div>
               <h2 className="text-2xl font-bold">{userProfile.name}</h2>
-              <p className="text-sm text-muted-foreground">
-                {userProfile.email}
+              <p className="text-sm text-muted-foreground">{userProfile.email}</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Foto de perfil não disponível para alteração.
               </p>
             </div>
             <Button
               variant="outline"
               size="icon"
               className="ml-auto"
+              type="button"
               onClick={() => (isEditing ? handleSave() : setIsEditing(true))}
             >
               {isEditing ? (
@@ -109,7 +110,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
           <div className="grid gap-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="name">Name</Label>
+                <Label htmlFor="name">Nome</Label>
                 <Input
                   id="name"
                   value={userProfile.name}
@@ -118,7 +119,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                 />
               </div>
               <div>
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">E-mail</Label>
                 <Input
                   id="email"
                   value={userProfile.email}
@@ -129,7 +130,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="company">Company</Label>
+                <Label htmlFor="company">Empresa</Label>
                 <Input
                   id="company"
                   value={userProfile.company}
@@ -138,7 +139,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                 />
               </div>
               <div>
-                <Label htmlFor="phone">Phone</Label>
+                <Label htmlFor="phone">Telefone</Label>
                 <Input
                   id="phone"
                   value={userProfile.phone}
@@ -149,7 +150,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="accountNumber">Account Number</Label>
+                <Label htmlFor="accountNumber">Número da conta</Label>
                 <Input
                   id="accountNumber"
                   value={userProfile.accountNumber}
@@ -157,14 +158,14 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                 />
               </div>
               <div>
-                <Label htmlFor="bankName">Bank Name</Label>
+                <Label htmlFor="bankName">Banco</Label>
                 <Input id="bankName" value={userProfile.bankName} readOnly />
               </div>
             </div>
           </div>
           <Card>
             <CardHeader>
-              <CardTitle>Cards</CardTitle>
+              <CardTitle>Cartões</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -173,15 +174,14 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                     <CreditCard className="h-6 w-6" />
                     <div>
                       <p className="font-medium">{card.type}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {card.number}
-                      </p>
+                      <p className="text-sm text-muted-foreground">{card.number}</p>
                     </div>
-                    <p className="ml-auto text-sm">Expires: {card.expiry}</p>
+                    <p className="ml-auto text-sm">Validade: {card.expiry}</p>
                     {isEditing && (
                       <Button
                         variant="destructive"
                         size="icon"
+                        type="button"
                         onClick={() => handleRemoveCard(index)}
                       >
                         <Trash2 className="h-4 w-4" />

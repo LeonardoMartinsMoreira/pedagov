@@ -11,7 +11,6 @@ declare module 'next-auth' {
       id: string
       /** true quando a API devolveu `session` no login/troca de senha — obriga /change-password */
       mustChangePassword: boolean
-      avatar: string
       roles: string[]
     }
   }

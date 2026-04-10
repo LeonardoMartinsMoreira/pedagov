@@ -4,7 +4,7 @@ import {
   pickSessionFromResponse,
 } from '@/utils/auth-session'
 import { errorMessages } from '@/utils/next-auth-errors-message'
-import { AxiosError } from 'axios'
+import axios, { AxiosError } from 'axios'
 import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { jwtDecode } from 'jwt-decode'
@@ -84,7 +84,7 @@ const handler = NextAuth({
   ],
 
   callbacks: {
-     jwt({ user, token, trigger, session }) {
+    jwt({ user, token, trigger, session }) {
       if (user) {
         const u = user as {
           access_token?: string
@@ -92,7 +92,6 @@ const handler = NextAuth({
           email?: string
           mustChangePassword?: boolean
         }
-
         const raw = typeof u.access_token === 'string' ? u.access_token : ''
 
         token.accessToken = raw
@@ -138,8 +137,7 @@ const handler = NextAuth({
 
       return token
     },
-     session({ session, token }) {
-
+    session({ session, token }) {
       if (session?.user) {
         session.user.accessToken = token.accessToken
         session.user.email = token.email

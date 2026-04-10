@@ -13,3 +13,5 @@ export const occurrencesColorsEnum: Record<string, IBadgeVariants> = {
   UNIFORM: 'outline',
   TARDINESS: 'default',
 }
+
+

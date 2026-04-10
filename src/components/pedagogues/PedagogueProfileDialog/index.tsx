@@ -31,7 +31,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { IPedagogue } from '@/interfaces/pedagogues/pedagogues'
-import { useEditPedagogue } from '@/services/mutations/update-pedagogue'
+import { useEditPedagogue } from '@/services/mutations/edit-pedagogue'
 
 const EditPedagogueSchema = z.object({
   name: z.string().min(4, { message: 'Nome do pedagogo é obrigatório' }),
@@ -107,7 +107,9 @@ export function PedagogueProfileDialog({
     closeDialog()
   }
 
-  const { mutate, isPending } = useEditPedagogue(handleCloseDialog)
+  const { mutate, isPending } = useEditPedagogue({
+    onSuccess: handleCloseDialog,
+  })
 
   const handleSave = (data: IEditPedagogue) => {
     const pedagogueData = {
@@ -115,9 +117,7 @@ export function PedagogueProfileDialog({
       role: data.isAdmin ? 'ADMIN' : 'COMMON',
     }
 
-    mutate({
-      data: pedagogueData,
-    })
+    mutate(pedagogueData)
   }
 
   return (

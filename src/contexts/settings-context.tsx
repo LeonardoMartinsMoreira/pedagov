@@ -1,12 +1,10 @@
 'use client'
 
-import { defaultAvatars } from '@/constants/avatars'
 import { usePedagogue } from '@/services/queries/get-pedagogue'
 import { useSession } from 'next-auth/react'
 import { createContext, useContext, useEffect, useState } from 'react'
 
 export interface UserSettings {
-  avatar: string
   name: string | undefined
   email: string
   theme: 'light' | 'dark' | 'system'
@@ -49,7 +47,6 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
 
   const [settings, setSettings] = useState<UserSettings>({
     ...defaultSettings,
-    avatar: defaultAvatars[0],
     name: '',
     email: '',
   })
@@ -58,7 +55,6 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     if (!session?.user) {
       setSettings({
         ...defaultSettings,
-        avatar: defaultAvatars[0],
         name: '',
         email: '',
       })
@@ -68,9 +64,8 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     const u = session.user
     setSettings((prev) => ({
       ...prev,
-      email: pedagogue?.email ?? u.email ?? 'no-email',
-      name: pedagogue?.name ?? u.name ?? 'no-name',
-      avatar: u.avatar ?? prev.avatar ?? defaultAvatars[0],
+      email: pedagogue?.email ?? u.email ?? '',
+      name: pedagogue?.name ?? u.name ?? '',
     }))
   }, [session?.user, pedagogue])
 

@@ -1,5 +1,5 @@
 'use client'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -16,7 +16,7 @@ import { usePathname } from 'next/navigation'
 import React from 'react'
 import { ThemeToggle } from './theme-toggle'
 
-import { ChevronRight } from 'lucide-react'
+import { ChevronRight, User } from 'lucide-react'
 
 const RoutesLabelEnum: Record<string, string> = {
   students: 'Alunos',
@@ -55,7 +55,7 @@ export function TopNav() {
               href="/"
               className="text-muted-foreground transition-colors hover:text-foreground"
             >
-              Inicio
+              Início
             </Link>
             {pathSegments
               .map((segment, index) => ({ segment, index }))
@@ -90,12 +90,8 @@ export function TopNav() {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src={settings.avatar} alt={settings.name} />
                   <AvatarFallback>
-                    {settings.name
-                      ?.split(' ')
-                      .map((n) => n[0])
-                      .join('')}
+                    <User/>
                   </AvatarFallback>
                 </Avatar>
               </Button>

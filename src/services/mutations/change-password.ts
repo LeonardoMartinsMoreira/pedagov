@@ -4,24 +4,14 @@ import { useRouter } from 'next/navigation'
 
 import { toast } from '@/hooks/use-toast'
 
-import { api } from '../api'
-
-interface IChangePassword {
-  password: string
-  newPassword: string
-  email: string
-}
-
-const changePassword = async (data: IChangePassword) => {
-  return await api.post('/change-password', data)
-}
+import { changePasswordRequest } from './change-password-request'
 
 export const useChangePassword = () => {
   const router = useRouter()
 
   return useMutation({
     mutationKey: ['change-password'],
-    mutationFn: changePassword,
+    mutationFn: changePasswordRequest,
     onSuccess: async (_response, variables) => {
       const res = await signIn('credentials', {
         redirect: false,

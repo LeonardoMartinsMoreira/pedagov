@@ -1,29 +1,27 @@
 import { toast } from '@/hooks/use-toast'
+import type { IPedagogue } from '@/interfaces/pedagogues/pedagogues'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+
 import { api } from '../api'
-import { IPedagogue } from '@/interfaces/pedagogues/pedagogues'
 
-interface EditPedagoguePayload {
-  data: IPedagogue
+const editPedagogue = async (data: IPedagogue) => {
+  await api.put(`/pedagogues/${data.id}`, data)
 }
 
-async function editPedagogueApi(payload: EditPedagoguePayload) {
-  await api.put(`/pedagogues/${payload.data.id}`, payload.data)
-}
-
-export function useEditPedagogue(closeDialog: () => void) {
+export function useEditPedagogue(options?: { onSuccess?: () => void }) {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: editPedagogueApi,
-    onSuccess: async (_, { data }) => {
+    mutationKey: ['edit-pedagogue'],
+    mutationFn: editPedagogue,
+    onSuccess: async (_, data) => {
       toast({
         title: 'Pedagogo editado com sucesso.',
         variant: 'success',
       })
       await queryClient.invalidateQueries({ queryKey: ['pedagogues'] })
       await queryClient.invalidateQueries({ queryKey: ['pedagogue', data.id] })
-      closeDialog()
+      options?.onSuccess?.()
     },
     onError: () => {
       toast({

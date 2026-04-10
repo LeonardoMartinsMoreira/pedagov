@@ -27,7 +27,12 @@ api.interceptors.request.use(async (config) => {
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response?.status === 401) {
+    const status = error.response?.status
+    const requestUrl = String(error.config?.url ?? '')
+    const isChangePasswordFailure =
+      status === 401 && requestUrl.includes('change-password')
+
+    if (status === 401 && !isChangePasswordFailure) {
       console.error('[API] Unauthorized access detected, signing out...')
       if (typeof window !== 'undefined') {
         const isLoginPage = window.location.pathname === '/login'
